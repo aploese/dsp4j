@@ -1,0 +1,117 @@
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>net.sf.dsp4j</groupId>
+        <artifactId>dsp4j</artifactId>
+        <version>0.1.4-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>dsp4j-core</artifactId>
+    <packaging>jar</packaging>
+    <name>dsp4j-core</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-math3</artifactId>
+            
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>net.sf.fms4j.swingui.Chapter2SwingApp</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>appassembler-maven-plugin</artifactId>
+                <configuration>
+                    <repositoryLayout>flat</repositoryLayout>
+                    <!-- Include etc/ in the beginning of the classpath declaration in the bin scripts -->
+                    <includeConfigurationDirectoryInClasspath>false</includeConfigurationDirectoryInClasspath>
+                    <!-- prefix all bin files with "apl" -->
+                    <binPrefix>apl</binPrefix>
+                    <!-- set alternative assemble directory -->
+                    <assembleDirectory>${project.build.directory}/fmsReport</assembleDirectory>
+                    <!-- Generate bin scripts for windows and unix pr default -->
+                    <platforms>
+                        <platform>windows</platform>
+                        <platform>unix</platform>
+                    </platforms>
+                    <programs>
+                        <program>
+                            <mainClass>net.sf.fms4j.swingui.Chapter2SwingApp</mainClass>
+                            <name>fmsReport</name>
+                        </program>
+                    </programs>
+                </configuration>
+            </plugin>
+            <!--plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>aspectj-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <!- - mvn package appassembler:assemble - ->
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>net.sf.fms4j.slaves.ui.SlavesUI</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin-->
+
+            <!--plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>unix-maven-plugin</artifactId>
+                <configuration>
+                    <contact>arnep@users.sf.net</contact>
+                </configuration>
+
+            </plugin-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <showDeprecation>false</showDeprecation>
+                    <debug>true</debug>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <!--
+<plugin>  <artifactId>maven-surefire-plugin</artifactId>  <configuration>  <forkMode>once</forkMode>
+<argLine>-javaagent:${user.home}/.m2/repository/org/aspectj/aspectjweaver/1.6.8/aspectjweaver-1.6.8.jar</argLine> </configuration> </plugin>
+
+    -->
+</project>

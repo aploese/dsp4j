@@ -1,0 +1,14 @@
+target
+fms4j-console/nbactions.xml
+
+dsp4j-core/nb-configuration.xml
+dsp4j-core/nbactions.xml
+
+fms4j-core/target
+fms4j-core/octave-core
+fms4j-core/nbactions.xml
+fms4j-core/nb-configuration.xml
+
+fms4j-swing-ui/target
+fms4j-swing-ui/nbactions.xml
+fms4j-console/target
