@@ -79,13 +79,13 @@ public class Decoder {
 				pw.print(", \"\"");
 			}
 			pw.println();
-			pw.flush();
 		}
 
 		@Override
 		public void success(FmsData data) {
 			pw.printf("FMS[%d]: @%s: ", fmsIndex++, getTimeStr());
 			printFmsData(data);
+			pw.flush();
 		}
 
 		@Override
@@ -104,6 +104,7 @@ public class Decoder {
 		public boolean txtLengthParityError(FmsData fmsData) {
 			pw.printf("Text Length Parity Error FMS: @%s: ", getTimeStr());
 			printFmsData(fmsData);
+			pw.flush();
 			return false;
 		}
 
@@ -112,6 +113,7 @@ public class Decoder {
 			pw.printf("Text Char Parity Error FMS: @%s: ", getTimeStr());
 			printFmsData(fmsData);
 			pw.printf("Text: %s\n", txt);
+			pw.flush();
 			return false;
 		}
 
@@ -120,6 +122,7 @@ public class Decoder {
 			pw.printf("Text Crc Error FMS: @%s: ", getTimeStr());
 			printFmsData(fmsData);
 			pw.printf("Text: %s\n", txt);
+			pw.flush();
 			return false;
 		}
 
@@ -128,6 +131,7 @@ public class Decoder {
 			pw.printf("Text Error FMS: @%s: ", getTimeStr());
 			printFmsData(fmsData);
 			pw.println(txt);
+			pw.flush();
 			return true;
 		}
 	}
@@ -259,6 +263,7 @@ public class Decoder {
 		inputFilename = f.getName();
 		inputFilename = inputFilename.substring(0, inputFilename.indexOf(".wav"));
 		pw.println(new Date() + " | decode file: " + f.getAbsolutePath());
+		pw.flush();
 		final ShortSampledSource aiss = new ShortSampledSource(f, 1024);
 		
 		setSampleRate(aiss.getSampleRate());
@@ -274,6 +279,7 @@ public class Decoder {
 			}
 		}
 		pw.println(new Date() + " | decoded file: " + f.getAbsolutePath());
+		pw.flush();
 	}
 
 	public void decodeDefaultAudioIn(double samplerate, int channels, int channel)
@@ -282,6 +288,7 @@ public class Decoder {
 		final ShortTargetDataLineWrapper ds = new ShortTargetDataLineWrapper(channels, samplerate, (int)samplerate);
 
 		pw.println(new Date() + " | decode audio: " + ds.getTargetDataLine());
+		pw.flush();
 
 		setSampleRate(ds.getSampleRate());
 		if (backupDir != null) {
@@ -312,6 +319,7 @@ public class Decoder {
 		final ShortTargetDataLineWrapper ds = new ShortTargetDataLineWrapper(m, channels, samplerate, 4096);
 
 		pw.println(new Date() + " | decode audio: " + ds.getTargetDataLine());
+		pw.flush();
 
 		setSampleRate(ds.getSampleRate());
 		if (backupDir != null) {
@@ -324,6 +332,7 @@ public class Decoder {
 			}
 		}
 		pw.println(new Date() + " | audio decoded");
+		pw.flush();
 	}
 
 	public void printPowerDefaultAudioIn(int channels, int channel, double samplerate)
@@ -364,6 +373,7 @@ public class Decoder {
 			System.out.println("Power for Squelch: " + fmSquech.getPower());
 		}
 		pw.println(new Date() + " | audio decoded");
+		pw.flush();
 	}
 
 	public Decoder(File backupDir, File fms32Dir, File logFile, short squelchThreshold) {
