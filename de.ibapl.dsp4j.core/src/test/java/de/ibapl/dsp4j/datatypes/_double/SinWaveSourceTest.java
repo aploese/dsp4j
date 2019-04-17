@@ -92,7 +92,8 @@ public class SinWaveSourceTest extends VisualResultCheckTest {
             instance.clock();
             sc.clock();
             if (isShowResult()) {
-                sfs.setX((short) (instance.getY() * Short.MAX_VALUE));
+                sfs.setShort(0, (short) (instance.getY() * Short.MAX_VALUE));
+                sfs.nextSample();
             }
         } while (!instance.isLast());
 

@@ -22,7 +22,8 @@
 package de.ibapl.dsp4j.datatypes._int;
 
 import de.ibapl.dsp4j.VisualResultCheckTest;
-import de.ibapl.dsp4j.datatypes._short.MonoShortFileSource;
+import de.ibapl.dsp4j.datatypes._short.ShortSampledSource;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -36,48 +37,49 @@ import org.junit.Test;
  */
 public class NoiseBlockTest extends VisualResultCheckTest {
 
-    public NoiseBlockTest() {
-    }
+	public NoiseBlockTest() {
+	}
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
+	@BeforeClass
+	public static void setUpClass() throws Exception {
+	}
 
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
+	@AfterClass
+	public static void tearDownClass() throws Exception {
+	}
 
-    @After
-    public void tearDown() throws Exception {
-        super.tearDown();
-    }
+	@After
+	public void tearDown() throws Exception {
+		super.tearDown();
+	}
 
-    @Before
-    public void setUp() {
-    }
+	@Before
+	public void setUp() {
+	}
 
-    /**
-     * Test of setX method, of class NoiseBlock.
-     */
-    @Test
-    @Ignore
-    public void testSetX() throws Exception {
-        System.out.println("setX");
+	/**
+	 * Test of setX method, of class NoiseBlock.
+	 */
+	@Test
+	@Ignore
+	public void testSetX() throws Exception {
+		System.out.println("setX");
 
-        FmSquelch instance = new FmSquelch(0.4, 1, 10, 1, 2);
+		FmSquelch instance = new FmSquelch(0.4, 1, 10, 1, 2);
 
-        MonoShortFileSource msfs = new MonoShortFileSource(NoiseBlockTest.class.getResourceAsStream("/noise1.wav")); //FMS-lineIn_11025.0_2013-05-06_17:05:23.735.wav"));
-        createFile("test", msfs.getSampleRate(), 5);
-        instance.setSampleRate(msfs.getSampleRate());
-        while (msfs.clock()) {
-            FmSquelch.State s = instance.setX(msfs.getY());
-            if (isShowResult()) {
-                sfs.setX(msfs.getY(),
-                        (short) instance.getLpFast().getY(),
-                        (short) instance.getLpSlow().getY(),
-                        (short) (instance.ratio),
-                        (s == FmSquelch.State.PASSING) ? (short) instance.getHpIn().getY() : 0);
-            }
-        }
-    }
+		ShortSampledSource msfs = new ShortSampledSource(NoiseBlockTest.class.getResourceAsStream("/noise1.wav"), 1); // FMS-lineIn_11025.0_2013-05-06_17:05:23.735.wav"));
+		createFile("test", msfs.getSampleRate(), 5);
+		instance.setSampleRate(msfs.getSampleRate());
+		while (msfs.nextSample()) {
+			FmSquelch.State s = instance.setX(msfs.getShort(0));
+			if (isShowResult()) {
+				sfs.setShort(0, msfs.getShort(0));
+				sfs.setShort(1, (short) instance.getLpFast().getY());
+				sfs.setShort(2, (short) instance.getLpSlow().getY());
+				sfs.setShort(3, (short) (instance.ratio));
+				sfs.setShort(4, (s == FmSquelch.State.PASSING) ? (short) instance.getHpIn().getY() : 0);
+				sfs.nextSample();
+			}
+		}
+	}
 }

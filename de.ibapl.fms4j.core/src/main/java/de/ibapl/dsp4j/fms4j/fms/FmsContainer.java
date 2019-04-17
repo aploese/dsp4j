@@ -40,7 +40,7 @@ public class FmsContainer extends AbstractSampleProcessingBlock {
     private final CostasLoop costasLoop;
     private final FmsPhiBitDecoder fmsBD;
     private final FmsDemodulator fmsD;
-    private AbstractCascadedDoubleIirFilter symbolFiilter;
+    private AbstractCascadedDoubleIirFilter symbolFilter;
     private AbstractCascadedDoubleIirFilter inFilter;
     
 
@@ -54,8 +54,8 @@ public class FmsContainer extends AbstractSampleProcessingBlock {
     public final void setX(double sample) {
         inFilter.setX(sample);
         costasLoop.setX(inFilter.getY());
-        symbolFiilter.setX(costasLoop.getPhiError());
-        if (fmsBD.setPhiError(symbolFiilter.getY())) {
+        symbolFilter.setX(costasLoop.getPhiError());
+        if (fmsBD.setPhiError(symbolFilter.getY())) {
                 final FmsData data = fmsD.setX(fmsBD.isBit());
                 if (data != null) {
                     fmsBD.reset();
@@ -69,7 +69,7 @@ public class FmsContainer extends AbstractSampleProcessingBlock {
     public void setSampleRate(double sampleRate) {
         super.setSampleRate(sampleRate);
         DoubleIirFilterGenerator iirGenerator = new DoubleIirFilterGenerator(sampleRate);
-        symbolFiilter = iirGenerator.getLP_EllipFc(3, 1, 40, 0.75 * FmsModulator.SYMBOL_RATE, AbstractCascadedDoubleIirFilter.class);
+        symbolFilter = iirGenerator.getLP_EllipFc(3, 1, 40, 0.75 * FmsModulator.SYMBOL_RATE, AbstractCascadedDoubleIirFilter.class);
         inFilter = iirGenerator.getBP_BesselFc(1, 10, 2000, AbstractCascadedDoubleIirFilter.class);
         costasLoop.setSampleRate(sampleRate);
         fmsBD.setSamplerate(sampleRate);
@@ -81,7 +81,7 @@ public class FmsContainer extends AbstractSampleProcessingBlock {
         costasLoop.reset();
         fmsBD.reset();
         fmsD.reset();
-        symbolFiilter.reset();
+        symbolFilter.reset();
         inFilter.reset();
     }
 
@@ -107,7 +107,7 @@ public class FmsContainer extends AbstractSampleProcessingBlock {
     }
 
     public double getSymbolFilterY() {
-        return symbolFiilter.getY();
+        return symbolFilter.getY();
     }
 
     public boolean getCurrentBit() {

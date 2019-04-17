@@ -78,7 +78,7 @@ public class SinWaveSource extends AbstractSampleProcessingBlock {
     private double y;
     private int samplesLeft;
     private int frequencyIndex = -1;
-    private List<SinWaveSnipplet> frequencies = new ArrayList();
+    private List<SinWaveSnipplet> frequencies = new ArrayList<>();
     private boolean firstSample;
 
     public SinWaveSource(double precisition) {

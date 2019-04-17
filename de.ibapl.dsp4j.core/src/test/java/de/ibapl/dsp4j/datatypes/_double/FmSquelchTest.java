@@ -22,7 +22,8 @@
 package de.ibapl.dsp4j.datatypes._double;
 
 import de.ibapl.dsp4j.VisualResultCheckTest;
-import de.ibapl.dsp4j.datatypes._short.MonoShortFileSource;
+import de.ibapl.dsp4j.datatypes._short.ShortSampledSource;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -66,16 +67,17 @@ public class FmSquelchTest extends VisualResultCheckTest {
 
         FmSquelch instance = new FmSquelch(1500, 10, 3600);
 
-        MonoShortFileSource msfs = new MonoShortFileSource(FmSquelchTest.class.getResourceAsStream("/noise2.wav")); //FMS-lineIn_11025.0_2013-05-06_17:05:23.735.wav"));
+        ShortSampledSource msfs = new ShortSampledSource(FmSquelchTest.class.getResourceAsStream("/noise2.wav"), 1); //FMS-lineIn_11025.0_2013-05-06_17:05:23.735.wav"));
         createFile("test", msfs.getSampleRate(), 3);
         instance.setSampleRate(msfs.getSampleRate());
-        while (msfs.clock()) {
-            boolean s = instance.setX(msfs.getY());
+        while (msfs.nextSample()) {
+            boolean s = instance.setX(msfs.getShort(0));
       //    System.out.println("SQUELCH: " + instance.getLp().getY());
             if (isShowResult()) {
-                sfs.setX(msfs.getY(),
-                        (short) instance.getLp().getY(),
-                        s ? msfs.getY() : 0);
+                sfs.setShort(0, msfs.getShort(0));
+                sfs.setShort(1, (short) instance.getLp().getY());
+                sfs.setShort(2, s ? msfs.getShort(0) : 0);
+                sfs.nextSample();
             }
         }
 

@@ -37,6 +37,7 @@ import javax.sound.sampled.Port;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionGroup;
@@ -206,7 +207,7 @@ public class Console {
         opt.setType(String.class);
         options.addOption(opt);
 
-        opt = new Option("sq", CMDL_OPT_SQUELCH_THRESHOLD, true, "squelch threshold");
+        opt = new Option("sq", CMDL_OPT_SQUELCH_THRESHOLD, true, "squelch threshold must be smaller than power of noise");
         opt.setArgName("value");
         opt.setType(Short.class);
         options.addOption(opt);
@@ -232,7 +233,7 @@ public class Console {
 //            throw new RuntimeException("Cant read prop file", ex);
 //        }
 
-        CommandLineParser cmdParser = new PosixParser();
+        CommandLineParser cmdParser = new DefaultParser();
         CommandLine cml = cmdParser.parse(opts, args);
         if (cml.hasOption(CMDL_OPT_HELP)) {
             printHelp(opts);
@@ -275,9 +276,9 @@ public class Console {
             if (cml.hasOption(CMDL_OPT_SAMPLERATE)) {
                 double sr = Double.parseDouble(cml.getOptionValue(CMDL_OPT_SAMPLERATE));
                 if (cml.hasOption(CMDL_OPT_USE_MIXER)) {
-                    d.printPowerAudioIn(cml.getOptionValue(CMDL_OPT_USE_MIXER), sr);
+                    d.printPowerAudioIn(cml.getOptionValue(CMDL_OPT_USE_MIXER), 2, 0, sr);
                 } else {
-                    d.printPowerDefaultAudioIn(sr);
+                    d.printPowerDefaultAudioIn(2, 0, sr);
                 }
                 return;
             }
@@ -286,16 +287,16 @@ public class Console {
         if (cml.hasOption(CMDL_OPT_SAMPLERATE)) {
             double sr = Double.parseDouble(cml.getOptionValue(CMDL_OPT_SAMPLERATE));
             if (cml.hasOption(CMDL_OPT_USE_MIXER)) {
-                d.decodeAudioIn(cml.getOptionValue(CMDL_OPT_USE_MIXER), sr);
+                d.decodeAudioIn(cml.getOptionValue(CMDL_OPT_USE_MIXER), 2, 0, sr);
             } else {
-                d.decodeDefaultAudioIn(sr);
+                d.decodeDefaultAudioIn(sr, 2, 0);
             }
             return;
         }
 
         if (cml.hasOption(CMDL_OPT_IN_FILE)) {
             String f = cml.getOptionValue(CMDL_OPT_IN_FILE);
-            d.decodeMonoFile(new File(f));
+            d.decodeFile(new File(f), 0);
             return;
         }
 
@@ -305,7 +306,7 @@ public class Console {
             for (File in : dir.listFiles()) {
                 if (in.getName().endsWith(".wav")) {
                     try {
-                        d.decodeMonoFile(in);
+                        d.decodeFile(in, 0);
                     } catch (Exception ex) {
                         System.err.println("file " + in.getAbsolutePath() + " E: " + ex);
                     }

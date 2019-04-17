@@ -31,7 +31,7 @@ import static org.junit.Assert.*;
  * @author aploese
  */
 public class ZveiTestListener implements ZveiFolgeContainerListener {
-    List<ZveiFreqTable[]> data = new ArrayList();
+    List<ZveiFreqTable[]> data = new ArrayList<>();
     int[] startIndices = new int[0];
     int currentDataIndex;
 

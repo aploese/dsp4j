@@ -21,15 +21,15 @@
  */
 package de.ibapl.dsp4j;
 
+import java.io.IOException;
+
 import javax.sound.sampled.AudioFormat;
 
 /**
  *
  * @author aploese
  */
-public abstract class AudioSink implements SampledBlock {
-    
-    public final static int DEFAULT_SECONDS_IN_BUFFER = 1;
+public abstract class AudioSink implements SampledBlock, Sampled {
     
     public static short scale0_2PI_to_short(double sample) {
         return (short)(((sample - Math.PI)/ Math.PI) * Short.MAX_VALUE);
@@ -40,10 +40,9 @@ public abstract class AudioSink implements SampledBlock {
     }
 
     private AudioFormat audioFormat;
-    protected byte[] buffer;
+    protected final byte[] buffer;
     protected int bufferSamplePos;
-    protected int bytesWriten;
-    protected final double secInBuffer;
+    protected int sampleSize;
     
     public AudioFormat.Encoding getEncoding() {
         return audioFormat.getEncoding();
@@ -78,47 +77,38 @@ public abstract class AudioSink implements SampledBlock {
         setAudioFormat(new AudioFormat(audioFormat.getEncoding(), (float) sampleRate, audioFormat.getSampleSizeInBits(), audioFormat.getChannels(), audioFormat.getFrameSize(), (float)sampleRate, audioFormat.isBigEndian(), audioFormat.properties()));
     }
 
-    protected AudioSink(AudioFormat audioFormat, double secInBuffer) {
-        this.secInBuffer = secInBuffer;
+    protected AudioSink(AudioFormat audioFormat, int framesInBuffer) {
         setAudioFormat(audioFormat);
+        buffer = new byte[sampleSize * framesInBuffer];
     }
 
-    protected void writeShortToBuffer(short sample) {
-        if (isBigEndian()) {
-            buffer[bufferSamplePos++] = (byte)(sample >>> 8);
-            buffer[bufferSamplePos++] = (byte)sample;
-        } else {
-            buffer[bufferSamplePos++] = (byte)sample;
-            buffer[bufferSamplePos++] = (byte)(sample >>> 8);
-        }
-    }
-    
     public AudioFormat getAudioFormat() {
         return audioFormat;
     }
 
     final protected void setAudioFormat(AudioFormat audioFormat) {
-        if (this.audioFormat != null) {
+    	if (this.audioFormat != null) {
             close();
         }
         this.audioFormat = audioFormat;
-        buffer = new byte[audioFormat.getFrameSize() * (int)(secInBuffer * audioFormat.getSampleRate())];
+        this.sampleSize = audioFormat.getFrameSize();
         open();
     }
 
+    @Override
+    public boolean nextSample() throws IOException {
+    	bufferSamplePos++;
+    	if (bufferSamplePos * sampleSize == buffer.length) {
+    		flush();
+    	}
+    	return true;
+    }
+    
     public abstract void open();
 
     public abstract void flush();
 
     public abstract void close();
-
-    public boolean isEmpty() {
-        return bytesWriten == 0 && bufferSamplePos == 0;
-    }
-    
-    public boolean isFull() {
-        return bufferSamplePos == buffer.length;
-    }
 
     @Override
     public void reset() {

@@ -19,32 +19,22 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package de.ibapl.dsp4j.datatypes._short;
+package de.ibapl.dsp4j.datatypes._byte;
 
-import java.io.File;
-import javax.sound.sampled.AudioFormat;
-import de.ibapl.dsp4j.FileSink;
+import java.io.IOException;
 
-/**
- *
- * @author aploese
- * 16 Bit PCM
- */
-public class MonoShortFileSink extends  FileSink {
+import javax.sound.sampled.AudioInputStream;
 
+import de.ibapl.dsp4j.AudioInputStreamSource;
 
-    public void setX(short sample) {
-        writeShortToBuffer(sample);
-        if (isFull()) {
-            flush();
-        }
-    }
+public class ByteSampledSource extends AudioInputStreamSource {
 
-    public MonoShortFileSink(File wavOut, double sampleRate, boolean signed, boolean bigEndian, int framesInBuffer) {
-        super(wavOut, new AudioFormat((float)sampleRate, 2 * 8, 1, signed, bigEndian), framesInBuffer);
-    }
+	public ByteSampledSource(AudioInputStream ais, int samplesInBuffer) throws IOException {
+		super(ais, samplesInBuffer);
+	}
 
-    public MonoShortFileSink(File wavOut, double sampleRate) {
-        super(wavOut, new AudioFormat((float)sampleRate, 2 * 8, 1, true, false), DEFAULT_SECONDS_IN_BUFFER);
-    }
+	protected final byte getByte(int channel) {
+		return buffer[bufferPos * sampleSize + channel];
+	}
+
 }

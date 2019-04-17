@@ -32,44 +32,51 @@ import javax.sound.sampled.TargetDataLine;
 /**
  *
  * @author aploese
+ * 
+ * To get a sample first call clock to read from the underlying TargetDataLine or move to the next sample in the buffer
  */
 public abstract class TargetDataLineWrapper {
 
     private TargetDataLine tdl;
-    private final byte[] buffer;
-    private int bufferPos;
-    private int bufferLength;
+    protected final byte[] buffer;
+    protected final int channels;
+    protected final int sampleSize;
+    protected int bufferPos;
+    protected int bufferLength;
     private boolean endOfAudioData;
     /*
      * Just a shorthand to avoid long access for each sample in readXXX().
      */
-    private final boolean bigEndian;
+    protected final boolean bigEndian;
     
-    public TargetDataLineWrapper(Mixer.Info mixerInfo, AudioFormat af, double secInBuffer) throws LineUnavailableException, IOException {
+    public TargetDataLineWrapper(Mixer.Info mixerInfo, AudioFormat af, int samplesInBuffer) throws LineUnavailableException, IOException {
         this.tdl = AudioSystem.getTargetDataLine(af, mixerInfo);
         this.bigEndian = af.isBigEndian();
-        buffer = new byte[tdl.getFormat().getFrameSize() * (int)(secInBuffer * af.getSampleRate())];
+        this.channels = af.getChannels();
+        this.sampleSize = af.getChannels() * af.getFrameSize();
+        buffer = new byte[sampleSize * samplesInBuffer];
         tdl.open(tdl.getFormat(), buffer.length * 3);
         tdl.start();
-        readBuffer();
     }
 
-    public TargetDataLineWrapper(AudioFormat af, double secInBuffer) throws LineUnavailableException, IOException {
+    public TargetDataLineWrapper(AudioFormat af, int samplesInBuffer) throws LineUnavailableException, IOException {
         this.tdl = AudioSystem.getTargetDataLine(af);
         this.bigEndian = af.isBigEndian();
-        buffer = new byte[tdl.getFormat().getFrameSize() * (int)(secInBuffer * af.getSampleRate())];
+        this.channels = af.getChannels();
+        this.sampleSize = af.getChannels() * af.getFrameSize();
+        buffer = new byte[sampleSize * samplesInBuffer];
         tdl.open(tdl.getFormat(), buffer.length * 3);
         tdl.start();
-        readBuffer();
     }
 
-    public TargetDataLineWrapper(TargetDataLine tdl, int framesInBuffer) throws IOException, LineUnavailableException {
+    public TargetDataLineWrapper(TargetDataLine tdl, int samplesInBuffer) throws IOException, LineUnavailableException {
         this.tdl = tdl;
         this.bigEndian = tdl.getFormat().isBigEndian();
-        buffer = new byte[tdl.getFormat().getFrameSize() * framesInBuffer];
+        this.channels = tdl.getFormat().getChannels();
+        this.sampleSize = tdl.getFormat().getChannels() * tdl.getFormat().getFrameSize();
+        buffer = new byte[sampleSize * samplesInBuffer];
         tdl.open(tdl.getFormat(), buffer.length * 3);
         tdl.start();
-        readBuffer();
     }
 
     private void readBuffer() throws IOException {
@@ -109,38 +116,16 @@ public abstract class TargetDataLineWrapper {
         return tdl.getFormat().getSampleRate();
     }
 
-    protected final byte readByte() throws IOException {
-        byte result = buffer[bufferPos++];
-        if (isBufferReaded()) {
-            readBuffer();
-        }
-        return result;
+    protected final byte getByte(int channel) {
+        return buffer[bufferPos + channel];
     }
 
-    protected final short readShort() throws IOException {
-        short result;
+    protected final int getInt(int channel) {
         if (bigEndian) {
-            result = (short)(((buffer[bufferPos++] << 8) & 0xFF00) | (buffer[bufferPos++] & 0x00FF));
+            return ((buffer[bufferPos + channel] << 24) & 0xFF000000) | ((buffer[bufferPos  + channel +1] << 16) & 0x00FF0000) | ((buffer[bufferPos  + channel +2] << 8) & 0x0000FF00) | (buffer[bufferPos  + channel +3] & 0x000000FF);
         } else {
-            result = (short)(((buffer[bufferPos++] & 0x00FF) | ((buffer[bufferPos++] << 8) & 0xFF00)));
+            return ((buffer[bufferPos + channel] & 0x000000FF)) | ((buffer[bufferPos  + channel +1] << 8) & 0x0000FF00) | ((buffer[bufferPos  + channel +2] << 16) & 0x00FF0000) | ((buffer[bufferPos  + channel +3] << 24) & 0xFF000000);
         }
-        if (isBufferReaded()) {
-            readBuffer();
-        } 
-        return result;
-    }
-
-    protected final int readInt() throws IOException {
-        int result; 
-        if (bigEndian) {
-            result = ((buffer[bufferPos++] << 24) & 0xFF000000) | ((buffer[bufferPos++] << 16) & 0x00FF0000) | ((buffer[bufferPos++] << 8) & 0x0000FF00) | (buffer[bufferPos++] & 0x000000FF);
-        } else {
-            result = ((buffer[bufferPos++] & 0x000000FF)) | ((buffer[bufferPos++] << 8) & 0x0000FF00) | ((buffer[bufferPos++] << 16) & 0x00FF0000) | ((buffer[bufferPos++] << 24) & 0xFF000000);
-        }
-        if (isBufferReaded()) {
-            readBuffer();
-        }
-        return result;
     }
 
     public final boolean isEndOfAudioData() {
@@ -162,9 +147,16 @@ public abstract class TargetDataLineWrapper {
     
    /**
      * 
-     * @return false, if the end of stream is rechead (The last frames where read in the buffer).
+     * @return false, if the end of stream is reached (The last frames where read in the buffer).
      * @throws IOException 
      */
-    public abstract boolean clock() throws IOException;
+    public final boolean nextSample() throws IOException {
+        if (bufferPos == bufferLength) {
+        	readBuffer();
+        } else {
+        	bufferPos += channels;
+        }
+        return !endOfAudioData;
+    }
 
 }

@@ -77,14 +77,16 @@ public class StereoShortFileTest {
         
         System.out.println("setX");
         int sample = 0;
-        StereoShortFileSink sink = new StereoShortFileSink(File.createTempFile("test", "wav"), 8000);
+        ShortFileSink sink = new ShortFileSink(File.createTempFile("test", "wav"), 2, 8000.0, 5);
         for (int i = 0; i < data.length; i++) {
-            sink.setX(data[i], (short)-data[i]);
+            sink.setShort(0, data[i]);
+            sink.setShort(1, (short)-data[i]);
+            sink.nextSample();
         }
         sink.close();
         
         
-        StereoShortFileSource source = new StereoShortFileSource(sink.getWavOut());
+        ShortSampledSource source = new ShortSampledSource(sink.getWavOut(), 3);
         assertEquals(sink.isBigEndian(), source.isBigEndian());
         assertEquals(sink.getEncoding(), source.getEncoding());
         assertEquals(sink.getChannels(), source.getChannels());
@@ -93,11 +95,11 @@ public class StereoShortFileTest {
         assertEquals(sink.getSampleSizeInBits(), source.getSampleSizeInBits());
         
         for (int i = 0; i < data.length; i++) {
-            source.clock();
-            assertEquals("Error at left:" + i, data[i], source.getLeftY());
-            assertEquals("Error at right:" + i, (short)-data[i], source.getRightY());
+            assertTrue(source.nextSample());
+            assertEquals("Error at left:" + i, data[i], source.getShort(0));
+            assertEquals("Error at right:" + i, (short)-data[i], source.getShort(1));
         }
-        source.clock();
+        assertFalse(source.nextSample());
     }
 
 }

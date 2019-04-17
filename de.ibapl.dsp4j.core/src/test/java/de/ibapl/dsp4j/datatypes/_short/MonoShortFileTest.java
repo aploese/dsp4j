@@ -76,15 +76,15 @@ public class MonoShortFileTest {
             0};
         
         System.out.println("setX");
-        int sample = 0;
-        MonoShortFileSink sink = new MonoShortFileSink(File.createTempFile("test", "wav"), 8000);
+        ShortFileSink sink = new ShortFileSink(File.createTempFile("test", "wav"), 1, 8000.0, 7);
         for (int i = 0; i < data.length; i++) {
-            sink.setX(data[i]);
+            sink.setShort(0, data[i]);
+            sink.nextSample();
         }
         sink.close();
         
         
-        MonoShortFileSource source = new MonoShortFileSource(sink.getWavOut());
+        ShortSampledSource source = new ShortSampledSource(sink.getWavOut(), 5);
         assertEquals(sink.isBigEndian(), source.isBigEndian());
         assertEquals(sink.getEncoding(), source.getEncoding());
         assertEquals(sink.getChannels(), source.getChannels());
@@ -93,10 +93,10 @@ public class MonoShortFileTest {
         assertEquals(sink.getSampleSizeInBits(), source.getSampleSizeInBits());
         
         for (int i = 0; i < data.length; i++) {
-            source.clock();
-            assertEquals("Error at:" + i, data[i], source.getY());
+            assertTrue(source.nextSample());
+            assertEquals("Error at:" + i, data[i], source.getShort(0));
         }
-        source.clock();
+        assertFalse(source.nextSample());
         
     }
 

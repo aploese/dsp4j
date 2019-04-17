@@ -43,10 +43,10 @@ public class CplxReal {
     }
     
     public void cplxReal(double delta, Complex... in) {
-        conjComplxPair = new ArrayList(in.length / 2);
-        realValues = new ArrayList();
+        conjComplxPair = new ArrayList<>(in.length / 2);
+        realValues = new ArrayList<>();
 
-        List<Complex> listValues = new ArrayList(in.length / 2);
+        List<Complex> listValues = new ArrayList<>(in.length / 2);
 
         for (Complex c : in) {
             if (checkIsReal(c, delta)) {

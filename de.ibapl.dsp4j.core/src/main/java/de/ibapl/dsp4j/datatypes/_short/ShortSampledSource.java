@@ -19,37 +19,44 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package de.ibapl.dsp4j.datatypes._int;
+package de.ibapl.dsp4j.datatypes._short;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
+
 import de.ibapl.dsp4j.AudioInputStreamSource;
 
 /**
  *
- * @author aploese
- * 32 Bit PCM
+ * @author aploese 16 Bit PCM
  */
-public class MonoIntegerFileSource extends AudioInputStreamSource {
-    
-    private int y;
-    
-    public MonoIntegerFileSource(File f) throws IOException, UnsupportedAudioFileException {
-        this(f, 1);
-    }
+public class ShortSampledSource extends AudioInputStreamSource {
 
-    public MonoIntegerFileSource(File f, int framesInBuffer) throws IOException, UnsupportedAudioFileException {
-        super(f, framesInBuffer);
-    }
-    
-    @Override
-    public boolean clock() throws IOException {
-        y = readInt();
-        return !isEndOfAudioData();
-    }
-    
-    public int getY() {
-        return y;
-    }
+	public ShortSampledSource(AudioInputStream ais, int samplesInBuffer) throws IOException {
+		super(ais, samplesInBuffer);
+	}
+
+	public ShortSampledSource(File f, int samplesInBuffer) throws IOException, UnsupportedAudioFileException {
+		super(f, samplesInBuffer);
+	}
+
+	public ShortSampledSource(InputStream is, int framesInBuffer) throws IOException, UnsupportedAudioFileException {
+		super(is, framesInBuffer);
+	}
+
+	public short getShort(int channel) {
+		final int pos = bufferPos * sampleSize + channel * 2;
+		if (bigEndian) {
+			return (short) (((buffer[pos] & 0xFF) << 8) | (buffer[pos + 1] & 0xFF));
+		} else {
+			return (short) (((buffer[pos] & 0xFF) | ((buffer[pos + 1] & 0xFF) << 8)));
+		}
+	}
+
+
 }

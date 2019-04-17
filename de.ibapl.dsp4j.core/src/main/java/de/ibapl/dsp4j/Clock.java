@@ -21,16 +21,10 @@
  */
 package de.ibapl.dsp4j;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  *
  * @author aploese
  */
 public class Clock {
-    
-    private double samplerate;
-    private List<ClockChangeListener> clockChangeListener = new ArrayList();
     
 }

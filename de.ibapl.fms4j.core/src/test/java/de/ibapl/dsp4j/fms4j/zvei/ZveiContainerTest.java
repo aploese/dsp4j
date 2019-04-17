@@ -24,9 +24,10 @@ package de.ibapl.dsp4j.fms4j.zvei;
 import de.ibapl.dsp4j.fms4j.fms.*;
 import java.io.File;
 import java.util.logging.Logger;
-import de.ibapl.dsp4j.datatypes._short.MonoShortFileSource;
 import de.ibapl.dsp4j.fms4j.VisualResultCheckTest;
 import de.ibapl.dsp4j.datatypes._short.ShortFileSink;
+import de.ibapl.dsp4j.datatypes._short.ShortSampledSource;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -43,72 +44,72 @@ import static de.ibapl.dsp4j.fms4j.zvei.ZveiFreqTable.*;
 @Ignore
 public class ZveiContainerTest extends VisualResultCheckTest {
 
-    final private static Logger LOG = Logger.getLogger(ZveiContainerTest.class.getCanonicalName());
-    private ShortFileSink sfs;
+	final private static Logger LOG = Logger.getLogger(ZveiContainerTest.class.getCanonicalName());
+	private ShortFileSink sfs;
 
-    public ZveiContainerTest() {
-    }
+	public ZveiContainerTest() {
+	}
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
+	@BeforeClass
+	public static void setUpClass() throws Exception {
+	}
 
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
+	@AfterClass
+	public static void tearDownClass() throws Exception {
+	}
 
-    @Before
-    public void setUp() {
-    }
+	@Before
+	public void setUp() {
+	}
 
-    @After
-    @Override
-    public void tearDown() throws Exception {
-        if (sfs != null) {
-            sfs.close();
-            sfs = null; 
-        }
-        super.tearDown();
-    }
+	@After
+	@Override
+	public void tearDown() throws Exception {
+		if (sfs != null) {
+			sfs.close();
+			sfs = null;
+		}
+		super.tearDown();
+	}
 
-    @Test
-    public void testZveiAudio() throws Exception {
-        ZveiTestListener l = new ZveiTestListener();
-        l.add(Integer.MAX_VALUE, new ZveiFreqTable[]{DIGIT_1, DIGIT_6, DIGIT_1, DIGIT_6, DIGIT_1});
-        l.add(Integer.MAX_VALUE, new ZveiFreqTable[]{DIGIT_1, DIGIT_6, DIGIT_1, DIGIT_6, DIGIT_1});
-        l.add(Integer.MAX_VALUE, new ZveiFreqTable[]{DIGIT_1, DIGIT_6, DIGIT_1, DIGIT_6, DIGIT_0});
-        l.add(Integer.MAX_VALUE, new ZveiFreqTable[]{DIGIT_1, DIGIT_6, DIGIT_1, DIGIT_6, DIGIT_0});
-        l.add(Integer.MAX_VALUE, new ZveiFreqTable[]{DIGIT_1, DIGIT_6, DIGIT_1, DIGIT_7, WIEDERHOLUNG});
-        l.add(Integer.MAX_VALUE, new ZveiFreqTable[]{DIGIT_1, DIGIT_6, DIGIT_1, DIGIT_7, WIEDERHOLUNG});
-        doTest("/teningen/20110416-hauptübung/01-zvei-alarmierung.wav", false, l);
-    }
+	@Test
+	public void testZveiAudio() throws Exception {
+		ZveiTestListener l = new ZveiTestListener();
+		l.add(Integer.MAX_VALUE, new ZveiFreqTable[] { DIGIT_1, DIGIT_6, DIGIT_1, DIGIT_6, DIGIT_1 });
+		l.add(Integer.MAX_VALUE, new ZveiFreqTable[] { DIGIT_1, DIGIT_6, DIGIT_1, DIGIT_6, DIGIT_1 });
+		l.add(Integer.MAX_VALUE, new ZveiFreqTable[] { DIGIT_1, DIGIT_6, DIGIT_1, DIGIT_6, DIGIT_0 });
+		l.add(Integer.MAX_VALUE, new ZveiFreqTable[] { DIGIT_1, DIGIT_6, DIGIT_1, DIGIT_6, DIGIT_0 });
+		l.add(Integer.MAX_VALUE, new ZveiFreqTable[] { DIGIT_1, DIGIT_6, DIGIT_1, DIGIT_7, WIEDERHOLUNG });
+		l.add(Integer.MAX_VALUE, new ZveiFreqTable[] { DIGIT_1, DIGIT_6, DIGIT_1, DIGIT_7, WIEDERHOLUNG });
+		doTest("/teningen/20110416-hauptübung/01-zvei-alarmierung.wav", false, l);
+	}
 
-    //TODO FMS 
-    @Test
-    public void testZveiAudio_fms() throws Exception {
-        ZveiTestListener l = new ZveiTestListener();
-        l.add(Integer.MAX_VALUE, new ZveiFreqTable[]{DIGIT_1, DIGIT_6, DIGIT_1, DIGIT_7, DIGIT_5});
-        l.add(Integer.MAX_VALUE, new ZveiFreqTable[]{DIGIT_1, DIGIT_6, DIGIT_1, DIGIT_7, DIGIT_9});
-        doTest("/teningen/20110416-hauptübung/03-zvei-alarmierung-mit-fms.wav", false, l);
-    }
+	// TODO FMS
+	@Test
+	public void testZveiAudio_fms() throws Exception {
+		ZveiTestListener l = new ZveiTestListener();
+		l.add(Integer.MAX_VALUE, new ZveiFreqTable[] { DIGIT_1, DIGIT_6, DIGIT_1, DIGIT_7, DIGIT_5 });
+		l.add(Integer.MAX_VALUE, new ZveiFreqTable[] { DIGIT_1, DIGIT_6, DIGIT_1, DIGIT_7, DIGIT_9 });
+		doTest("/teningen/20110416-hauptübung/03-zvei-alarmierung-mit-fms.wav", false, l);
+	}
 
-    public void doTest(String resFileName, boolean showResult, final ZveiTestListener l) throws Exception {
-        MonoShortFileSource msfs = new MonoShortFileSource(FmsContainerTest.class.getResourceAsStream(resFileName));
+	public void doTest(String resFileName, boolean showResult, final ZveiTestListener l) throws Exception {
+		ShortSampledSource msfs = new ShortSampledSource(FmsContainerTest.class.getResourceAsStream(resFileName), 1);
 
-        ZveiContainer zveiContainer = new ZveiContainer(l);
+		ZveiContainer zveiContainer = new ZveiContainer(l);
 
-        zveiContainer.setSampleRate(msfs.getSampleRate());
+		zveiContainer.setSampleRate(msfs.getSampleRate());
 
-        File f = createFile("testFms", showResult);
-        sfs = new ShortFileSink(f, msfs.getSampleRate(), 4);
-        while (msfs.clock()) {
-            zveiContainer.setX(msfs.getY());
-
-            sfs.setX(msfs.getY(),
-                    (short) zveiContainer.getInHpFilter().getY(),
-                    (short) (zveiContainer.getSampleCount() * Short.MAX_VALUE / 30 - Short.MAX_VALUE),
-                    (short) (zveiContainer.getSignalFilter().getY() * Short.MAX_VALUE / 30 - Short.MAX_VALUE));
-        }
-        assertEquals(l.data.size(), l.currentDataIndex);
-    }
+		File f = createFile("testFms", showResult);
+		sfs = new ShortFileSink(f, 4, msfs.getSampleRate(), 1024);
+		while (msfs.nextSample()) {
+			zveiContainer.setX(msfs.getShort(0));
+			sfs.setShort(0, msfs.getShort(0));
+			sfs.setShort(1, (short) zveiContainer.getInHpFilter().getY());
+			sfs.setShort(2, (short) (zveiContainer.getSampleCount() * Short.MAX_VALUE / 30 - Short.MAX_VALUE));
+			sfs.setShort(3, (short) (zveiContainer.getSignalFilter().getY() * Short.MAX_VALUE / 30 - Short.MAX_VALUE));
+			sfs.nextSample();
+		}
+		assertEquals(l.data.size(), l.currentDataIndex);
+	}
 }

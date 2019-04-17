@@ -24,6 +24,7 @@ package de.ibapl.dsp4j.datatypes._short;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.Mixer;
+
 import de.ibapl.dsp4j.SpeakerSink;
 
 /**
@@ -31,30 +32,30 @@ import de.ibapl.dsp4j.SpeakerSink;
  * @author aploese
  * 16 Bit PCM
  */
-public class MonoShortSpeakerSink extends  SpeakerSink {
+public class ShortSpeakerSink extends  SpeakerSink {
 
 
-    public void setX(short sample) {
-        writeShortToBuffer(sample);
-        if (isFull()) {
-            flush();
-        }
+    public void setShort(int channel, short sample) {
+    	final int pos =  bufferSamplePos * sampleSize + channel * 2;
+    	if (isBigEndian()) {
+             buffer[pos] = (byte)(sample >>> 8);
+             buffer[pos + 1] = (byte)sample;
+         } else {
+             buffer[pos] = (byte)sample;
+             buffer[pos +1] = (byte)(sample >>> 8);
+    }
     }
 
-    public MonoShortSpeakerSink(Mixer.Info mInfo, double sampleRate, boolean signed, boolean bigEndian, int framesInBuffer) throws LineUnavailableException {
-        super(mInfo, new AudioFormat((float)sampleRate, 2 * 8, 1, signed, bigEndian), framesInBuffer);
+    public ShortSpeakerSink(Mixer.Info mixerInfo, AudioFormat audioFormat, int samplesInBuffer) throws LineUnavailableException {
+        super(mixerInfo, audioFormat, samplesInBuffer);
     }
 
-    public MonoShortSpeakerSink(double sampleRate, boolean signed, boolean bigEndian, int framesInBuffer) throws LineUnavailableException {
-        super(new AudioFormat((float)sampleRate, 2 * 8, 1, signed, bigEndian), framesInBuffer);
+    public ShortSpeakerSink(AudioFormat audioFormat, int samplesInBuffer) throws LineUnavailableException {
+        super(audioFormat, samplesInBuffer);
     }
 
-    public MonoShortSpeakerSink(Mixer.Info mInfo, double sampleRate) throws LineUnavailableException {
-        super(mInfo, new AudioFormat((float)sampleRate, 2 * 8, 1, true, false), DEFAULT_SECONDS_IN_BUFFER);
-    }
+	public ShortSpeakerSink(int channels, double samplerate, int samplesInBuffer) throws LineUnavailableException {
+		this(new AudioFormat((float)samplerate, 2 * 8, channels, true, false), samplesInBuffer);
+	}
     
-    public MonoShortSpeakerSink(double sampleRate) throws LineUnavailableException {
-        super(new AudioFormat((float)sampleRate, 2 * 8, 1, true, false), DEFAULT_SECONDS_IN_BUFFER);
-    }
-
 }

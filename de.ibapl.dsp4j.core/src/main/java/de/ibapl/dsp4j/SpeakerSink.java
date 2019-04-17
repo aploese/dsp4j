@@ -33,22 +33,21 @@ import javax.sound.sampled.SourceDataLine;
  *
  * @author aploese
  */
-public class SpeakerSink extends AudioSink {
+public abstract class SpeakerSink extends AudioSink {
 
     private SourceDataLine sdl;
 
-    protected SpeakerSink(Mixer.Info mixerInfo, AudioFormat audioFormat, double secInBuffer) throws LineUnavailableException {
-        super(audioFormat, secInBuffer);
+    protected SpeakerSink(Mixer.Info mixerInfo, AudioFormat audioFormat, int samplesInBuffer) throws LineUnavailableException {
+        super(audioFormat, samplesInBuffer);
     }
 
-    protected SpeakerSink(AudioFormat audioFormat, double secInBuffer) throws LineUnavailableException {
-        super(audioFormat, secInBuffer);
+    protected SpeakerSink(AudioFormat audioFormat, int samplesInBuffer) throws LineUnavailableException {
+        super(audioFormat, samplesInBuffer);
     }
 
     @Override
     public void flush() {
-        sdl.write(buffer, 0, bufferSamplePos);
-        bytesWriten += bufferSamplePos;
+        sdl.write(buffer, 0, bufferSamplePos * sampleSize);
         bufferSamplePos = 0;
     }
 

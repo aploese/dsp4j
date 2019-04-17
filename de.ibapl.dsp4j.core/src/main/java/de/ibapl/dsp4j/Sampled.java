@@ -19,41 +19,12 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package de.ibapl.dsp4j.datatypes._short;
+package de.ibapl.dsp4j;
 
-import java.io.File;
 import java.io.IOException;
-import javax.sound.sampled.UnsupportedAudioFileException;
-import de.ibapl.dsp4j.AudioInputStreamSource;
 
-/**
- *
- * @author aploese 16 Bit PCM
- */
-public class ShortFileSource extends AudioInputStreamSource {
+public interface Sampled {
+	
+	boolean nextSample() throws IOException;
 
-    private short[] y;
-
-    public ShortFileSource(File f) throws IOException, UnsupportedAudioFileException {
-        this(f, 1);
-    }
-
-    public ShortFileSource(File f, int framesInBuffer) throws IOException, UnsupportedAudioFileException {
-        super(f, framesInBuffer);
-        y = new short[getChannels()];
-    }
-
-    @Override
-    public boolean clock() throws IOException {
-        readShort(y);
-        return !isEndOfAudioData();
-    }
-
-    public short getY(int i) {
-        return y[i];
-    }
-
-    public short[] getY() {
-        return y;
-    }
 }

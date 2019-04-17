@@ -76,14 +76,15 @@ public class MonoIntegerFileTest {
             0};
 
         System.out.println("setX");
-        MonoIntegerFileSink sink = new MonoIntegerFileSink(File.createTempFile("test", "wav"), 8000);
+        IntegerFileSink sink = new IntegerFileSink(File.createTempFile("test", "wav"), 1, 8000.0, 3);
         for (int i = 0; i < data.length; i++) {
-            sink.setX(data[i]);
+            sink.setInt(0, data[i]);
+            sink.nextSample();
         }
         sink.close();
 
 
-        MonoIntegerFileSource source = new MonoIntegerFileSource(sink.getWavOut());
+        IntegerSampledSource source = new IntegerSampledSource(sink.getWavOut());
         assertEquals(sink.isBigEndian(), source.isBigEndian());
         assertEquals(sink.getEncoding(), source.getEncoding());
         assertEquals(sink.getChannels(), source.getChannels());
@@ -92,14 +93,10 @@ public class MonoIntegerFileTest {
         assertEquals(sink.getSampleSizeInBits(), source.getSampleSizeInBits());
 
         for (int i = 0; i < data.length; i++) {
-            if (i < data.length - 1) {
-                assertTrue("At Idx: " + i, source.clock());
-            } else {
-                assertFalse(source.clock());
-            }
-            assertEquals("Error at:" + i, data[i], source.getY());
+            assertTrue("At Idx: " + i, source.nextSample());
+            assertEquals("Error at:" + i, data[i], source.getInt(0));
         }
-        assertFalse(source.clock());
+        assertFalse(source.nextSample());
 
     }
 }

@@ -25,7 +25,6 @@ import java.io.IOException;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.Mixer;
-import static de.ibapl.dsp4j.AudioSink.DEFAULT_SECONDS_IN_BUFFER;
 import de.ibapl.dsp4j.TargetDataLineWrapper;
 
 /**
@@ -33,33 +32,27 @@ import de.ibapl.dsp4j.TargetDataLineWrapper;
  * @author aploese
  * 16 Bit PCM
  */
-public class MonoShortTargetDataLineWrapper extends TargetDataLineWrapper {
+public class ShortTargetDataLineWrapper extends TargetDataLineWrapper {
     
-    private short y;
-    
-    public MonoShortTargetDataLineWrapper(Mixer.Info mixerInfo, double sampleRate, boolean signed, boolean bigEndian, int framesInBuffer) throws IOException, LineUnavailableException {
-        super(mixerInfo, new AudioFormat((float)sampleRate, 2 * 8, 1, signed, bigEndian), framesInBuffer);
+    public ShortTargetDataLineWrapper(Mixer.Info mixerInfo, int channels, double sampleRate, boolean signed, boolean bigEndian, int framesInBuffer) throws IOException, LineUnavailableException {
+        super(mixerInfo, new AudioFormat((float)sampleRate, 2 * 8, channels, signed, bigEndian), framesInBuffer);
     }
     
-    public MonoShortTargetDataLineWrapper(Mixer.Info mixerInfo, double sampleRate) throws IOException, LineUnavailableException {
-        super(mixerInfo, new AudioFormat((float)sampleRate, 2 * 8, 1, true, false), DEFAULT_SECONDS_IN_BUFFER);
+    public ShortTargetDataLineWrapper(Mixer.Info mixerInfo, int channels, double sampleRate, int framesInBuffer) throws IOException, LineUnavailableException {
+        super(mixerInfo, new AudioFormat((float)sampleRate, 2 * 8, channels, true, false), framesInBuffer);
     }
 
-    public MonoShortTargetDataLineWrapper(Mixer.Info mixerInfo, double sampleRate, int framesInBuffer) throws IOException, LineUnavailableException {
-        super(mixerInfo, new AudioFormat((float)sampleRate, 2 * 8, 1, true, false), framesInBuffer);
+    public ShortTargetDataLineWrapper(int channels, double sampleRate, int framesInBuffer) throws IOException, LineUnavailableException {
+        super(new AudioFormat((float)sampleRate, 2 * 8, channels, true, false), framesInBuffer);
+    }
+    
+    public final short getShort(int channel){
+    	final int pos = bufferPos * sampleSize + channel * 2; 
+        if (bigEndian) {
+            return (short)(((buffer[bufferPos + channel] << 8) & 0xFF00) | (buffer[bufferPos + channel + 1] & 0x00FF));
+        } else {
+            return (short)(((buffer[bufferPos + channel] & 0x00FF) | ((buffer[bufferPos + channel + 1] << 8) & 0xFF00)));
+        }
     }
 
-    public MonoShortTargetDataLineWrapper(double sampleRate) throws IOException, LineUnavailableException {
-        super(new AudioFormat((float)sampleRate, 2 * 8, 1, true, false), DEFAULT_SECONDS_IN_BUFFER);
-    }
-    
-    @Override
-    public boolean clock() throws IOException {
-        y = readShort();
-        return !isEndOfAudioData();
-    }
-    
-    public short getY() {
-        return y;
-    }
 }

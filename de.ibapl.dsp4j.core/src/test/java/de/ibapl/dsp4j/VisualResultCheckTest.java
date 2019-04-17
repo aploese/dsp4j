@@ -65,7 +65,7 @@ public class VisualResultCheckTest {
      */
     protected void createFile(String name, double samplerate, int channels) throws IOException{
         this.f = File.createTempFile(String.format("%s_%s", getClass().getSimpleName(), name), ".wav");
-        sfs = new ShortFileSink(f, samplerate, channels);
+        sfs = new ShortFileSink(f, channels, samplerate, 1024);
         f.deleteOnExit();
     }
 

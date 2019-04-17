@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package de.ibapl.dsp4j.datatypes._short;
+package de.ibapl.dsp4j.datatypes._int;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,31 +29,28 @@ import de.ibapl.dsp4j.AudioInputStreamSource;
 /**
  *
  * @author aploese
- * 16 Bit PCM
+ * 32 Bit PCM
  */
-public class StereoShortFileSource extends AudioInputStreamSource {
+public class IntegerSampledSource extends AudioInputStreamSource {
     
-    private final short[] y = new short[2];
-    
-    public StereoShortFileSource(File f) throws IOException, UnsupportedAudioFileException {
+    public IntegerSampledSource(File f) throws IOException, UnsupportedAudioFileException {
         this(f, 1);
     }
 
-    public StereoShortFileSource(File f, int framesInBuffer) throws IOException, UnsupportedAudioFileException {
+    public IntegerSampledSource(File f, int framesInBuffer) throws IOException, UnsupportedAudioFileException {
         super(f, framesInBuffer);
     }
     
-    @Override
-    public boolean clock() throws IOException {
-        readShort(y);
-        return !isEndOfAudioData();
-    }
-    
-    public short getLeftY() {
-        return y[0];
-    }
-    
-    public short getRightY() {
-        return y[1];
-    }
+	protected final int getInt(int channel) {
+		final int pos = bufferPos * sampleSize + channel * 4;
+		if (bigEndian) {
+			return ((buffer[pos] & 0xFF) << 24) | ((buffer[pos + 1] & 0xFF) << 16)
+					| ((buffer[pos + 2] & 0xFF) << 8) | (buffer[pos + 3] & 0xFF);
+		} else {
+			return ((buffer[pos + channel] & 0xFF)) | ((buffer[pos + 1] & 0xFF) << 8)
+					| ((buffer[pos + 2] & 0xFF) << 16)
+					| ((buffer[pos + 3] & 0xFF) << 24);
+		}
+	}
+
 }

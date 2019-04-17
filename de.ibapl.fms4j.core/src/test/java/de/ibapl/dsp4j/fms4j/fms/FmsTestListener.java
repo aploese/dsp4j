@@ -26,11 +26,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import javax.sound.sampled.LineUnavailableException;
 import de.ibapl.dsp4j.AudioSink;
-import de.ibapl.dsp4j.datatypes._short.MonoShortFileSource;
-import de.ibapl.dsp4j.datatypes._short.MonoShortSpeakerSink;
 import de.ibapl.dsp4j.datatypes._short.ShortFileSink;
+import de.ibapl.dsp4j.datatypes._short.ShortSampledSource;
+
 import org.junit.Assert;
 
 /**
@@ -39,251 +38,240 @@ import org.junit.Assert;
  */
 public class FmsTestListener implements FmsContainerListener {
 
-    List<FmsData> data = new ArrayList();
-    int[] startIndices = new int[0];
-    int currentDataIndex;
-    private File f;
-    private ShortFileSink sfs;
-    private boolean showResult;
-    private MonoShortSpeakerSink msss;
-    
-    private boolean ignoreError;
-    private boolean ignoreCrcError;
-    private boolean ignoreTxtCharParityError;
-    private boolean ignoreTxtLengthParityError;
-    private boolean ignoreTxtCrcError;
-    private boolean ignoreTxtError;
+	List<FmsData> data = new ArrayList<>();
+	int[] startIndices = new int[0];
+	int currentDataIndex;
+	private File f;
+	private ShortFileSink sfs;
+	private boolean showResult;
 
-    public FmsTestListener(boolean soundOut, boolean showResult){
-        this.showResult = showResult;
-        if (soundOut) {
-            try {
-                msss = new MonoShortSpeakerSink(11025);
-            } catch (LineUnavailableException ex) {
-                throw  new RuntimeException(ex);
-            }
-        }
-    }
+	private boolean ignoreError;
+	private boolean ignoreCrcError;
+	private boolean ignoreTxtCharParityError;
+	private boolean ignoreTxtLengthParityError;
+	private boolean ignoreTxtCrcError;
+	private boolean ignoreTxtError;
 
-    @Override
-    public void success(FmsData fmsData) {
-        Assert.assertEquals(String.format("Index %d\n%s\n%s\n", currentDataIndex, data.get(currentDataIndex).toCsvString(), fmsData.toCsvString()), data.get(currentDataIndex), fmsData);
-        currentDataIndex++;
-    }
+	public FmsTestListener(boolean showResult) {
+		this.showResult = showResult;
+	}
 
-    @Override
-    public boolean error(FmsData fmsData) {
-        Assert.assertEquals(String.format("Index %d\n%s\n%s\n", currentDataIndex, data.get(currentDataIndex).toCsvString(), fmsData.toCsvString()), data.get(currentDataIndex), FmsData.ERROR_DUMMY);
-        currentDataIndex++;
-        return !ignoreError;
-    }
+	@Override
+	public void success(FmsData fmsData) {
+		Assert.assertEquals(String.format("Index %d\n%s\n%s\n", currentDataIndex,
+				data.get(currentDataIndex).toCsvString(), fmsData.toCsvString()), data.get(currentDataIndex), fmsData);
+		currentDataIndex++;
+	}
 
-    @Override
-    public boolean crcError(FmsData fmsData) {
-        Assert.assertEquals(String.format("Index %d\n%s\n%s\n", currentDataIndex, data.get(currentDataIndex).toCsvString(), fmsData.toCsvString()), data.get(currentDataIndex), FmsData.CRC_ERROR_DUMMY);
-        currentDataIndex++;
-        return !ignoreCrcError;
-    }
+	@Override
+	public boolean error(FmsData fmsData) {
+		Assert.assertEquals(String.format("Index %d\n%s\n%s\n", currentDataIndex,
+				data.get(currentDataIndex).toCsvString(), fmsData.toCsvString()), data.get(currentDataIndex),
+				FmsData.ERROR_DUMMY);
+		currentDataIndex++;
+		return !ignoreError;
+	}
 
-    @Override
-    public boolean txtCharParityError(FmsData fmsData, String txt) {
-        Assert.assertEquals(String.format("Index %d\n%s\n%s\nTXT:%s\n", currentDataIndex, data.get(currentDataIndex).toCsvString(), fmsData.toCsvString(), txt), data.get(currentDataIndex), FmsData.TXT_CHAR_PARITY_ERROR_DUMMY);
-        currentDataIndex++;
-        return !ignoreTxtCharParityError;
-    }
+	@Override
+	public boolean crcError(FmsData fmsData) {
+		Assert.assertEquals(String.format("Index %d\n%s\n%s\n", currentDataIndex,
+				data.get(currentDataIndex).toCsvString(), fmsData.toCsvString()), data.get(currentDataIndex),
+				FmsData.CRC_ERROR_DUMMY);
+		currentDataIndex++;
+		return !ignoreCrcError;
+	}
 
-    @Override
-    public boolean txtLengthParityError(FmsData fmsData) {
-        Assert.assertEquals(String.format("Index %d\n%s\n%s\n", currentDataIndex, data.get(currentDataIndex).toCsvString(), fmsData.toCsvString()), data.get(currentDataIndex), FmsData.TXT_LENGTH_PARITY_ERROR_DUMMY);
-        currentDataIndex++;
-        return !ignoreTxtLengthParityError;
-    }
+	@Override
+	public boolean txtCharParityError(FmsData fmsData, String txt) {
+		Assert.assertEquals(String.format("Index %d\n%s\n%s\nTXT:%s\n", currentDataIndex,
+				data.get(currentDataIndex).toCsvString(), fmsData.toCsvString(), txt), data.get(currentDataIndex),
+				FmsData.TXT_CHAR_PARITY_ERROR_DUMMY);
+		currentDataIndex++;
+		return !ignoreTxtCharParityError;
+	}
 
-    @Override
-    public boolean txtCrcError(FmsData fmsData, String txt) {
-        Assert.assertEquals(String.format("Index %d\n%s\n%s\nTXT:%s\n", currentDataIndex, data.get(currentDataIndex).toCsvString(), fmsData.toCsvString(), txt), data.get(currentDataIndex), FmsData.TXT_CRC_ERROR_DUMMY);
-        currentDataIndex++;
-        return !ignoreTxtCrcError;
-    }
+	@Override
+	public boolean txtLengthParityError(FmsData fmsData) {
+		Assert.assertEquals(String.format("Index %d\n%s\n%s\n", currentDataIndex,
+				data.get(currentDataIndex).toCsvString(), fmsData.toCsvString()), data.get(currentDataIndex),
+				FmsData.TXT_LENGTH_PARITY_ERROR_DUMMY);
+		currentDataIndex++;
+		return !ignoreTxtLengthParityError;
+	}
 
-    @Override
-    public boolean txtError(FmsData fmsData, String txt) {
-        Assert.assertEquals(String.format("Index %d\n%s\n%s\nTXT:%s\n", currentDataIndex, data.get(currentDataIndex).toCsvString(), fmsData.toCsvString(), txt), data.get(currentDataIndex), FmsData.TXT_ERROR_DUMMY);
-        currentDataIndex++;
-        return !ignoreTxtError;
-    }
+	@Override
+	public boolean txtCrcError(FmsData fmsData, String txt) {
+		Assert.assertEquals(String.format("Index %d\n%s\n%s\nTXT:%s\n", currentDataIndex,
+				data.get(currentDataIndex).toCsvString(), fmsData.toCsvString(), txt), data.get(currentDataIndex),
+				FmsData.TXT_CRC_ERROR_DUMMY);
+		currentDataIndex++;
+		return !ignoreTxtCrcError;
+	}
 
-    void add(int startIndex, FmsData fmsData) {
-        data.add(fmsData);
-        startIndices = Arrays.copyOf(startIndices, startIndices.length + 1);
-        startIndices[startIndices.length - 1] = startIndex;
-    }
+	@Override
+	public boolean txtError(FmsData fmsData, String txt) {
+		Assert.assertEquals(String.format("Index %d\n%s\n%s\nTXT:%s\n", currentDataIndex,
+				data.get(currentDataIndex).toCsvString(), fmsData.toCsvString(), txt), data.get(currentDataIndex),
+				FmsData.TXT_ERROR_DUMMY);
+		currentDataIndex++;
+		return !ignoreTxtError;
+	}
 
-    public void doTest(String dirName, String resFileName) throws Exception {
-        final short bit_1 = (short) (Short.MAX_VALUE * 0.75);
-        final short bit_0 = (short) (Short.MIN_VALUE * 0.75);
-        MonoShortFileSource msfs = new MonoShortFileSource(MultipleFmsTest.class.getResourceAsStream(String.format("/%s/%s", dirName, resFileName)));
-        FmsModulator m = new FmsModulator(0.001);
-        m.setSampleRate(msfs.getSampleRate());
-        FmsContainer fmsContainer = new FmsContainer(this);
-        fmsContainer.setSampleRate(msfs.getSampleRate());
-        f = createFile(dirName, resFileName, showResult);
-        sfs = new ShortFileSink(f, msfs.getSampleRate(), 6);
-        if (msss != null) {
-            msss.setSampleRate(msfs.getSampleRate());
-        }
-        
-        short synthBit = 0;
-        short realBit = 0;
-        short lastRealBit = 0;
-        int lastRealBitCount = 0;
-        int sample = 0;
-        m.addDuration(0, Double.MIN_NORMAL);
-        while (msfs.clock()) {
-            fmsContainer.setX(msfs.getY());
-            if (msss != null) {
-                msss.setX(msfs.getY());
-            }
-            if (showResult) {
-                sample++;
-                if (currentDataIndex < startIndices.length && sample == startIndices[currentDataIndex]) {
-                    m.reset();
-                    m.addData(data.get(currentDataIndex));
-                }
-                if (fmsContainer.getFmsBD().getState() == FmsBitDecoder.State.DECODE_BITS) {
-                    if (lastRealBitCount < fmsContainer.getFmsBD().bitCount) {
-                        realBit = (short) (fmsContainer.getFmsBD().bit ? Short.MAX_VALUE / 2 : Short.MIN_VALUE / 2);
-                        lastRealBitCount = fmsContainer.getFmsBD().bitCount;
-                    } else {
-                        realBit = fmsContainer.getFmsBD().bit ? bit_1 : bit_0;
-                        if (lastRealBit != realBit) {
-                            lastRealBitCount = 0;
-                        }
-                    }
-                    lastRealBit = fmsContainer.getFmsBD().bit ? bit_1 : bit_0;
-                } else {
-                    lastRealBit = 0;
-                    lastRealBitCount = 0;
-                    realBit = 0;
-                    lastRealBitCount = 0;
-                }
-                m.clock();
-                synthBit = m.getCurrentFrequency() == 1200 ? bit_1 : bit_0;
-                sfs.setX(
-//                        msfs.getY(), // Ungefiltert
-                        (short)fmsContainer.getInFilter().getY(), //gefiltert 
-                        AudioSink.scale0_2PI_to_short(fmsContainer.getNco().getPhi()),
-                        (short) (fmsContainer.getCostasLoop().getPhiError() * Short.MAX_VALUE / Math.PI), 
-                        synthBit, 
-                        realBit, 
-                        (short) (fmsContainer.getSymbolFilterY() * Short.MAX_VALUE / 3));
-            }
-        }
-        Assert.assertEquals(data.size(), currentDataIndex);
-    }
+	void add(int startIndex, FmsData fmsData) {
+		data.add(fmsData);
+		startIndices = Arrays.copyOf(startIndices, startIndices.length + 1);
+		startIndices[startIndices.length - 1] = startIndex;
+	}
 
-    protected File createFile(String dir, String name, boolean showResult) throws IOException {
-        this.showResult = showResult;
-        this.f = File.createTempFile(String.format("%s_%s", dir, name), ".wav");
-        f.deleteOnExit();
-        return f;
-    }
+	public void doTest(String dirName, String resFileName) throws Exception {
+		final short bit_1 = (short) (Short.MAX_VALUE * 0.75);
+		final short bit_0 = (short) (Short.MIN_VALUE * 0.75);
+		ShortSampledSource msfs = new ShortSampledSource(
+				FmsTestListener.class.getResourceAsStream(String.format("/%s/%s", dirName, resFileName)), 1);
+		FmsContainer fmsContainer = new FmsContainer(this);
+		fmsContainer.setSampleRate(msfs.getSampleRate());
+		if (showResult) {
+			f = createFile(dirName, resFileName);
+			sfs = new ShortFileSink(f, 8, msfs.getSampleRate(), 1024);
+		}
+		short realBit = 0;
+		short lastRealBit = 0;
+		int lastRealBitCount = 0;
+		while (msfs.nextSample()) {
+			final short rawSample = msfs.getShort(0);
+			fmsContainer.setX(rawSample);
+			if (showResult) {
+				if (fmsContainer.getFmsBD().getState() == FmsBitDecoder.State.DECODE_BITS) {
+					if (lastRealBitCount < fmsContainer.getFmsBD().bitCount) {
+						realBit = (short) (fmsContainer.getFmsBD().bit ? Short.MAX_VALUE / 2 : Short.MIN_VALUE / 2);
+						lastRealBitCount = fmsContainer.getFmsBD().bitCount;
+					} else {
+						realBit = fmsContainer.getFmsBD().bit ? bit_1 : bit_0;
+						if (lastRealBit != realBit) {
+							lastRealBitCount = 0;
+						}
+					}
+					lastRealBit = fmsContainer.getFmsBD().bit ? bit_1 : bit_0;
+				} else {
+					lastRealBit = 0;
+					lastRealBitCount = 0;
+					realBit = 0;
+					lastRealBitCount = 0;
+				}
 
-    void tearDown() throws Exception {
-        if (sfs != null) {
-            sfs.close();
-        }
-        if (msss != null) {
-            msss.close();
-        }
-        msss = null;
-        if (showResult) {
-            Runtime.getRuntime().exec(new String[]{"audacity", f.getAbsolutePath()}).waitFor();
-        }
-    }
+				if (showResult) {
+					sfs.setShort(0, rawSample);
+					sfs.setShort(1, (short) fmsContainer.getInFilter().getY());
+					sfs.setShort(2, AudioSink.scale0_2PI_to_short(fmsContainer.getNco().getPhi()));
+					sfs.setShort(3, (short) (fmsContainer.getCostasLoop().getPhiError() * Short.MAX_VALUE / Math.PI));
+					sfs.setShort(4, (short) fmsContainer.getCostasLoop().getY());
+					sfs.setShort(5, (short) (fmsContainer.getFmsBD().getState().ordinal() * Short.MAX_VALUE / FmsBitDecoder.State.values().length));
+					sfs.setShort(6, (short) (fmsContainer.getFmsBD().bit ? Short.MAX_VALUE / 2 : Short.MIN_VALUE / 2));
+					sfs.setShort(7, (short) (fmsContainer.getSymbolFilterY() * Short.MAX_VALUE / 3));
+					sfs.nextSample();
+				}
+			}
+		}
+		Assert.assertEquals(data.size(), currentDataIndex);
+	}
 
-    /**
-     * @return the ignoreError
-     */
-    public boolean isIgnoreError() {
-        return ignoreError;
-    }
+	protected File createFile(String dir, String name) throws IOException {
+		File result = File.createTempFile(String.format("%s_%s", dir, name), ".wav");
+		result.deleteOnExit();
+		return result;
+	}
 
-    /**
-     * @param ignoreError the ignoreError to set
-     */
-    public void setIgnoreError(boolean ignoreError) {
-        this.ignoreError = ignoreError;
-    }
+	void tearDown() throws Exception {
+		if (sfs != null) {
+			sfs.close();
+		}
+		if (showResult && f != null) {
+			Runtime.getRuntime().exec(new String[] { "audacity", f.getAbsolutePath() }).waitFor();
+		}
+	}
 
-    /**
-     * @return the ignoreCrcError
-     */
-    public boolean isIgnoreCrcError() {
-        return ignoreCrcError;
-    }
+	/**
+	 * @return the ignoreError
+	 */
+	public boolean isIgnoreError() {
+		return ignoreError;
+	}
 
-    /**
-     * @param ignoreCrcError the ignoreCrcError to set
-     */
-    public void setIgnoreCrcError(boolean ignoreCrcError) {
-        this.ignoreCrcError = ignoreCrcError;
-    }
+	/**
+	 * @param ignoreError the ignoreError to set
+	 */
+	public void setIgnoreError(boolean ignoreError) {
+		this.ignoreError = ignoreError;
+	}
 
-    /**
-     * @return the ignoreTxtCrcError
-     */
-    public boolean isIgnoreTxtCrcError() {
-        return ignoreTxtCrcError;
-    }
+	/**
+	 * @return the ignoreCrcError
+	 */
+	public boolean isIgnoreCrcError() {
+		return ignoreCrcError;
+	}
 
-    /**
-     * @param ignoreTxtCrcError the ignoreTxtCrcError to set
-     */
-    public void setIgnoreTxtCrcError(boolean ignoreTxtCrcError) {
-        this.ignoreTxtCrcError = ignoreTxtCrcError;
-    }
+	/**
+	 * @param ignoreCrcError the ignoreCrcError to set
+	 */
+	public void setIgnoreCrcError(boolean ignoreCrcError) {
+		this.ignoreCrcError = ignoreCrcError;
+	}
 
-    /**
-     * @return the ignoreTxtCharParityError
-     */
-    public boolean isIgnoreTxtCharParityError() {
-        return ignoreTxtCharParityError;
-    }
+	/**
+	 * @return the ignoreTxtCrcError
+	 */
+	public boolean isIgnoreTxtCrcError() {
+		return ignoreTxtCrcError;
+	}
 
-    /**
-     * @param ignoreTxtCharParityError the ignoreTxtCharParityError to set
-     */
-    public void setIgnoreTxtCharParityError(boolean ignoreTxtCharParityError) {
-        this.ignoreTxtCharParityError = ignoreTxtCharParityError;
-    }
+	/**
+	 * @param ignoreTxtCrcError the ignoreTxtCrcError to set
+	 */
+	public void setIgnoreTxtCrcError(boolean ignoreTxtCrcError) {
+		this.ignoreTxtCrcError = ignoreTxtCrcError;
+	}
 
-    /**
-     * @return the ignoreTxtLengthParityError
-     */
-    public boolean isIgnoreTxtLengthParityError() {
-        return ignoreTxtLengthParityError;
-    }
+	/**
+	 * @return the ignoreTxtCharParityError
+	 */
+	public boolean isIgnoreTxtCharParityError() {
+		return ignoreTxtCharParityError;
+	}
 
-    /**
-     * @param ignoreTxtLengthParityError the ignoreTxtLengthParityError to set
-     */
-    public void setIgnoreTxtLengthParityError(boolean ignoreTxtLengthParityError) {
-        this.ignoreTxtLengthParityError = ignoreTxtLengthParityError;
-    }
+	/**
+	 * @param ignoreTxtCharParityError the ignoreTxtCharParityError to set
+	 */
+	public void setIgnoreTxtCharParityError(boolean ignoreTxtCharParityError) {
+		this.ignoreTxtCharParityError = ignoreTxtCharParityError;
+	}
 
-    /**
-     * @return the ignoreTxtError
-     */
-    public boolean isIgnoreTxtError() {
-        return ignoreTxtError;
-    }
+	/**
+	 * @return the ignoreTxtLengthParityError
+	 */
+	public boolean isIgnoreTxtLengthParityError() {
+		return ignoreTxtLengthParityError;
+	}
 
-    /**
-     * @param ignoreTxtError the ignoreTxtError to set
-     */
-    public void setIgnoreTxtError(boolean ignoreTxtError) {
-        this.ignoreTxtError = ignoreTxtError;
-    }
+	/**
+	 * @param ignoreTxtLengthParityError the ignoreTxtLengthParityError to set
+	 */
+	public void setIgnoreTxtLengthParityError(boolean ignoreTxtLengthParityError) {
+		this.ignoreTxtLengthParityError = ignoreTxtLengthParityError;
+	}
 
- }
+	/**
+	 * @return the ignoreTxtError
+	 */
+	public boolean isIgnoreTxtError() {
+		return ignoreTxtError;
+	}
+
+	/**
+	 * @param ignoreTxtError the ignoreTxtError to set
+	 */
+	public void setIgnoreTxtError(boolean ignoreTxtError) {
+		this.ignoreTxtError = ignoreTxtError;
+	}
+
+}
