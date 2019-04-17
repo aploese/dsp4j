@@ -259,7 +259,7 @@ public class Decoder {
 		inputFilename = f.getName();
 		inputFilename = inputFilename.substring(0, inputFilename.indexOf(".wav"));
 		pw.println(new Date() + " | decode file: " + f.getAbsolutePath());
-		ShortSampledSource aiss = new ShortSampledSource(f, 1024);
+		final ShortSampledSource aiss = new ShortSampledSource(f, 1024);
 		
 		setSampleRate(aiss.getSampleRate());
 		if (backupDir != null) {
@@ -279,7 +279,7 @@ public class Decoder {
 	public void decodeDefaultAudioIn(double samplerate, int channels, int channel)
 			throws IOException, LineUnavailableException {
 
-		ShortTargetDataLineWrapper ds = new ShortTargetDataLineWrapper(channels, samplerate, (int)samplerate);
+		final ShortTargetDataLineWrapper ds = new ShortTargetDataLineWrapper(channels, samplerate, (int)samplerate);
 
 		pw.println(new Date() + " | decode audio: " + ds.getTargetDataLine());
 
@@ -306,13 +306,10 @@ public class Decoder {
 		}
 
 		if (m == null) {
-			throw new RuntimeException("Cant find mixer: " + mixerName);
+			throw new RuntimeException("Can't find mixer: " + mixerName);
 		}
 
-		ShortTargetDataLineWrapper ds = new ShortTargetDataLineWrapper(m, channels, samplerate,
-				(int) (samplerate / 10)); // 100ms
-											// will
-											// do
+		final ShortTargetDataLineWrapper ds = new ShortTargetDataLineWrapper(m, channels, samplerate, 4096);
 
 		pw.println(new Date() + " | decode audio: " + ds.getTargetDataLine());
 
@@ -332,7 +329,7 @@ public class Decoder {
 	public void printPowerDefaultAudioIn(int channels, int channel, double samplerate)
 			throws IOException, LineUnavailableException {
 
-		ShortTargetDataLineWrapper ds = new ShortTargetDataLineWrapper(channels, samplerate, 4096);
+		final ShortTargetDataLineWrapper ds = new ShortTargetDataLineWrapper(channels, samplerate, 4096);
 
 		pw.println(new Date() + " | decode audio: " + ds.getTargetDataLine());
 
@@ -357,7 +354,7 @@ public class Decoder {
 			throw new RuntimeException("Can't find mixer: " + mixerName);
 		}
 
-		ShortTargetDataLineWrapper ds = new ShortTargetDataLineWrapper(m, channels, samplerate, 4096);
+		final ShortTargetDataLineWrapper ds = new ShortTargetDataLineWrapper(m, channels, samplerate, 4096);
 
 		pw.println(new Date() + " | decode audio: " + ds.getTargetDataLine());
 

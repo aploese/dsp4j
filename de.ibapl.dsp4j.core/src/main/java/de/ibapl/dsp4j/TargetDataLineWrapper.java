@@ -41,9 +41,8 @@ public abstract class TargetDataLineWrapper {
     protected final byte[] buffer;
     protected final int channels;
     protected final int sampleSize;
-    protected int bufferPos;
-    protected int bufferLength;
-    private boolean endOfAudioData;
+    protected int bufferPos = -1;
+    protected int bytesReaded;
     /*
      * Just a shorthand to avoid long access for each sample in readXXX().
      */
@@ -53,7 +52,7 @@ public abstract class TargetDataLineWrapper {
         this.tdl = AudioSystem.getTargetDataLine(af, mixerInfo);
         this.bigEndian = af.isBigEndian();
         this.channels = af.getChannels();
-        this.sampleSize = af.getChannels() * af.getFrameSize();
+        this.sampleSize = af.getFrameSize();
         buffer = new byte[sampleSize * samplesInBuffer];
         tdl.open(tdl.getFormat(), buffer.length * 3);
         tdl.start();
@@ -63,7 +62,7 @@ public abstract class TargetDataLineWrapper {
         this.tdl = AudioSystem.getTargetDataLine(af);
         this.bigEndian = af.isBigEndian();
         this.channels = af.getChannels();
-        this.sampleSize = af.getChannels() * af.getFrameSize();
+        this.sampleSize = af.getFrameSize();
         buffer = new byte[sampleSize * samplesInBuffer];
         tdl.open(tdl.getFormat(), buffer.length * 3);
         tdl.start();
@@ -73,23 +72,10 @@ public abstract class TargetDataLineWrapper {
         this.tdl = tdl;
         this.bigEndian = tdl.getFormat().isBigEndian();
         this.channels = tdl.getFormat().getChannels();
-        this.sampleSize = tdl.getFormat().getChannels() * tdl.getFormat().getFrameSize();
+        this.sampleSize = tdl.getFormat().getFrameSize();
         buffer = new byte[sampleSize * samplesInBuffer];
         tdl.open(tdl.getFormat(), buffer.length * 3);
         tdl.start();
-    }
-
-    private void readBuffer() throws IOException {
-        bufferLength = tdl.read(buffer, 0, buffer.length);
-        if (bufferLength == 0) {
-            throw new RuntimeException("Cant read datat from line ...");
-        }
-        bufferPos = 0;
-        endOfAudioData = bufferLength == -1;
-    }
-    
-    protected final boolean isBufferReaded() {
-        return bufferPos == bufferLength;
     }
 
     public final int getChannels() {
@@ -128,10 +114,6 @@ public abstract class TargetDataLineWrapper {
         }
     }
 
-    public final boolean isEndOfAudioData() {
-        return endOfAudioData;
-    }
-
     public final TargetDataLine getTargetDataLine() {
         return tdl;
     } 
@@ -151,12 +133,18 @@ public abstract class TargetDataLineWrapper {
      * @throws IOException 
      */
     public final boolean nextSample() throws IOException {
-        if (bufferPos == bufferLength) {
-        	readBuffer();
-        } else {
-        	bufferPos += channels;
-        }
-        return !endOfAudioData;
+		if ((bufferPos == -1) || ((bufferPos +1) * sampleSize >= bytesReaded)) {
+			bytesReaded = tdl.read(buffer, 0, buffer.length);
+			if (bytesReaded > 0) {
+				bufferPos = 0;
+				return true;
+			} else {
+				bufferPos = -1;
+				return false;
+			}
+		}
+		bufferPos++;
+		return true;
     }
 
 }
