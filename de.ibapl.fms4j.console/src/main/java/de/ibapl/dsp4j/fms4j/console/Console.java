@@ -287,9 +287,9 @@ public class Console {
             if (cml.hasOption(CMDL_OPT_SAMPLERATE)) {
                 double sr = Double.parseDouble(cml.getOptionValue(CMDL_OPT_SAMPLERATE));
                 if (cml.hasOption(CMDL_OPT_USE_MIXER)) {
-                    d.printPowerAudioIn(cml.getOptionValue(CMDL_OPT_USE_MIXER), 2, channel, sr);
+                    d.printPowerAudioIn(cml.getOptionValue(CMDL_OPT_USE_MIXER), 2, sr);
                 } else {
-                    d.printPowerDefaultAudioIn(2, channel, sr);
+                    d.printPowerDefaultAudioIn(2, sr);
                 }
                 return;
             }

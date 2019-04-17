@@ -49,9 +49,9 @@ public class ShortTargetDataLineWrapper extends TargetDataLineWrapper {
     public final short getShort(int channel){
     	final int pos = bufferPos * sampleSize + channel * 2; 
         if (bigEndian) {
-            return (short)(((buffer[bufferPos + channel] << 8) & 0xFF00) | (buffer[bufferPos + channel + 1] & 0x00FF));
+            return (short)(((buffer[pos] << 8) & 0xFF00) | (buffer[pos + 1] & 0x00FF));
         } else {
-            return (short)(((buffer[bufferPos + channel] & 0x00FF) | ((buffer[bufferPos + channel + 1] << 8) & 0xFF00)));
+            return (short)(((buffer[pos] & 0x00FF) | ((buffer[pos + 1] << 8) & 0xFF00)));
         }
     }
 

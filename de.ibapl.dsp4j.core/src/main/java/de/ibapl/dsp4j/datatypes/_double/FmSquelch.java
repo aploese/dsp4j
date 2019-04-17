@@ -36,8 +36,8 @@ public class FmSquelch extends AbstractSampleProcessingBlock {
 
     private DirectDoubleIirFilter lp;
     private DirectDoubleIirFilter hpIn;
-    private double flp;
-    private double fhp;
+    private final double flp;
+    private final double fhp;
     private final double threshold;
     
 
@@ -55,10 +55,10 @@ public class FmSquelch extends AbstractSampleProcessingBlock {
     }
 
     /**
-     * @param fhp the fhp to set
+     * @return the flp
      */
-    public void setFhp(double fhp) {
-        this.fhp = fhp;
+    public double getFlp() {
+        return flp;
     }
 
     /**

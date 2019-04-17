@@ -335,22 +335,12 @@ public class Decoder {
 		pw.flush();
 	}
 
-	public void printPowerDefaultAudioIn(int channels, int channel, double samplerate)
+	public void printPowerDefaultAudioIn(int channels, double samplerate)
 			throws IOException, LineUnavailableException {
-
-		final ShortTargetDataLineWrapper ds = new ShortTargetDataLineWrapper(channels, samplerate, 4096);
-
-		pw.println(new Date() + " | decode audio: " + ds.getTargetDataLine());
-
-		setSampleRate(ds.getSampleRate());
-		while (ds.nextSample()) {
-			fmSquech.setX(ds.getShort(channel));
-			System.out.println("Power for Squelch: " + fmSquech.getPower());
-		}
-		pw.println(new Date() + " | audio decoded");
+		printPowerForAudio(new ShortTargetDataLineWrapper(channels, samplerate, 4096));
 	}
 
-	public void printPowerAudioIn(String mixerName, int channels, int channel, double samplerate)
+	public void printPowerAudioIn(String mixerName, int channels, double samplerate)
 			throws IOException, LineUnavailableException {
 		Mixer.Info m = null;
 		for (Mixer.Info mi : AudioSystem.getMixerInfo()) {
@@ -362,15 +352,23 @@ public class Decoder {
 		if (m == null) {
 			throw new RuntimeException("Can't find mixer: " + mixerName);
 		}
+		printPowerForAudio(new ShortTargetDataLineWrapper(m, channels, samplerate, 4096));
+	}
 
-		final ShortTargetDataLineWrapper ds = new ShortTargetDataLineWrapper(m, channels, samplerate, 4096);
-
+	private void printPowerForAudio(final ShortTargetDataLineWrapper ds) throws IOException {
 		pw.println(new Date() + " | decode audio: " + ds.getTargetDataLine());
 
-		setSampleRate(ds.getSampleRate());
+		final FmSquelch fmSquech0 = new FmSquelch(fmSquech.getThreshold(), fmSquech.getFlp(), fmSquech.getFhp());
+		final FmSquelch fmSquech1 = new FmSquelch(fmSquech.getThreshold(), fmSquech.getFlp(), fmSquech.getFhp());
+		fmSquech0.setSampleRate(ds.getSampleRate());
+		fmSquech1.setSampleRate(ds.getSampleRate());
 		while (ds.nextSample()) {
-			fmSquech.setX(ds.getShort(channel));
-			System.out.println("Power for Squelch: " + fmSquech.getPower());
+			final short sample0 = ds.getShort(0);
+			final short sample1 = ds.getShort(1);
+			fmSquech0.setX(sample0);
+			fmSquech1.setX(sample1);
+			System.out.printf("Power for Squelch [0]:% 10f [1]:% 10f | Value [0]% 8d [1]% 8d\n", fmSquech0.getPower(), fmSquech1.getPower(), sample0, sample1);
+			System.out.flush();
 		}
 		pw.println(new Date() + " | audio decoded");
 		pw.flush();
