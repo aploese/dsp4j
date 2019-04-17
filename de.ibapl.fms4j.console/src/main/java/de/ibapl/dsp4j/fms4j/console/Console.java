@@ -68,6 +68,7 @@ public class Console {
     private static final String CMDL_OPT_LOG_FILE = "log to file";
     private static final String CMDL_OPT_SQUELCH_THRESHOLD = "squelch-threshold";
     private static final String CMDL_OPT_PRINT_POWER = "print-power";
+    private static final String CMDL_OPT_CHANNEL = "channel";
 
     public static void main(String[] args) throws Exception {
         Console c = new Console();
@@ -202,6 +203,11 @@ public class Console {
         opt.setType(String.class);
         options.addOption(opt);
 
+        opt = new Option("c", CMDL_OPT_CHANNEL, true, "channel");
+        opt.setArgName("channel");
+        opt.setType(Integer.class);
+        options.addOption(opt);
+
         opt = new Option("l", CMDL_OPT_LOG_FILE, true, "frms32 dir");
         opt.setArgName("log file");
         opt.setType(String.class);
@@ -270,15 +276,20 @@ public class Console {
         if (cml.hasOption(CMDL_OPT_SQUELCH_THRESHOLD)) {
             squelchTreshold = Short.parseShort(cml.getOptionValue(CMDL_OPT_SQUELCH_THRESHOLD));
         }
+        int channel = 0;
+        if (cml.hasOption(CMDL_OPT_CHANNEL)) {
+            channel = Integer.parseInt(cml.getOptionValue(CMDL_OPT_CHANNEL));
+        }
+        
         Decoder d = new Decoder(backupDir, fms32Dir, logFile, squelchTreshold);
 
         if (cml.hasOption(CMDL_OPT_PRINT_POWER)) {
             if (cml.hasOption(CMDL_OPT_SAMPLERATE)) {
                 double sr = Double.parseDouble(cml.getOptionValue(CMDL_OPT_SAMPLERATE));
                 if (cml.hasOption(CMDL_OPT_USE_MIXER)) {
-                    d.printPowerAudioIn(cml.getOptionValue(CMDL_OPT_USE_MIXER), 2, 0, sr);
+                    d.printPowerAudioIn(cml.getOptionValue(CMDL_OPT_USE_MIXER), 2, channel, sr);
                 } else {
-                    d.printPowerDefaultAudioIn(2, 0, sr);
+                    d.printPowerDefaultAudioIn(2, channel, sr);
                 }
                 return;
             }
@@ -287,16 +298,16 @@ public class Console {
         if (cml.hasOption(CMDL_OPT_SAMPLERATE)) {
             double sr = Double.parseDouble(cml.getOptionValue(CMDL_OPT_SAMPLERATE));
             if (cml.hasOption(CMDL_OPT_USE_MIXER)) {
-                d.decodeAudioIn(cml.getOptionValue(CMDL_OPT_USE_MIXER), 2, 0, sr);
+                d.decodeAudioIn(cml.getOptionValue(CMDL_OPT_USE_MIXER), 2, channel, sr);
             } else {
-                d.decodeDefaultAudioIn(sr, 2, 0);
+                d.decodeDefaultAudioIn(sr, 2, channel);
             }
             return;
         }
 
         if (cml.hasOption(CMDL_OPT_IN_FILE)) {
             String f = cml.getOptionValue(CMDL_OPT_IN_FILE);
-            d.decodeFile(new File(f), 0);
+            d.decodeFile(new File(f), channel);
             return;
         }
 
@@ -306,7 +317,7 @@ public class Console {
             for (File in : dir.listFiles()) {
                 if (in.getName().endsWith(".wav")) {
                     try {
-                        d.decodeFile(in, 0);
+                        d.decodeFile(in, channel);
                     } catch (Exception ex) {
                         System.err.println("file " + in.getAbsolutePath() + " E: " + ex);
                     }
