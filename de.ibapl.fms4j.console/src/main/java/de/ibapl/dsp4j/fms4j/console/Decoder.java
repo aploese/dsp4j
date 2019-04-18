@@ -335,6 +335,31 @@ public class Decoder {
 		pw.flush();
 	}
 
+	public void printPowerFile(File f, int channel)
+			throws IOException, UnsupportedAudioFileException  {
+		inputFilename = f.getName();
+		inputFilename = inputFilename.substring(0, inputFilename.indexOf(".wav"));
+		pw.println(new Date() + " | decode file: " + f.getAbsolutePath());
+		pw.flush();
+		
+		final ShortSampledSource aiss = new ShortSampledSource(f, 1024);
+		final ShortFileSink sfs = new ShortFileSink(new File(f.getAbsolutePath() + ".wav") , 2, aiss.getSampleRate(), 4096);
+		
+		setSampleRate(aiss.getSampleRate());
+		while (aiss.nextSample()) {
+			final short sample0 = aiss.getShort(0);
+			fmSquech.setX(sample0);
+			sfs.setShort(0, sample0);
+			sfs.setShort(1, (short)Math.round(10 * (fmSquech.getPower() - fmSquech.getThreshold())));
+			sfs.nextSample();
+		}
+		sfs.flush();
+		sfs.close();
+
+		pw.println(new Date() + " | decoded to file: " + sfs.getWavOut().getAbsolutePath());
+		pw.flush();
+	}
+
 	public void printPowerDefaultAudioIn(int channels, double samplerate)
 			throws IOException, LineUnavailableException {
 		printPowerForAudio(new ShortTargetDataLineWrapper(channels, samplerate, 4096));

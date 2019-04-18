@@ -213,7 +213,7 @@ public class Console {
         opt.setType(String.class);
         options.addOption(opt);
 
-        opt = new Option("sq", CMDL_OPT_SQUELCH_THRESHOLD, true, "squelch threshold must be smaller than power of noise");
+        opt = new Option("sq", CMDL_OPT_SQUELCH_THRESHOLD, true, "squelch threshold must be smaller than power of noise (default is 1000)");
         opt.setArgName("value");
         opt.setType(Short.class);
         options.addOption(opt);
@@ -275,16 +275,29 @@ public class Console {
         short squelchTreshold = 1000;
         if (cml.hasOption(CMDL_OPT_SQUELCH_THRESHOLD)) {
             squelchTreshold = Short.parseShort(cml.getOptionValue(CMDL_OPT_SQUELCH_THRESHOLD));
+            System.out.println("set squelch to: " + squelchTreshold);
+        } else {
+            System.out.println("use default squelch of: " + squelchTreshold);
         }
+        
         int channel = 0;
         if (cml.hasOption(CMDL_OPT_CHANNEL)) {
             channel = Integer.parseInt(cml.getOptionValue(CMDL_OPT_CHANNEL));
+            System.out.println("set channel to: " + channel);
+        } else {
+            System.out.println("use default channel of: " + channel);
         }
         
         Decoder d = new Decoder(backupDir, fms32Dir, logFile, squelchTreshold);
 
         if (cml.hasOption(CMDL_OPT_PRINT_POWER)) {
-            if (cml.hasOption(CMDL_OPT_SAMPLERATE)) {
+            if (cml.hasOption(CMDL_OPT_IN_FILE)) {
+                String f = cml.getOptionValue(CMDL_OPT_IN_FILE);
+                d.printPowerFile(new File(f), channel);
+                return;
+            }
+
+        	if (cml.hasOption(CMDL_OPT_SAMPLERATE)) {
                 double sr = Double.parseDouble(cml.getOptionValue(CMDL_OPT_SAMPLERATE));
                 if (cml.hasOption(CMDL_OPT_USE_MIXER)) {
                     d.printPowerAudioIn(cml.getOptionValue(CMDL_OPT_USE_MIXER), 2, sr);

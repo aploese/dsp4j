@@ -98,7 +98,7 @@ public abstract class AudioSink implements SampledBlock, Sampled {
     @Override
     public boolean nextSample() throws IOException {
     	bufferSamplePos++;
-    	if (bufferSamplePos * sampleSize == buffer.length) {
+    	if (bufferSamplePos * sampleSize >= buffer.length) {
     		flush();
     	}
     	return true;
