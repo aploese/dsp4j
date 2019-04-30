@@ -172,80 +172,67 @@ public class Decoder {
 	private final FmsFileDataStore ds;
 	private final PrintWriter pw;
 	private final File backupDir;
-	private boolean showBlocking = false;
 	private int fmsIndex;
 	private int zveiIndex;
-	private int squelchTrailing;
-	private int squelchTrailingCount;
-	private int squelchThreshold;
-	private int squelchThresholdCount;
+	private int backupSamples;
 
 	private void processSampleBackup(final short y) throws IOException {
-		if (fmSquech.setX(y)) {
-			if (squelchTrailing == 0) {
-				fs.setWavOut(new File(backupDir,
-						"FMS-" + (inputFilename != null ? inputFilename : "lineIn_" + fmSquech.getSampleRate()) + "_"
-								+ getTimeStr().replace(" ", "_") + ".wav"));
-				if (showBlocking) {
-					System.out.println("PASSING: @" + new Date());
-				}
-				fmsContainer.reset();
-				zveiContainer.reset();
-				fs.setShort(0, y);
-				fs.nextSample();
-				squelchTrailing = squelchTrailingCount;
-				squelchThreshold = squelchThresholdCount;
-			} else {
-				fs.setShort(0, y);
-				if (squelchThreshold != 0) {
-					squelchThreshold--;
-				}
-			}
-		} else {
-			if (squelchTrailing == 0) {
-				return;
-			}
+		switch (fmSquech.setX(y)) {
+		case MUTED:
+			break;
+		case TRIGGERING:
+			fs.setWavOut(new File(backupDir,
+					"FMS-" + (inputFilename != null ? inputFilename : "lineIn_" + fmSquech.getSampleRate()) + "_"
+							+ getTimeStr().replace(" ", "_") + ".wav"));
 			fs.setShort(0, y);
 			fs.nextSample();
-			if (showBlocking) {
-				System.out.println("BLOCKING: @" + getTimeStr());
-			}
-			if (squelchThreshold > 0) {
-				fs.delete();
-				squelchTrailing = 0;
-				return;
-			} else if (squelchTrailing == 1) {
+			fmsContainer.setX(y);
+			zveiContainer.setX(y);
+			backupSamples++;
+			break;
+		case TRIGGERED:
+			fs.setShort(0, y);
+			fs.nextSample();
+			fmsContainer.setX(y);
+			zveiContainer.setX(y);
+			backupSamples++;
+			break;
+		case MUTING:
+			if (backupSamples > (int)fmSquech.getSampleRate() / 10 ) {
+				//more than 100ms save
 				fs.close();
-				squelchTrailing = 0;
-				return;
+			} else {
+				fs.delete();
 			}
+			backupSamples = 0;
+			fmsContainer.reset();
+			zveiContainer.reset();
+			break;
+		default:
+			throw new IllegalStateException("Can't handle state: " + fmSquech.getState());
 		}
-		squelchTrailing--;
-		fmsContainer.setX(y);
-		zveiContainer.setX(y);
 	}
 
 	private void processSampleWoBackup(double y) {
-		if (fmSquech.setX(y)) {
-			if (squelchTrailing == 0) {
-				if (showBlocking) {
-					System.out.println("PASSING: @" + new Date());
-				}
-				fmsContainer.reset();
-				zveiContainer.reset();
-				squelchTrailing = squelchTrailingCount;
-			}
-		} else {
-			if (squelchTrailing > 0) {
-				squelchTrailing--;
-			}
-			if (squelchTrailing == 0 && showBlocking) {
-				System.out.println("BLOCKING: @" + getTimeStr());
-				return;
-			}
+		switch (fmSquech.setX(y)) {
+		case MUTED:
+			break;
+		case TRIGGERING:
+			fmsContainer.setX(y);
+			zveiContainer.setX(y);
+			break;
+		case TRIGGERED:
+			fmsContainer.setX(y);
+			zveiContainer.setX(y);
+			break;
+		case MUTING:
+			fs.close();
+			fmsContainer.reset();
+			zveiContainer.reset();
+			break;
+		default:
+			throw new IllegalStateException("Can't handle state: " + fmSquech.getState());
 		}
-		fmsContainer.setX(y);
-		zveiContainer.setX(y);
 	}
 
 	private void setSampleRate(float sampleRate) {
@@ -255,8 +242,6 @@ public class Decoder {
 		fmSquech.setSampleRate(sampleRate);
 		fmsContainer.setSampleRate(sampleRate);
 		zveiContainer.setSampleRate(sampleRate);
-		squelchTrailingCount = (int) Math.ceil(sampleRate * 2); // 2s
-		squelchThresholdCount = (int) Math.ceil(sampleRate / 10.0); // 100ms
 	}
 
 	public void decodeFile(File f, int channel) throws IOException, UnsupportedAudioFileException {
@@ -405,7 +390,7 @@ public class Decoder {
 			ds.read(fms32Dir);
 		} catch (Exception e) {
 		}
-		fmSquech = new FmSquelch(squelchThreshold, 10, 3600);
+		fmSquech = new FmSquelch(squelchThreshold, 5, 3600);
 		fmsConsolePrinter = new FmsConsolePrinter();
 		fmsContainer = new FmsContainer(fmsConsolePrinter);
 		zveiConsolePrinter = new ZveiConsolePrinter();

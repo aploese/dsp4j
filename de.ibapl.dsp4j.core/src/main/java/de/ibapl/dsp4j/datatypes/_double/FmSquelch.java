@@ -34,84 +34,122 @@ import de.ibapl.dsp4j.Out;
  */
 public class FmSquelch extends AbstractSampleProcessingBlock {
 
-    private DirectDoubleIirFilter lp;
-    private DirectDoubleIirFilter hpIn;
-    private final double flp;
-    private final double fhp;
-    private final double threshold;
-    
+	public enum State {
+		MUTED, TRIGGERING, TRIGGERED, MUTING;
+	}
 
-    public FmSquelch(double threshhold, double flp, double fhp) {
-        this.threshold = threshhold;
-        this.flp = flp;
-        this.fhp = fhp;
-    }
+	private DirectDoubleIirFilter lp;
+	private DirectDoubleIirFilter hpIn;
+	private final double flp;
+	private final double fhp;
+	private final double threshold;
+	private State state = State.MUTED;
 
-    /**
-     * @return the fhp
-     */
-    public double getFhp() {
-        return fhp;
-    }
+	public FmSquelch(double threshhold, double flp, double fhp) {
+		this.threshold = threshhold;
+		this.flp = flp;
+		this.fhp = fhp;
+	}
 
-    /**
-     * @return the flp
-     */
-    public double getFlp() {
-        return flp;
-    }
+	/**
+	 * @return the fhp
+	 */
+	public double getFhp() {
+		return fhp;
+	}
 
-    /**
-     * @return the hpIn
-     */
-    public DirectDoubleIirFilter getHpIn() {
-        return hpIn;
-    }
+	/**
+	 * @return the flp
+	 */
+	public double getFlp() {
+		return flp;
+	}
 
-    /**
-     * @param hpIn the hpIn to set
-     */
-    public void setHpIn(DirectDoubleIirFilter hpIn) {
-        this.hpIn = hpIn;
-    }
+	/**
+	 * @return the hpIn
+	 */
+	public DirectDoubleIirFilter getHpIn() {
+		return hpIn;
+	}
 
-    public double getPower() {
-        return lp.getY();
-    }
+	/**
+	 * @param hpIn the hpIn to set
+	 */
+	public void setHpIn(DirectDoubleIirFilter hpIn) {
+		this.hpIn = hpIn;
+	}
 
-    /**
-     * @return the lpSlow
-     */
-    public DirectDoubleIirFilter getLp() {
-        return lp;
-    }
+	public double getPower() {
+		return lp.getY();
+	}
 
-    /**
-     * @return the threshold
-     */
-    public double getThreshold() {
-        return threshold;
-    }
+	/**
+	 * @return the lpSlow
+	 */
+	public DirectDoubleIirFilter getLp() {
+		return lp;
+	}
 
-    @Override
-    public void setSampleRate(double sampleRate) {
-        DoubleIirFilterGenerator gen = new DoubleIirFilterGenerator(sampleRate);
-        lp = gen.getLP_ButterFc(1, flp, Direct1stOrderDoubleIirFilter.class);
-        hpIn = gen.getHP_Cheby2Fc(1, 20, fhp, Direct1stOrderDoubleIirFilter.class);
-        super.setSampleRate(sampleRate);
-    }
+	/**
+	 * @return the threshold
+	 */
+	public double getThreshold() {
+		return threshold;
+	}
 
-    /**
-     *
-     * @param sample
-     * @return 
-     */
-    @In
-    @Out
-    public boolean setX(final double sample) {
-        hpIn.setX(sample);
-        lp.setX(Math.abs(hpIn.getY()));
-        return lp.getY() < threshold;
-    }
+	@Override
+	public void setSampleRate(double sampleRate) {
+		DoubleIirFilterGenerator gen = new DoubleIirFilterGenerator(sampleRate);
+		lp = gen.getLP_ButterFc(1, flp, Direct1stOrderDoubleIirFilter.class);
+		hpIn = gen.getHP_Cheby2Fc(1, 20, fhp, Direct1stOrderDoubleIirFilter.class);
+		super.setSampleRate(sampleRate);
+	}
+
+	/**
+	 *
+	 * @param sample
+	 * @return
+	 */
+	@In
+	@Out
+	public State setX(final double sample) {
+		hpIn.setX(sample);
+		lp.setX(Math.abs(hpIn.getY()));
+		final boolean triggered = lp.getY() < threshold;
+		switch (state) {
+		case MUTED:
+			if (triggered) {
+				state = State.TRIGGERING;
+			}
+			break;
+		case TRIGGERING:
+			if (triggered) {
+				state = State.TRIGGERED;
+			} else {
+				state = State.MUTING;
+			}
+			break;
+		case TRIGGERED:
+			if (triggered) {
+			} else {
+				state = State.MUTING;
+			}
+			break;
+		case MUTING:
+			if (triggered) {
+				state = State.TRIGGERING;
+			} else {
+				state = State.MUTED;
+			}
+			break;
+		default:
+			throw new IllegalStateException("Can't handle state: " + state);
+		}
+		return state;
+	}
+	
+	public State getState() {
+		return state;
+	}
 
 }
