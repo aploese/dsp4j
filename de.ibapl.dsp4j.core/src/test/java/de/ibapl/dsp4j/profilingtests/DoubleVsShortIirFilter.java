@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -44,7 +44,7 @@ public class DoubleVsShortIirFilter {
         finalSf = new ShortIirFilterGenerator(8000).getLP_ButterFc(10, 1000, DirectShortIirFilter.class);
         finalDf = new DoubleIirFilterGenerator(8000).getLP_ButterFc(10, 1000, DirectDoubleIirFilter.class);
     }
-    
+
     int runShort(int x) {
         sf.setX(x);
         return sf.getY();
@@ -72,24 +72,24 @@ public class DoubleVsShortIirFilter {
 
     private void runIn() {
         for (int j = 0; j < LENGTH; j++) {
-        for (int i = 0; i < Short.MAX_VALUE; i++) {
-            runShort(i);
-            runFinalShort(i);
-            runDouble(i);
-            runFinalDouble(i);
-        }
+            for (int i = 0; i < Short.MAX_VALUE; i++) {
+                runShort(i);
+                runFinalShort(i);
+                runDouble(i);
+                runFinalDouble(i);
+            }
         }
     }
 
     private void run() {
         runIn();
-       for (int j = 0; j < 10; j++) {
-        timeShort();
-        timeFinalShort();
-        timeDouble();
-        timeFinalDouble();
-           System.out.println("");
-       }
+        for (int j = 0; j < 10; j++) {
+            timeShort();
+            timeFinalShort();
+            timeDouble();
+            timeFinalDouble();
+            System.out.println("");
+        }
     }
 
     private void timeShort() {

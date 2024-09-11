@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -21,11 +21,11 @@
  */
 package de.ibapl.dsp4j.octave.packages.signal_1_2_0;
 
-import java.util.Arrays;
 import de.ibapl.dsp4j.octave.packages.specfun_1_1_0.Ellipke;
 import de.ibapl.dsp4j.octave_3_2_4.OctaveBuildIn;
 import de.ibapl.dsp4j.octave_3_6_4.m.optimization.Fminbnd;
 import de.ibapl.dsp4j.octave_3_6_4.m.optimization.FunctionWrapper;
+import java.util.Arrays;
 import org.apache.commons.math3.complex.Complex;
 
 /*
@@ -76,7 +76,6 @@ public class NCauer {
 
         //Filter order maybe this, but not used now:
         //n=ceil(log10(16*D)/log10(1/q))
-
         double l = (1.0 / (2.0 * n)) * Math.log((Math.pow(10, 0.05 * Rp) + 1.0) / (Math.pow(10, 0.05 * Rp) - 1.0));
         double sig01 = 0;
         double sig02 = 0;
@@ -103,7 +102,7 @@ public class NCauer {
             if (n % 2 != 0) {
                 mu = ii;
             } else {
-                mu = (double)ii - 0.5;
+                mu = (double) ii - 0.5;
             }
             double soma1 = 0;
             for (int m = 0; m <= 30; m++) {
@@ -133,7 +132,7 @@ public class NCauer {
         for (int i = 0; i < wi.length; i++) {
             B0i[i] = (Math.pow((sig0 * Vi[i]), 2) + Math.pow((w * wi[i]), 2)) / Math.pow((1.0 + Math.pow(sig0, 2) * Math.pow(wi[i], 2)), 2);
         }
-        
+
         double C01;
         if (wi.length == 0) {
             C01 = 1.0;
@@ -161,8 +160,8 @@ public class NCauer {
         //poles:
         pol = new Complex[Vi.length * 2];
         for (int i = 0; i < Vi.length; i++) {
-            pol[i] = new Complex(-2.0 * sig0 * Vi[i],  2.0 * wi[i] * w).divide(2.0 * (1 + Math.pow(sig0, 2) * Math.pow(wi[i], 2)));
-            pol[i + Vi.length] = new Complex(-2.0 * sig0 * Vi[i], - 2.0 * wi[i] * w).divide(2.0 * (1 + Math.pow(sig0, 2) * Math.pow(wi[i], 2)));
+            pol[i] = new Complex(-2.0 * sig0 * Vi[i], 2.0 * wi[i] * w).divide(2.0 * (1 + Math.pow(sig0, 2) * Math.pow(wi[i], 2)));
+            pol[i + Vi.length] = new Complex(-2.0 * sig0 * Vi[i], -2.0 * wi[i] * w).divide(2.0 * (1 + Math.pow(sig0, 2) * Math.pow(wi[i], 2)));
         }
 
         //If n odd, there is a real pole  -sig0:
@@ -191,7 +190,7 @@ public class NCauer {
 
         double ql0 = ellipke.getK(0);
         double q0 = ellipke.getK(1);
-        final double x_V = (double)n * ql0 / q0;
+        final double x_V = (double) n * ql0 / q0;
         Fminbnd fminbnd = new Fminbnd();
         double kl = fminbnd.fminbnd(new FunctionWrapper() {
             double err;

@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -39,9 +39,18 @@ package de.ibapl.dsp4j.octave.packages.signal_1_0_11;
 
  ## Return bessel analog filter prototype.
  ##
- ## References: 
+ ## References:
  ##
  ## http://en.wikipedia.org/wiki/Bessel_polynomials
+ */
+/**
+ * The Bessel IIR filter.
+ * <br>
+ * <b>Octave Version: octave signal-1.0.11</b>
+ *
+ * @author aploese
+ *
+ *
  */
 public class Bessel extends PoleZeroGainIIRFilterGenerator {
 
@@ -54,13 +63,13 @@ public class Bessel extends PoleZeroGainIIRFilterGenerator {
         gain = bap.getGain();
 
     }
-    
+
     public Bessel(int n, double wc, boolean digital, boolean stop) {
-        this(n, new double[] {wc}, digital, stop);
+        this(n, new double[]{wc}, digital, stop);
     }
 
     public Bessel(int n, double wl, double wh, boolean digital, boolean stop) {
-        this(n, new double[] {wl, wh}, digital, stop);
+        this(n, new double[]{wl, wh}, digital, stop);
     }
 
 }

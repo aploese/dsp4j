@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -21,40 +21,40 @@
  */
 package de.ibapl.dsp4j.octave.packages.signal_1_0_11;
 
-import java.util.Arrays;
 import static de.ibapl.dsp4j.DspConst.TWO_PI;
+import java.util.Arrays;
 
-/**************************************************************************
+/**
+ * ************************************************************************
  * Parks-McClellan algorithm for FIR filter design (C version)
- *-------------------------------------------------
- *  Copyright (c) 1995,1998  Jake Janovetz <janovetz@uiuc.edu>
+ * ------------------------------------------------- Copyright (c) 1995,1998
+ * Jake Janovetz <janovetz@uiuc.edu>
  *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Library General Public
- *  License as published by the Free Software Foundation; either
- *  version 2 of the License, or (at your option) any later version.
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Library General Public License as published by the Free
+ * Software Foundation; either version 2 of the License, or (at your option) any
+ * later version.
  *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Library General Public License for more details.
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Library General Public License for more
+ * details.
  *
- *  You should have received a copy of the GNU Library General Public
- *  License along with this library; if not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Library General Public License
+ * along with this library; if not, see <http://www.gnu.org/licenses/>.
  *
  *
- *  Sep 1999 - Paul Kienzle (pkienzle@cs.indiana.edu)
- *      Modified for use in octave as a replacement for the matlab function
- *      remez.mex.  In particular, magnitude responses are required for all
- *      band edges rather than one per band, griddensity is a parameter,
- *      and errors are returned rather than printed directly.
- *  Mar 2000 - Kai Habel (kahacjde@linux.zrz.tu-berlin.de)
- *      Change: ColumnVector x=arg(i).vector_value();
- *      to: ColumnVector x(arg(i).vector_value());
- *  There appear to be some problems with the routine Search. See comments
- *  therein [search for PAK:].  I haven't looked closely at the rest
- *  of the code---it may also have some problems.
- *************************************************************************/
+ * Sep 1999 - Paul Kienzle (pkienzle@cs.indiana.edu) Modified for use in octave
+ * as a replacement for the matlab function remez.mex. In particular, magnitude
+ * responses are required for all band edges rather than one per band,
+ * griddensity is a parameter, and errors are returned rather than printed
+ * directly. Mar 2000 - Kai Habel (kahacjde@linux.zrz.tu-berlin.de) Change:
+ * ColumnVector x=arg(i).vector_value(); to: ColumnVector
+ * x(arg(i).vector_value()); There appear to be some problems with the routine
+ * Search. See comments therein [search for PAK:]. I haven't looked closely at
+ * the rest of the code---it may also have some problems.
+ * ***********************************************************************
+ */
 /*
 #include <octave/oct.h>
 #include <cmath>
@@ -96,7 +96,7 @@ public class Remez {
     }
 
     /* == Octave interface starts here ====================================== */
-    /*
+ /*
     DEFUN_DLD (remez, args, ,
     "b = remez(n, f, a [, w] [, ftype] [, griddensity])\n\
     Parks-McClellan optimal FIR filter design.\n\
@@ -124,7 +124,6 @@ public class Remez {
     }
 
     //remez256, [0, 0.2497498779296875, 0.2502498779296875, 1], [1,1,0,0])
-
     public Remez(int order, double[] f, double[] response, double[] weight, FType ftype, int griddensity) {
         this.numtaps = order + 1;
         this.bands = new double[f.length];
@@ -185,32 +184,25 @@ public class Remez {
         return h;
     }
 
-    /*******************
-     * CreateDenseGrid
-     *=================
-     * Creates the dense grid of frequencies from the specified bands.
-     * Also creates the Desired Frequency Response function (D[]) and
-     * the Weight function (W[]) on that dense grid
+    /**
+     * *****************
+     * CreateDenseGrid ================= Creates the dense grid of frequencies
+     * from the specified bands. Also creates the Desired Frequency Response
+     * function (D[]) and the Weight function (W[]) on that dense grid
      *
      *
-     * INPUT:
-     * ------
-     * int      r        - 1/2 the number of filter coefficients
-     * int      numtaps  - Number of taps in the resulting filter
-     * int      numband  - Number of bands in user specification
-     * double   bands[]  - User-specified band edges [2*numband]
-     * double   des[]    - Desired response per band [2*numband]
-     * double   weight[] - Weight per band [numband]
-     * int      symmetry - Symmetry of filter - used for grid check
-     * int      griddensity
+     * INPUT: ------ int r - 1/2 the number of filter coefficients int numtaps -
+     * Number of taps in the resulting filter int numband - Number of bands in
+     * user specification double bands[] - User-specified band edges [2*numband]
+     * double des[] - Desired response per band [2*numband] double weight[] -
+     * Weight per band [numband] int symmetry - Symmetry of filter - used for
+     * grid check int griddensity
      *
-     * OUTPUT:
-     * -------
-     * int    gridsize   - Number of elements in the dense frequency grid
-     * double Grid[]     - Frequencies (0 to 0.5) on the dense grid [gridsize]
-     * double D[]        - Desired response on the dense grid [gridsize]
-     * double W[]        - Weight function on the dense grid [gridsize]
-     *******************/
+     * OUTPUT: ------- int gridsize - Number of elements in the dense frequency
+     * grid double Grid[] - Frequencies (0 to 0.5) on the dense grid [gridsize]
+     * double D[] - Desired response on the dense grid [gridsize] double W[] -
+     * Weight function on the dense grid [gridsize] *****************
+     */
     void CreateDenseGrid(final int r, final double Grid[], final double D[], final double W[]) {
         final double delf = 0.5 / (griddensity * r);
 
@@ -250,21 +242,18 @@ public class Remez {
         }
     }
 
-    /********************
-     * InitialGuess
-     *==============
-     * Places Extremal Frequencies evenly throughout the dense grid.
+    /**
+     * ******************
+     * InitialGuess ============== Places Extremal Frequencies evenly throughout
+     * the dense grid.
      *
      *
-     * INPUT:
-     * ------
-     * int r        - 1/2 the number of filter coefficients
-     * int gridsize - Number of elements in the dense frequency grid
+     * INPUT: ------ int r - 1/2 the number of filter coefficients int gridsize
+     * - Number of elements in the dense frequency grid
      *
-     * OUTPUT:
-     * -------
-     * int Ext[]    - Extremal indexes to dense frequency grid [r+1]
-     ********************/
+     * OUTPUT: ------- int Ext[] - Extremal indexes to dense frequency grid
+     * [r+1] ******************
+     */
     private int[] InitialGuess(final int r, final int gridsize) {
         int[] Ext = new int[r + 1];
         for (int i = 0; i <= r; i++) {
@@ -273,25 +262,21 @@ public class Remez {
         return Ext;
     }
 
-    /***********************
-     * CalcParms
-     *===========
+    /**
+     * *********************
+     * CalcParms ===========
      *
      *
-     * INPUT:
-     * ------
-     * int    r      - 1/2 the number of filter coefficients
-     * int    Ext[]  - Extremal indexes to dense frequency grid [r+1]
-     * double Grid[] - Frequencies (0 to 0.5) on the dense grid [gridsize]
-     * double D[]    - Desired response on the dense grid [gridsize]
-     * double W[]    - Weight function on the dense grid [gridsize]
+     * INPUT: ------ int r - 1/2 the number of filter coefficients int Ext[] -
+     * Extremal indexes to dense frequency grid [r+1] double Grid[] -
+     * Frequencies (0 to 0.5) on the dense grid [gridsize] double D[] - Desired
+     * response on the dense grid [gridsize] double W[] - Weight function on the
+     * dense grid [gridsize]
      *
-     * OUTPUT:
-     * -------
-     * double ad[]   - 'b' in Oppenheim & Schafer [r+1]
-     * double x[]    - [r+1]
-     * double y[]    - 'C' in Oppenheim & Schafer [r+1]
-     ***********************/
+     * OUTPUT: ------- double ad[] - 'b' in Oppenheim & Schafer [r+1] double x[]
+     * - [r+1] double y[] - 'C' in Oppenheim & Schafer [r+1]
+     * *********************
+     */
     void CalcParms(final int r, final int Ext[], final double Grid[], final double D[], final double W[],
             final double ad[], final double x[], final double y[]) {
         double xi, delta, denom;
@@ -306,7 +291,8 @@ public class Remez {
         /*
          * Calculate ad[]  - Oppenheim & Schafer eq 7.132
          */
-        int ld = (r - 1) / 15 + 1;         /* Skips around to avoid round errors */
+        int ld = (r - 1) / 15 + 1;
+        /* Skips around to avoid round errors */
         for (int i = 0; i <= r; i++) {
             denom = 1.0;
             xi = x[i];
@@ -345,26 +331,20 @@ public class Remez {
         }
     }
 
-    /*********************
-     * ComputeA
-     *==========
-     * Using values calculated in CalcParms, ComputeA calculates the
-     * actual filter response at a given frequency (freq).  Uses
+    /**
+     * *******************
+     * ComputeA ========== Using values calculated in CalcParms, ComputeA
+     * calculates the actual filter response at a given frequency (freq). Uses
      * eq 7.133a from Oppenheim & Schafer.
      *
      *
-     * INPUT:
-     * ------
-     * double freq - Frequency (0 to 0.5) at which to calculate A
-     * int    r    - 1/2 the number of filter coefficients
-     * double ad[] - 'b' in Oppenheim & Schafer [r+1]
-     * double x[]  - [r+1]
-     * double y[]  - 'C' in Oppenheim & Schafer [r+1]
+     * INPUT: ------ double freq - Frequency (0 to 0.5) at which to calculate A
+     * int r - 1/2 the number of filter coefficients double ad[] - 'b' in
+     * Oppenheim & Schafer [r+1] double x[] - [r+1] double y[] - 'C' in
+     * Oppenheim & Schafer [r+1]
      *
-     * OUTPUT:
-     * -------
-     * Returns double value of A[freq]
-     *********************/
+     * OUTPUT: ------- Returns double value of A[freq] *******************
+     */
     double ComputeA(final double freq, final int r, final double ad[], final double x[], final double y[]) {
 
         double denom = 0;
@@ -384,29 +364,22 @@ public class Remez {
         return numer / denom;
     }
 
-    /************************
-     * CalcError
-     *===========
-     * Calculates the Error function from the desired frequency response
-     * on the dense grid (D[]), the weight function on the dense grid (W[]),
-     * and the present response calculation (A[])
+    /**
+     * **********************
+     * CalcError =========== Calculates the Error function from the desired
+     * frequency response on the dense grid (D[]), the weight function on the
+     * dense grid (W[]), and the present response calculation (A[])
      *
      *
-     * INPUT:
-     * ------
-     * int    r      - 1/2 the number of filter coefficients
-     * double ad[]   - [r+1]
-     * double x[]    - [r+1]
-     * double y[]    - [r+1]
-     * int gridsize  - Number of elements in the dense frequency grid
-     * double Grid[] - Frequencies on the dense grid [gridsize]
-     * double D[]    - Desired response on the dense grid [gridsize]
-     * double W[]    - Weight function on the desnse grid [gridsize]
+     * INPUT: ------ int r - 1/2 the number of filter coefficients double ad[] -
+     * [r+1] double x[] - [r+1] double y[] - [r+1] int gridsize - Number of
+     * elements in the dense frequency grid double Grid[] - Frequencies on the
+     * dense grid [gridsize] double D[] - Desired response on the dense grid
+     * [gridsize] double W[] - Weight function on the desnse grid [gridsize]
      *
-     * OUTPUT:
-     * -------
-     * double E[]    - Error function on dense grid [gridsize]
-     ************************/
+     * OUTPUT: ------- double E[] - Error function on dense grid [gridsize]
+     * **********************
+     */
     void CalcError(final int r, final double ad[], final double x[], final double y[],
             final double Grid[],
             final double D[], final double W[], final double E[]) {
@@ -417,30 +390,23 @@ public class Remez {
         }
     }
 
-    /************************
-     * Search
-     *========
-     * Searches for the maxima/minima of the error curve.  If more than
-     * r+1 extrema are found, it uses the following heuristic (thanks
-     * Chris Hanson):
-     * 1) Adjacent non-alternating extrema deleted first.
-     * 2) If there are more than one excess extrema, delete the
-     *    one with the smallest error.  This will create a non-alternation
-     *    condition that is fixed by 1).
-     * 3) If there is exactly one excess extremum, delete the smaller
-     *    of the first/last extremum
+    /**
+     * **********************
+     * Search ======== Searches for the maxima/minima of the error curve. If
+     * more than r+1 extrema are found, it uses the following heuristic (thanks
+     * Chris Hanson): 1) Adjacent non-alternating extrema deleted first. 2) If
+     * there are more than one excess extrema, delete the one with the smallest
+     * error. This will create a non-alternation condition that is fixed by 1).
+     * 3) If there is exactly one excess extremum, delete the smaller of the
+     * first/last extremum
      *
      *
-     * INPUT:
-     * ------
-     * int    r        - 1/2 the number of filter coefficients
-     * int    Ext[]    - Indexes to Grid[] of extremal frequencies [r+1]
-     * int    gridsize - Number of elements in the dense frequency grid
-     * double E[]      - Array of error values.  [gridsize]
-     * OUTPUT:
-     * -------
-     * int    Ext[]    - New indexes to extremal frequencies [r+1]
-     ************************/
+     * INPUT: ------ int r - 1/2 the number of filter coefficients int Ext[] -
+     * Indexes to Grid[] of extremal frequencies [r+1] int gridsize - Number of
+     * elements in the dense frequency grid double E[] - Array of error values.
+     * [gridsize] OUTPUT: ------- int Ext[] - New indexes to extremal
+     * frequencies [r+1] **********************
+     */
     private void Search(final int r, final int Ext[], final double E[]) {
 
         /*
@@ -497,21 +463,26 @@ public class Remez {
         while (extra > 0) {
             boolean up;
             if (E[foundExt[0]] > 0.0) {
-                up = true;                /* first one is a maxima */
+                up = true;
+                /* first one is a maxima */
             } else {
-                up = false;                /* first one is a minima */
+                up = false;
+                /* first one is a minima */
             }
 
             int l = 0;
             boolean alt = true;
             for (j = 1; j < k; j++) {
                 if (Math.abs(E[foundExt[j]]) < Math.abs(E[foundExt[l]])) {
-                    l = j;               /* new smallest error. */
+                    l = j;
+                    /* new smallest error. */
                 }
                 if ((up) && (E[foundExt[j]] < 0.0)) {
-                    up = false;             /* switch to a minima */
+                    up = false;
+                    /* switch to a minima */
                 } else if ((!up) && (E[foundExt[j]] > 0.0)) {
-                    up = true;             /* switch to a maxima */
+                    up = true;
+                    /* switch to a maxima */
                 } else {
                     alt = false;
                     // PAK: break now and you will delete the smallest overall
@@ -520,11 +491,14 @@ public class Remez {
                     //
                     // if (fabs(E[foundExt[j]]) < fabs(E[foundExt[j-1]])) l=j;
                     // else l=j-1;
-                    break;              /* Ooops, found two non-alternating */
-                }                      /* extrema.  Delete smallest of them */
-            }  /* if the loop finishes, all extrema are alternating */
+                    break;
+                    /* Ooops, found two non-alternating */
+                }
+                /* extrema.  Delete smallest of them */
+            }
+            /* if the loop finishes, all extrema are alternating */
 
-            /*
+ /*
              * If there's only one extremal and all are alternating,
              * delete the smallest of the first/last extremals.
              */
@@ -548,28 +522,25 @@ public class Remez {
 
         for (int i = 0; i <= r; i++) {
             assert (foundExt[i] < E.length);
-            Ext[i] = foundExt[i];       /* Copy found extremals to Ext[] */
+            Ext[i] = foundExt[i];
+            /* Copy found extremals to Ext[] */
         }
 
     }
 
-    /*********************
-     * FreqSample
-     *============
-     * Simple frequency sampling algorithm to determine the impulse
-     * response h[] from A's found in ComputeA
+    /**
+     * *******************
+     * FreqSample ============ Simple frequency sampling algorithm to determine
+     * the impulse response h[] from A's found in ComputeA
      *
      *
-     * INPUT:
-     * ------
-     * int      N        - Number of filter coefficients
-     * double   A[]      - Sample points of desired response [N/2]
-     * int      symmetry - Symmetry of desired filter
+     * INPUT: ------ int N - Number of filter coefficients double A[] - Sample
+     * points of desired response [N/2] int symmetry - Symmetry of desired
+     * filter
      *
-     * OUTPUT:
-     * -------
-     * double h[] - Impulse Response of final filter [N]
-     *********************/
+     * OUTPUT: ------- double h[] - Impulse Response of final filter [N]
+     * *******************
+     */
     void FreqSample(final double A[]) {
 
         double M = (numtaps - 1.0) / 2.0;
@@ -616,23 +587,18 @@ public class Remez {
         }
     }
 
-    /*******************
-     * isDone
-     *========
-     * Checks to see if the error function is small enough to consider
-     * the result to have converged.
+    /**
+     * *****************
+     * isDone ======== Checks to see if the error function is small enough to
+     * consider the result to have converged.
      *
-     * INPUT:
-     * ------
-     * int    r     - 1/2 the number of filter coeffiecients
-     * int    Ext[] - Indexes to extremal frequencies [r+1]
-     * double E[]   - Error function on the dense grid [gridsize]
+     * INPUT: ------ int r - 1/2 the number of filter coeffiecients int Ext[] -
+     * Indexes to extremal frequencies [r+1] double E[] - Error function on the
+     * dense grid [gridsize]
      *
-     * OUTPUT:
-     * -------
-     * Returns 1 if the result converged
-     * Returns 0 if the result has not converged
-     ********************/
+     * OUTPUT: ------- Returns 1 if the result converged Returns 0 if the result
+     * has not converged ******************
+     */
     boolean isDone(final int r, final int Ext[], final double E[]) {
         int i;
         double min, max, current;
@@ -650,31 +616,26 @@ public class Remez {
         return (((max - min) / max) < 0.0001);
     }
 
-    /********************
-     * remez
-     *=======
-     * Calculates the optimal (in the Chebyshev/minimax sense)
-     * FIR filter impulse response given a set of band edges,
-     * the desired reponse on those bands, and the weight given to
-     * the error in those bands.
+    /**
+     * ******************
+     * remez ======= Calculates the optimal (in the Chebyshev/minimax sense) FIR
+     * filter impulse response given a set of band edges, the desired reponse on
+     * those bands, and the weight given to the error in those bands.
      *
-     * INPUT:
-     * ------
-     * int     numtaps     - Number of filter coefficients
-     * int     numband     - Number of bands in filter specification
-     * double  bands[]     - User-specified band edges [2 * numband]
-     * double  des[]       - User-specified band responses [numband]
-     * double  weight[]    - User-specified error weights [numband]
-     * int     type        - Type of filter
+     * INPUT: ------ int numtaps - Number of filter coefficients int numband -
+     * Number of bands in filter specification double bands[] - User-specified
+     * band edges [2 * numband] double des[] - User-specified band responses
+     * [numband] double weight[] - User-specified error weights [numband] int
+     * type - Type of filter
      *
-     * OUTPUT:
-     * -------
-     * double h[]      - Impulse response of final filter [numtaps]
-     * returns         - true on success, false on failure to converge
-     ********************/
+     * OUTPUT: ------- double h[] - Impulse response of final filter [numtaps]
+     * returns - true on success, false on failure to converge
+     * ******************
+     */
     private void remez() {
 
-        int r = numtaps / 2;                  /* number of extrema */
+        int r = numtaps / 2;
+        /* number of extrema */
         if ((numtaps % 2 != 0) && (ftype.symmetry == Symmety.POSITIVE)) {
             r++;
         }

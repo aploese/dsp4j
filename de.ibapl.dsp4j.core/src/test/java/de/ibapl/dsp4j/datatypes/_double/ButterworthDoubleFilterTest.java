@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -23,13 +23,9 @@ package de.ibapl.dsp4j.datatypes._double;
 
 import de.ibapl.dsp4j.datatypes._double.iirfilter.DirectDoubleIirFilter;
 import de.ibapl.dsp4j.datatypes._double.iirfilter.DoubleIirFilterGenerator;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import org.junit.Ignore;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -40,24 +36,8 @@ public class ButterworthDoubleFilterTest {
     public ButterworthDoubleFilterTest() {
     }
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
-
+    @Disabled
     @Test
-    @Ignore
     public void test1stOrder() throws Exception {
         System.out.println("setX");
         DoubleIirFilterGenerator gen = new DoubleIirFilterGenerator(8000);
@@ -69,7 +49,6 @@ public class ButterworthDoubleFilterTest {
 //        filter.setFc(5, 500, false);
 //        assertArrayEquals(new double[]{1.0, -0.6681786379192989}, filter.getA(), Double.MIN_VALUE);
 //        assertArrayEquals(new double[]{0.16591068104035053, 0.16591068104035053}, filter.getB(), Double.MIN_VALUE);
-
         //HP
         filter = gen.getHP_ButterFc(1, 500, DirectDoubleIirFilter.class);
         assertArrayEquals(new double[]{1.0, -0.6681786379192989}, filter.getA(), Double.MIN_VALUE);

@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -21,9 +21,6 @@
  */
 package de.ibapl.dsp4j.octave;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.logging.Logger;
 
 /**
@@ -34,7 +31,8 @@ public class OctaveFilterFactory {
 
     private final static Logger LOG = Logger.getLogger(OctaveFilterFactory.class.getCanonicalName());
 
-    /*
+    /* TODO
+
     public static void setIirFilter(IirFilter filter, FilterType ft, FilterBandType fbt, int order, float fgu, float fgo) {
         StringBuilder sb = new StringBuilder("[b, a] = ");
         sb.append(ft.octaveName);
@@ -63,13 +61,13 @@ public class OctaveFilterFactory {
             BufferedReader br = new BufferedReader(new InputStreamReader(p.getErrorStream()));
             String line;
             while ((line = br.readLine()) != null) {
-                LOG.warn("Octave err:" + line);
+                LOG.warning("Octave err:" + line);
             }
             br = new BufferedReader(new InputStreamReader(p.getInputStream()));
             double[] a = null;
             double[] b = null;
             while ((line = br.readLine()) != null) {
-                LOG.debug(line);
+                LOG.fine(line);
                 String[] splitted = line.split(" ");
                 if (splitted.length > 1) {
                     if (splitted[0].startsWith("a=[")) {
@@ -90,12 +88,10 @@ public class OctaveFilterFactory {
             } else {
                 throw new RuntimeException("Cant read coefficents from octave");
             }
-        } catch (InterruptedException ex) {
-            LOG.error("Get filter coefficients", ex);
-        } catch (IOException ex) {
-            LOG.error("Get filter coefficients", ex);
+        } catch (InterruptedException | IOException ex) {
+            LOG.log(Level.SEVERE, "Get filter coefficients", ex);
         }
     }
-     
+
      */
 }

@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -21,11 +21,11 @@
  */
 package de.ibapl.dsp4j.datatypes._double;
 
-import java.util.logging.Logger;
 import de.ibapl.dsp4j.AbstractSampleProcessingBlock;
 import static de.ibapl.dsp4j.DspConst.TWO_PI;
 import de.ibapl.dsp4j.In;
 import de.ibapl.dsp4j.Out;
+import java.util.logging.Logger;
 
 /**
  *
@@ -39,10 +39,10 @@ public class GenericNCO2ndOrder extends AbstractSampleProcessingBlock implements
     private double deltaPhi;
     private double currentDeltaPhi;
     private double deltaPhiMax;
- 
+
     private double alpha;
     private double beta;
-    
+
     private double fMin;
     private double f0;
     private double fMax;
@@ -66,7 +66,7 @@ public class GenericNCO2ndOrder extends AbstractSampleProcessingBlock implements
         setAlpha(alpha);
     }
 
-    public GenericNCO2ndOrder(double fMin, double f0, double fMax, double alpha, double  beta) {
+    public GenericNCO2ndOrder(double fMin, double f0, double fMax, double alpha, double beta) {
         this(fMin, f0, fMax);
         this.alpha = alpha;
         this.beta = beta;
@@ -92,9 +92,9 @@ public class GenericNCO2ndOrder extends AbstractSampleProcessingBlock implements
         }
         deltaPhi += error * beta;
         if (deltaPhi < deltaPhiMin) {
-           deltaPhi = deltaPhiMin;
+            deltaPhi = deltaPhiMin;
         } else if (deltaPhi > deltaPhiMax) {
-           deltaPhi = deltaPhiMax;
+            deltaPhi = deltaPhiMax;
         }
         cosY = Math.cos(phi);
         sinY = Math.sin(phi);
@@ -135,8 +135,7 @@ public class GenericNCO2ndOrder extends AbstractSampleProcessingBlock implements
     }
 
     /**
-     * @param alpha the alpha to set
-     * beta will be calculated
+     * @param alpha the alpha to set beta will be calculated
      */
     public void setAlpha(double alpha) {
         this.alpha = alpha;
@@ -153,7 +152,7 @@ public class GenericNCO2ndOrder extends AbstractSampleProcessingBlock implements
      */
     public double getBeta() {
         return beta;
-}
+    }
 
     /**
      * @return the deltaPhiMin

@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -42,7 +42,7 @@ import org.apache.commons.math3.util.FastMath;
 ## along with this program; If not, see <http://www.gnu.org/licenses/>.
 
 ## Generate an Chebyshev type I filter with Rp dB of pass band ripple.
-## 
+##
 ## [b, a] = cheby1(n, Rp, Wc)
 ##    low pass filter with cutoff pi*Wc radians
 ##
@@ -61,11 +61,11 @@ import org.apache.commons.math3.util.FastMath;
 ##
 ## [...] = cheby1(...,'s')
 ##     return a Laplace space filter, W can be larger than 1.
-## 
+##
 ## [a,b,c,d] = cheby1(...)
-##  return  state-space matrices 
-## 
-## References: 
+##  return  state-space matrices
+##
+## References:
 ##
 ## Parks & Burrus (1987). Digital Filter Design. New York:
 ## John Wiley & Sons, Inc.
@@ -106,13 +106,13 @@ public class Cheby1 extends PoleZeroGainIIRFilterGenerator {
         }
         gain = gainC.getReal();
     }
-    
+
     public Cheby1(int n, double Rp, double wc, boolean digital, boolean stop) {
-        this(n, Rp, new double[] {wc}, digital, stop);
+        this(n, Rp, new double[]{wc}, digital, stop);
     }
-    
+
     public Cheby1(int n, double Rp, double wl, double wh, boolean digital, boolean stop) {
-        this(n, Rp, new double[] {wl, wh}, digital, stop);
+        this(n, Rp, new double[]{wl, wh}, digital, stop);
     }
-    
+
 }

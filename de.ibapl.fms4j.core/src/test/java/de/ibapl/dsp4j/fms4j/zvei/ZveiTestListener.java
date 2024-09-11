@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -24,13 +24,14 @@ package de.ibapl.dsp4j.fms4j.zvei;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
  * @author aploese
  */
 public class ZveiTestListener implements ZveiFolgeContainerListener {
+
     List<ZveiFreqTable[]> data = new ArrayList<>();
     int[] startIndices = new int[0];
     int currentDataIndex;
@@ -43,15 +44,15 @@ public class ZveiTestListener implements ZveiFolgeContainerListener {
 
     @Override
     public void success(ZveiFreqTable[] result) {
-        assertTrue("more data received than expected", currentDataIndex < data.size());
-        assertArrayEquals(String.format("Index %d", currentDataIndex), data.get(currentDataIndex), result);
+        assertTrue(currentDataIndex < data.size(), "more data received than expected");
+        assertArrayEquals(data.get(currentDataIndex), result, String.format("Index %d", currentDataIndex));
         currentDataIndex++;
     }
 
     @Override
     public void fail(ZveiFreqTable[] result) {
-        assertArrayEquals(String.format("Index %d expected: %s , but was %s", currentDataIndex, data.get(currentDataIndex), result), data.get(currentDataIndex), null);
+        assertArrayEquals(data.get(currentDataIndex), null, String.format("Index %d expected: %s , but was %s", currentDataIndex, data.get(currentDataIndex), result));
         currentDataIndex++;
     }
-    
+
 }

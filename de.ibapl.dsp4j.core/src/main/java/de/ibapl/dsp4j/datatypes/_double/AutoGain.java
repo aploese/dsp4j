@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -21,13 +21,12 @@
  */
 package de.ibapl.dsp4j.datatypes._double;
 
-import java.util.logging.Logger;
-import de.ibapl.dsp4j.datatypes._double.iirfilter.DirectDoubleIirFilter;
-import de.ibapl.dsp4j.datatypes._double.iirfilter.DoubleIirFilterGenerator;
 import de.ibapl.dsp4j.AbstractSampleProcessingBlock;
 import de.ibapl.dsp4j.In;
 import de.ibapl.dsp4j.Out;
-
+import de.ibapl.dsp4j.datatypes._double.iirfilter.DirectDoubleIirFilter;
+import de.ibapl.dsp4j.datatypes._double.iirfilter.DoubleIirFilterGenerator;
+import java.util.logging.Logger;
 
 /**
  *
@@ -50,9 +49,8 @@ public class AutoGain extends AbstractSampleProcessingBlock {
     public AutoGain() {
     }
 
-
     @Override
-    public void setSampleRate(double  sampleRate) {
+    public void setSampleRate(double sampleRate) {
         lp = new DoubleIirFilterGenerator(sampleRate).getLP_FirstOrder(100, DirectDoubleIirFilter.class);
         super.setSampleRate(sampleRate);
     }
@@ -61,16 +59,16 @@ public class AutoGain extends AbstractSampleProcessingBlock {
     public double setX(double data) {
         y = data * gain;
         lp.setX(y < 0 ? -y : y);
-                gain = beta * gain + alpha * (pow - lp.getY());
-                if (gain < gainMin) {
-                    gain = gainMin;
-                } else if (gain > gainMax) {
-                    gain = gainMax;
-                }
+        gain = beta * gain + alpha * (pow - lp.getY());
+        if (gain < gainMin) {
+            gain = gainMin;
+        } else if (gain > gainMax) {
+            gain = gainMax;
+        }
 
-                return y;
+        return y;
     }
-    
+
     @Out
     public double getY() {
         return y;

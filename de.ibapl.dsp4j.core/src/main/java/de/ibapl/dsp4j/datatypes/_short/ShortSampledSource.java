@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -26,7 +26,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 import de.ibapl.dsp4j.AudioInputStreamSource;
@@ -37,26 +36,25 @@ import de.ibapl.dsp4j.AudioInputStreamSource;
  */
 public class ShortSampledSource extends AudioInputStreamSource {
 
-	public ShortSampledSource(AudioInputStream ais, int samplesInBuffer) throws IOException {
-		super(ais, samplesInBuffer);
-	}
+    public ShortSampledSource(AudioInputStream ais, int samplesInBuffer) throws IOException {
+        super(ais, samplesInBuffer);
+    }
 
-	public ShortSampledSource(File f, int samplesInBuffer) throws IOException, UnsupportedAudioFileException {
-		super(f, samplesInBuffer);
-	}
+    public ShortSampledSource(File f, int samplesInBuffer) throws IOException, UnsupportedAudioFileException {
+        super(f, samplesInBuffer);
+    }
 
-	public ShortSampledSource(InputStream is, int framesInBuffer) throws IOException, UnsupportedAudioFileException {
-		super(is, framesInBuffer);
-	}
+    public ShortSampledSource(InputStream is, int framesInBuffer) throws IOException, UnsupportedAudioFileException {
+        super(is, framesInBuffer);
+    }
 
-	public short getShort(int channel) {
-		final int pos = bufferPos * sampleSize + channel * 2;
-		if (bigEndian) {
-			return (short) (((buffer[pos] & 0xFF) << 8) | (buffer[pos + 1] & 0xFF));
-		} else {
-			return (short) (((buffer[pos] & 0xFF) | ((buffer[pos + 1] & 0xFF) << 8)));
-		}
-	}
-
+    public short getShort(int channel) {
+        final int pos = bufferPos * sampleSize + channel * 2;
+        if (bigEndian) {
+            return (short) (((buffer[pos] & 0xFF) << 8) | (buffer[pos + 1] & 0xFF));
+        } else {
+            return (short) (((buffer[pos] & 0xFF) | ((buffer[pos + 1] & 0xFF) << 8)));
+        }
+    }
 
 }

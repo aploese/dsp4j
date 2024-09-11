@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -39,15 +39,15 @@ public class Direct2ndOrderShortIirFilter implements DirectShortIirFilter {
     private int si1;
     private int y;
 
-    public Direct2ndOrderShortIirFilter(double [] a, double [] b) {
+    public Direct2ndOrderShortIirFilter(double[] a, double[] b) {
         if (a[0] != 1) {
             throw new IllegalArgumentException("a[0] must be 1");
         }
-        this.a1 = (int)Math.round(a[1] * Q_DOT_15_VALUE);
-        this.a2 = (int)Math.round(a[2] * Q_DOT_15_VALUE);
-        this.b0 = (int)Math.round(b[0] * Q_DOT_15_VALUE);
-        this.b1 = (int)Math.round(b[1] * Q_DOT_15_VALUE);
-        this.b2 = (int)Math.round(b[2] * Q_DOT_15_VALUE);
+        this.a1 = (int) Math.round(a[1] * Q_DOT_15_VALUE);
+        this.a2 = (int) Math.round(a[2] * Q_DOT_15_VALUE);
+        this.b0 = (int) Math.round(b[0] * Q_DOT_15_VALUE);
+        this.b1 = (int) Math.round(b[1] * Q_DOT_15_VALUE);
+        this.b2 = (int) Math.round(b[2] * Q_DOT_15_VALUE);
     }
 
     @Override
@@ -65,17 +65,17 @@ public class Direct2ndOrderShortIirFilter implements DirectShortIirFilter {
     }
 
     @Override
-    public int [] getA() {
+    public int[] getA() {
         return new int[]{1, a1, a2};
     }
 
     @Override
-    public int [] getB() {
+    public int[] getB() {
         return new int[]{b0, b1, b2};
     }
 
     @Override
-    public int [] getSi() {
+    public int[] getSi() {
         return new int[]{si0, si1};
     }
 

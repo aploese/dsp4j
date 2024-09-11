@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -21,9 +21,9 @@
  */
 package de.ibapl.dsp4j.datatypes._int;
 
-import java.util.Arrays;
 import de.ibapl.dsp4j.In;
 import de.ibapl.dsp4j.Out;
+import java.util.Arrays;
 
 /**
  *
@@ -42,8 +42,8 @@ public class GenericDirectIntIirFilter implements DirectIntIirFilter<GenericDire
 
     public GenericDirectIntIirFilter setCoeff(int[] a, int[] b) {
         if (a.length == b.length) {
-        this.a = a;
-        this.b = b;
+            this.a = a;
+            this.b = b;
         } else if (a.length < b.length) {
             this.a = Arrays.copyOf(a, b.length);
             this.b = b;
@@ -62,11 +62,11 @@ public class GenericDirectIntIirFilter implements DirectIntIirFilter<GenericDire
     @In
     @Override
     public int setX(int x) {
-        y = (int)(((long)b[0] * x) >> Q_DOT_31) + si[0];
+        y = (int) (((long) b[0] * x) >> Q_DOT_31) + si[0];
         for (int i = 0; i < si.length - 1; i++) {
-            si[i] = (int)(((long)b[i + 1] * x) >> Q_DOT_31) - (int)(((long)a[i + 1] * y) >> Q_DOT_31) + si[i + 1];
+            si[i] = (int) (((long) b[i + 1] * x) >> Q_DOT_31) - (int) (((long) a[i + 1] * y) >> Q_DOT_31) + si[i + 1];
         }
-        si[si.length - 1] = (int)(((long)b[b.length - 1] * x) >> Q_DOT_31) - (int)(((long)a[a.length - 1] * y) >> Q_DOT_31);
+        si[si.length - 1] = (int) (((long) b[b.length - 1] * x) >> Q_DOT_31) - (int) (((long) a[a.length - 1] * y) >> Q_DOT_31);
         return y;
     }
 
@@ -93,9 +93,9 @@ public class GenericDirectIntIirFilter implements DirectIntIirFilter<GenericDire
 
     @Override
     public void reset() {
-       for (int i = 0; i < si.length; i++) {
-           si[i] = 0;
-       }
+        for (int i = 0; i < si.length; i++) {
+            si[i] = 0;
+        }
     }
 
 }

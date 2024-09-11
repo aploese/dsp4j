@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -36,7 +36,6 @@ public class RemezFilter extends AbstractDoubleFirFilter {
     Remez.FType ftype;
     int griddensity;
 
-
     public RemezFilter(int order, double[] f, double[] a, Remez.FType ftype) {
         this(order, f, a, Remez.defaultWeight(a), ftype, Remez.DEFAULT_GRID_DENSITY);
     }
@@ -63,7 +62,7 @@ public class RemezFilter extends AbstractDoubleFirFilter {
         for (int i = 0; i < frequencies.length; i++) {
             result[i] = 2.0 * frequencies[i] / getSampleRate();
         }
-        result[result.length -1] = 1; // add last frq at PI
+        result[result.length - 1] = 1; // add last frq at PI
         return result;
     }
 
@@ -78,13 +77,13 @@ public class RemezFilter extends AbstractDoubleFirFilter {
 
     void setFc(int order, double fc, double with, boolean high) {
         this.order = order;
-        frequencies = new double[] {0, fc * (1 - with), fc * (1 + with)};
+        frequencies = new double[]{0, fc * (1 - with), fc * (1 + with)};
         if (high) {
-            response = new double[] {0,0,1,1};
+            response = new double[]{0, 0, 1, 1};
         } else {
-            response = new double[] {1,1,0,0};
+            response = new double[]{1, 1, 0, 0};
         }
-        this.weight =  Remez.defaultWeight(response);
+        this.weight = Remez.defaultWeight(response);
         init();
     }
 

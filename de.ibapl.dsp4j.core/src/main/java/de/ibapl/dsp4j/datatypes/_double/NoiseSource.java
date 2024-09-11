@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -21,10 +21,10 @@
  */
 package de.ibapl.dsp4j.datatypes._double;
 
-import java.util.Random;
 import de.ibapl.dsp4j.AbstractSampleProcessingBlock;
 import de.ibapl.dsp4j.In;
 import de.ibapl.dsp4j.Out;
+import java.util.Random;
 
 /**
  *
@@ -36,7 +36,6 @@ public class NoiseSource extends AbstractSampleProcessingBlock {
     private double gain;
     private Random random;
     private double y;
-
 
     public NoiseSource() {
         random = new Random();
@@ -51,7 +50,7 @@ public class NoiseSource extends AbstractSampleProcessingBlock {
         y = ((random.nextDouble() - 0.5) * gain) + x;
         return y;
     }
-    
+
     @Out
     public double getY() {
         return y;
@@ -74,6 +73,5 @@ public class NoiseSource extends AbstractSampleProcessingBlock {
     public void setRandomSeed(long seed) {
         random.setSeed(seed);
     }
-
 
 }

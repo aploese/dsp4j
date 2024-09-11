@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -21,11 +21,11 @@
  */
 package de.ibapl.dsp4j;
 
+import de.ibapl.dsp4j.datatypes._short.ShortFileSink;
 import java.io.File;
 import java.io.IOException;
-import de.ibapl.dsp4j.datatypes._short.ShortFileSink;
-import org.junit.After;
-import org.junit.Ignore;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Disabled;
 
 /**
  *
@@ -33,12 +33,13 @@ import org.junit.Ignore;
  *
  * set setShowTests(true) in before... to show all tests
  */
-@Ignore
+@Disabled
 public class VisualResultCheckTest {
+
     protected ShortFileSink sfs;
     private File f;
-    
-    @After
+
+    @AfterEach
     public void tearDown() throws Exception {
         if (sfs != null) {
             sfs.close();
@@ -63,7 +64,7 @@ public class VisualResultCheckTest {
     /**
      * @param showTestName the showTests to set
      */
-    protected void createFile(String name, double samplerate, int channels) throws IOException{
+    protected void createFile(String name, double samplerate, int channels) throws IOException {
         this.f = File.createTempFile(String.format("%s_%s", getClass().getSimpleName(), name), ".wav");
         sfs = new ShortFileSink(f, channels, samplerate, 1024);
         f.deleteOnExit();

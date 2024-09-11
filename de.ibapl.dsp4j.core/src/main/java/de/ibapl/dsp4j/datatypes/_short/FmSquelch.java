@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -21,10 +21,10 @@
  */
 package de.ibapl.dsp4j.datatypes._short;
 
-import de.ibapl.dsp4j.datatypes._short.iirfilter.DirectShortIirFilter;
-import de.ibapl.dsp4j.datatypes._short.iirfilter.ShortIirFilterGenerator;
 import de.ibapl.dsp4j.AbstractSampleProcessingBlock;
 import de.ibapl.dsp4j.In;
+import de.ibapl.dsp4j.datatypes._short.iirfilter.DirectShortIirFilter;
+import de.ibapl.dsp4j.datatypes._short.iirfilter.ShortIirFilterGenerator;
 
 /**
  *
@@ -37,7 +37,7 @@ public class FmSquelch extends AbstractSampleProcessingBlock {
     private double flp;
     private double fhp;
     private final int threshold;
-    
+
     public FmSquelch(int threshhold, double flp, double fhp) {
         this.threshold = threshhold;
         this.flp = flp;
@@ -97,7 +97,7 @@ public class FmSquelch extends AbstractSampleProcessingBlock {
     /**
      *
      * @param sample
-     * @return 
+     * @return
      */
     @In
     public boolean setX(int sample) {

@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -36,8 +36,7 @@ public class LPll extends AbstractSampleProcessingBlock {
     private double phi2_n;
     private double ud_n_M_1;
     private double uf_n_M_1;
-    
-    
+
     //Config of the pll
     private double kd;
     private double k0;

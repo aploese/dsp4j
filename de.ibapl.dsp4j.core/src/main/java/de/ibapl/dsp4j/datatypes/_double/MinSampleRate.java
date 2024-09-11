@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -59,7 +59,7 @@ public class MinSampleRate extends UpSample {
     }
 
     private void init() {
-       setMultiplier((int)Math.ceil(getMinOutSampleRate() / getSampleRate()));
+        setMultiplier((int) Math.ceil(getMinOutSampleRate() / getSampleRate()));
     }
 
 }

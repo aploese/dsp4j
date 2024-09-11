@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -29,44 +29,44 @@ import org.apache.commons.math3.complex.Complex;
  */
 public class HilbertTransformator extends AbstractSampleProcessingBlock {
 
-       double[] b;
-        double[] si;
-        int mid;
-        int length;
-        Complex y;
+    double[] b;
+    double[] si;
+    int mid;
+    int length;
+    Complex y;
 
-        public HilbertTransformator(int length) {
-            mid = length / 2;
-            this.length = mid * 2;
-            b = new double[length];
-            si = new double[length];
-            for (int i = 0; i < this.length; i++) {
-                if (i == mid) {
-                    b[i] = 0;
-                } else {
+    public HilbertTransformator(int length) {
+        mid = length / 2;
+        this.length = mid * 2;
+        b = new double[length];
+        si = new double[length];
+        for (int i = 0; i < this.length; i++) {
+            if (i == mid) {
+                b[i] = 0;
+            } else {
 
-                    b[i] = (1 - Math.cos((i - mid) * Math.PI)) / ((i - mid) * Math.PI);
-                }
-
+                b[i] = (1 - Math.cos((i - mid) * Math.PI)) / ((i - mid) * Math.PI);
             }
-        }
 
-        @In
-        public Complex setX(double x) {
-            si[0] = x;
-            double resultIm = 0;
-            for (int i = length - 1; i >= 1; i--) {
-                resultIm += b[i] * si[i];
-                si[i] = si[i - 1];
-            }
-            resultIm += b[0] * si[0];
-            y = new Complex(si[mid], resultIm);
-                    return y;
         }
-        
-        @Out
-        public Complex getY() {
-            return y;
+    }
+
+    @In
+    public Complex setX(double x) {
+        si[0] = x;
+        double resultIm = 0;
+        for (int i = length - 1; i >= 1; i--) {
+            resultIm += b[i] * si[i];
+            si[i] = si[i - 1];
         }
+        resultIm += b[0] * si[0];
+        y = new Complex(si[mid], resultIm);
+        return y;
+    }
+
+    @Out
+    public Complex getY() {
+        return y;
+    }
 
 }

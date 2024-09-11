@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -29,7 +29,7 @@ import de.ibapl.dsp4j.In;
  * @author aploese
  */
 public class EdgeDetector extends AbstractSampleProcessingBlock {
-    
+
     enum State {
 
         IDLE,
@@ -46,7 +46,6 @@ public class EdgeDetector extends AbstractSampleProcessingBlock {
     double minHoldTime;
     int samplesLeft;
     TriState y;
-    
 
     public EdgeDetector(double lowThreshold, double highThreshold, double minHoldTime) {
         super();
@@ -73,7 +72,7 @@ public class EdgeDetector extends AbstractSampleProcessingBlock {
                 if (data > highEdgeUpper) {
                     state = State.HIGH_EDGE_UPPER_TRIGGERED;
                     y = TriState.POSITIVE;
-                    samplesLeft = (int)(getSampleRate() * minHoldTime);
+                    samplesLeft = (int) (getSampleRate() * minHoldTime);
                 } else if (data < highEdgeLower) {
                     state = State.IDLE;
                     y = TriState.ZERO;
@@ -95,7 +94,7 @@ public class EdgeDetector extends AbstractSampleProcessingBlock {
                 if (data < lowEdgeLower) {
                     state = State.LOW_EDGE_LOWER_TRIGGERED;
                     y = TriState.NEGATIVE;
-                    samplesLeft = (int)(getSampleRate() * minHoldTime);
+                    samplesLeft = (int) (getSampleRate() * minHoldTime);
                 } else if (data > lowEdgeUpper) {
                     state = State.IDLE;
                     y = TriState.ZERO;
@@ -108,7 +107,7 @@ public class EdgeDetector extends AbstractSampleProcessingBlock {
                 if (data > lowEdgeUpper) {
                     state = State.IDLE;
                     if (samplesLeft > 0) {
-                     //TODO   sink.reset();
+                        //TODO   sink.reset();
                     }
                 }
                 y = TriState.ZERO;

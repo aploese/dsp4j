@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -21,31 +21,22 @@
  */
 package de.ibapl.dsp4j.fms4j.fms;
 
-import java.io.File;
-import java.util.logging.Logger;
-
-import javax.sound.sampled.AudioFormat;
-
 import de.ibapl.dsp4j.AudioSink;
 import de.ibapl.dsp4j.datatypes._double.iirfilter.AbstractCascadedDoubleIirFilter;
 import de.ibapl.dsp4j.datatypes._double.iirfilter.DirectDoubleIirFilter;
 import de.ibapl.dsp4j.datatypes._double.iirfilter.DoubleIirFilterGenerator;
-import de.ibapl.dsp4j.fms4j.VisualResultCheckTest;
 import de.ibapl.dsp4j.datatypes._short.ShortFileSink;
 import de.ibapl.dsp4j.datatypes._short.ShortSpeakerSink;
-
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import org.junit.Ignore;
-import static de.ibapl.dsp4j.fms4j.fms.Laenderkennung.*;
+import de.ibapl.dsp4j.fms4j.VisualResultCheckTest;
 import static de.ibapl.dsp4j.fms4j.fms.Baustufenkennung.*;
 import static de.ibapl.dsp4j.fms4j.fms.Dienstkennung.*;
+import static de.ibapl.dsp4j.fms4j.fms.Laenderkennung.*;
 import static de.ibapl.dsp4j.fms4j.fms.Richtungskennung.*;
 import static de.ibapl.dsp4j.fms4j.fms.TaktischeKurzinformation.*;
+import java.io.File;
+import java.util.logging.Logger;
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
@@ -53,270 +44,255 @@ import static de.ibapl.dsp4j.fms4j.fms.TaktischeKurzinformation.*;
  */
 public class FmsContainerSynthTest extends VisualResultCheckTest {
 
-	final private static Logger LOG = Logger.getLogger(FmsContainerSynthTest.class.getCanonicalName());
+    final private static Logger LOG = Logger.getLogger(FmsContainerSynthTest.class.getCanonicalName());
 
-	public FmsContainerSynthTest() {
-	}
+    ShortSpeakerSink msss;
+    ShortFileSink sfs;
 
-	ShortSpeakerSink msss;
-	ShortFileSink sfs;
+    @AfterEach
+    public void tearDown() throws Exception {
+        if (msss != null) {
+            msss.close();
+        }
+        if (sfs != null) {
+            sfs.close();
+        }
+        sfs = null;
+        super.tearDown();
+    }
 
-	@BeforeClass
-	public static void setUpClass() throws Exception {
-	}
+    @Disabled
+    @Test
+    public void testFmsAudio3() throws Exception {
+        FmsData data = new FmsData(FW, BW, "65", "45-99", NUR_VOM_FZG, LST_ZU_FZG, TKI_IV, "ABCDE");
+        doTest(false, false, 0, Short.MAX_VALUE, 0, 44100, data);
+        doTest(false, false, 0, Short.MAX_VALUE, 0, 22050, data);
+        doTest(false, false, 0, Short.MAX_VALUE, 0, 11025, data);
+    }
 
-	@AfterClass
-	public static void tearDownClass() throws Exception {
-	}
+    @Disabled
+    @Test
+    public void testFmsAudio4() throws Exception {
+        FmsData data = new FmsData(FW, BW, "65", "45-99", NUR_VOM_FZG, LST_ZU_FZG, TKI_IV, "ABCDEF");
+        doTest(false, false, 0, Short.MAX_VALUE, 0, 44100, data);
+        doTest(false, false, 0, Short.MAX_VALUE, 0, 22050, data);
+        doTest(false, false, 0, Short.MAX_VALUE, 0, 11025, data);
+    }
 
-	@Before
-	public void setUp() throws Exception {
-	}
+    @Disabled
+    @Test
+    public void testFmsAudio5() throws Exception {
+        FmsData data = new FmsData(FW, BW, "65", "45-99", NUR_VOM_FZG, LST_ZU_FZG, TKI_IV, "ABCDEFG");
+        doTest(false, false, 0, Short.MAX_VALUE, 0, 44100, data);
+        doTest(false, false, 0, Short.MAX_VALUE, 0, 22050, data);
+        doTest(false, false, 0, Short.MAX_VALUE, 0, 11025, data);
+    }
 
-	@After
-	public void tearDown() throws Exception {
-		if (msss != null) {
-			msss.close();
-		}
-		if (sfs != null) {
-			sfs.close();
-		}
-		sfs = null;
-		super.tearDown();
-	}
+    @Disabled
+    @Test
+    public void testFmsAudio6() throws Exception {
+        FmsData data = new FmsData(FW, BW, "64", "17-50", (byte) 15, BEIDE_RICHTUNGEN, FZG_ZU_LST, TKI_II);
+        doTest(false, false, 0, Short.MAX_VALUE, 0, 11025, data);
+    }
 
-	@Test
-	@Ignore
-	public void testFmsAudio3() throws Exception {
-		FmsData data = new FmsData(FW, BW, "65", "45-99", NUR_VOM_FZG, LST_ZU_FZG, TKI_IV, "ABCDE");
-		doTest(false, false, 0, Short.MAX_VALUE, 0, 44100, data);
-		doTest(false, false, 0, Short.MAX_VALUE, 0, 22050, data);
-		doTest(false, false, 0, Short.MAX_VALUE, 0, 11025, data);
-	}
+    @Disabled
+    @Test
+    public void testFmsAudio7() throws Exception {
+        FmsData data = new FmsData(FW, BW, "64", "17-50", (byte) 1, BEIDE_RICHTUNGEN, FZG_ZU_LST, TKI_II);
+        doTest(false, false, -0.5, Short.MAX_VALUE / 3, 0, 44100, data);
+        // doTest(false, false, 0, Short.MAX_VALUE, 0, 22050, data);
+        // doTest(false, false, 0, Short.MAX_VALUE, 0, 11025, data);
+    }
 
-	@Test
-	@Ignore
-	public void testFmsAudio4() throws Exception {
-		FmsData data = new FmsData(FW, BW, "65", "45-99", NUR_VOM_FZG, LST_ZU_FZG, TKI_IV, "ABCDEF");
-		doTest(false, false, 0, Short.MAX_VALUE, 0, 44100, data);
-		doTest(false, false, 0, Short.MAX_VALUE, 0, 22050, data);
-		doTest(false, false, 0, Short.MAX_VALUE, 0, 11025, data);
-	}
+    @Disabled
+    @Test
+    public void testFmsAudio8() throws Exception {
+        FmsData data = new FmsData(FW, BW, "64", "07-99", NUR_VOM_FZG, LST_ZU_FZG, TKI_III,
+                "Unwetter Wassernot  \n\nIm Untertal 21      \nYach");
+        doTest(false, false, -0.5, Short.MAX_VALUE / 3, 0, 11025, data);
+        // doTest(false, false, 0, Short.MAX_VALUE, 0, 22050, data);
+        // doTest(false, false, 0, Short.MAX_VALUE, 0, 11025, data);
+    }
 
-	@Test
-	@Ignore
-	public void testFmsAudio5() throws Exception {
-		FmsData data = new FmsData(FW, BW, "65", "45-99", NUR_VOM_FZG, LST_ZU_FZG, TKI_IV, "ABCDEFG");
-		doTest(false, false, 0, Short.MAX_VALUE, 0, 44100, data);
-		doTest(false, false, 0, Short.MAX_VALUE, 0, 22050, data);
-		doTest(false, false, 0, Short.MAX_VALUE, 0, 11025, data);
-	}
+    boolean success;
 
-	@Test
-	@Ignore
-	public void testFmsAudio6() throws Exception {
-		FmsData data = new FmsData(FW, BW, "64", "17-50", (byte) 15, BEIDE_RICHTUNGEN, FZG_ZU_LST, TKI_II);
-		doTest(false, false, 0, Short.MAX_VALUE, 0, 11025, data);
-	}
+    // TODO noise
+    public void doTest(boolean soundOut, boolean showResult, double offset, double signalPower, double noiseRatio,
+            double samplerate, final FmsData data) throws Exception {
+        success = false;
+        if (soundOut) {
+            msss = new ShortSpeakerSink(1, samplerate, 1);
+        }
+        FmsModulator m = new FmsModulator(0.001);
+        m.setSampleRate(samplerate);
+        DoubleIirFilterGenerator gen = new DoubleIirFilterGenerator(samplerate);
+        AbstractCascadedDoubleIirFilter filter = gen.getLP_ButterFc(7, 1500, AbstractCascadedDoubleIirFilter.class); // FMS32
+        // 7.ordnung
+        DirectDoubleIirFilter sFilter = gen.getHP_ButterFc(1, 1200, DirectDoubleIirFilter.class);
 
-	@Test
-	@Ignore
-	public void testFmsAudio7() throws Exception {
-		FmsData data = new FmsData(FW, BW, "64", "17-50", (byte) 1, BEIDE_RICHTUNGEN, FZG_ZU_LST, TKI_II);
-		doTest(false, false, -0.5, Short.MAX_VALUE / 3, 0, 44100, data);
-		// doTest(false, false, 0, Short.MAX_VALUE, 0, 22050, data);
-		// doTest(false, false, 0, Short.MAX_VALUE, 0, 11025, data);
-	}
+        FmsContainer fmsContainer = new FmsContainer(new FmsContainerListener() {
+            @Override
+            public boolean error(FmsData fmsData) {
+                fail(fmsData.toString());
+                return true;
+            }
 
-	@Test
-	@Ignore
-	public void testFmsAudio8() throws Exception {
-		FmsData data = new FmsData(FW, BW, "64", "07-99", NUR_VOM_FZG, LST_ZU_FZG, TKI_III,
-				"Unwetter Wassernot  \n\nIm Untertal 21      \nYach");
-		doTest(false, false, -0.5, Short.MAX_VALUE / 3, 0, 11025, data);
-		// doTest(false, false, 0, Short.MAX_VALUE, 0, 22050, data);
-		// doTest(false, false, 0, Short.MAX_VALUE, 0, 11025, data);
-	}
+            @Override
+            public void success(FmsData fmsData) {
+                assertEquals(data, fmsData);
+                success = true;
+            }
 
-	boolean success;
+            @Override
+            public boolean crcError(FmsData fmsData) {
+                fail(fmsData.toString());
+                return true;
+            }
 
-	// TODO noise
-	public void doTest(boolean soundOut, boolean showResult, double offset, double signalPower, double noiseRatio,
-			double samplerate, final FmsData data) throws Exception {
-		success = false;
-		if (soundOut) {
-			msss = new ShortSpeakerSink(1, samplerate, 1);
-		}
-		FmsModulator m = new FmsModulator(0.001);
-		m.setSampleRate(samplerate);
-		DoubleIirFilterGenerator gen = new DoubleIirFilterGenerator(samplerate);
-		AbstractCascadedDoubleIirFilter filter = gen.getLP_ButterFc(7, 1500, AbstractCascadedDoubleIirFilter.class); // FMS32
-																														// 7.ordnung
-		DirectDoubleIirFilter sFilter = gen.getHP_ButterFc(1, 1200, DirectDoubleIirFilter.class);
+            @Override
+            public boolean txtCrcError(FmsData fmsData, String txt) {
+                throw new UnsupportedOperationException("Not supported yet."); // To change body of generated methods,
+                // choose Tools | Templates.
+            }
 
-		FmsContainer fmsContainer = new FmsContainer(new FmsContainerListener() {
-			@Override
-			public boolean error(FmsData fmsData) {
-				org.junit.Assert.fail(fmsData.toString());
-				return true;
-			}
+            @Override
+            public boolean txtLengthParityError(FmsData fmsData) {
+                throw new UnsupportedOperationException("Not supported yet."); // To change body of generated methods,
+                // choose Tools | Templates.
+            }
 
-			@Override
-			public void success(FmsData fmsData) {
-				assertEquals(data, fmsData);
-				success = true;
-			}
+            @Override
+            public boolean txtCharParityError(FmsData fmsData, String txt) {
+                throw new UnsupportedOperationException("Not supported yet."); // To change body of generated methods,
+                // choose Tools | Templates.
+            }
 
-			@Override
-			public boolean crcError(FmsData fmsData) {
-				org.junit.Assert.fail(fmsData.toString());
-				return true;
-			}
+            @Override
+            public boolean txtError(FmsData fmsData, String txt) {
+                throw new UnsupportedOperationException("Not supported yet."); // To change body of generated methods,
+                // choose Tools | Templates.
+            }
+        });
+        fmsContainer.setSampleRate(m.getSampleRate());
 
-			@Override
-			public boolean txtCrcError(FmsData fmsData, String txt) {
-				throw new UnsupportedOperationException("Not supported yet."); // To change body of generated methods,
-																				// choose Tools | Templates.
-			}
+        if (showResult) {
+            File f = createFile("testFms", showResult);
+            sfs = new ShortFileSink(f, 8, m.getSampleRate(), 1024);
+        }
 
-			@Override
-			public boolean txtLengthParityError(FmsData fmsData) {
-				throw new UnsupportedOperationException("Not supported yet."); // To change body of generated methods,
-																				// choose Tools | Templates.
-			}
+        short synthBit = 0;
+        short realBit = 0;
+        short lastRealBit = 0;
+        int lastRealBitCount = 0;
+        double oldSymbol = 0;
 
-			@Override
-			public boolean txtCharParityError(FmsData fmsData, String txt) {
-				throw new UnsupportedOperationException("Not supported yet."); // To change body of generated methods,
-																				// choose Tools | Templates.
-			}
-
-			@Override
-			public boolean txtError(FmsData fmsData, String txt) {
-				throw new UnsupportedOperationException("Not supported yet."); // To change body of generated methods,
-																				// choose Tools | Templates.
-			}
-		});
-		fmsContainer.setSampleRate(m.getSampleRate());
-
-		if (showResult) {
-			File f = createFile("testFms", showResult);
-			sfs = new ShortFileSink(f, 8, m.getSampleRate(), 1024);
-		}
-
-		short synthBit = 0;
-		short realBit = 0;
-		short lastRealBit = 0;
-		int lastRealBitCount = 0;
-		double oldSymbol = 0;
-
-		m.addData(data);
-		do {
-			m.clock();
-			filter.setX((m.getY() + offset) * signalPower);
-			fmsContainer.setX(m.getY());
+        m.addData(data);
+        do {
+            m.clock();
+            filter.setX((m.getY() + offset) * signalPower);
+            fmsContainer.setX(m.getY());
 //            fmsContainer.setX(filter.getY());
 //filter raus            fmsContainer.setX((m.getY() + offset) * signalPower);
-			if (soundOut) {
-				msss.setShort(0, (short) (filter.getY() / 5));
-				msss.nextSample();
-			}
-			if (showResult) {
-				if (fmsContainer.getFmsBD().getState() == FmsBitDecoder.State.DECODE_BITS) {
-					if (lastRealBitCount < fmsContainer.getFmsBD().bitCount) {
-						realBit = (short) (fmsContainer.getFmsBD().bit ? Short.MAX_VALUE / 2 : Short.MIN_VALUE / 2);
-						lastRealBitCount = fmsContainer.getFmsBD().bitCount;
-					} else {
-						realBit = fmsContainer.getFmsBD().bit ? Short.MAX_VALUE : Short.MIN_VALUE;
-						if (lastRealBit != realBit) {
-							lastRealBitCount = 0;
-						}
-					}
-					lastRealBit = fmsContainer.getFmsBD().bit ? Short.MAX_VALUE : Short.MIN_VALUE;
-				} else {
-					lastRealBit = 0;
-					lastRealBitCount = 0;
-					realBit = 0;
-					lastRealBitCount = 0;
-				}
-				synthBit = m.getCurrentFrequency() == 1200 ? Short.MAX_VALUE : Short.MIN_VALUE;
+            if (soundOut) {
+                msss.setShort(0, (short) (filter.getY() / 5));
+                msss.nextSample();
+            }
+            if (showResult) {
+                if (fmsContainer.getFmsBD().getState() == FmsBitDecoder.State.DECODE_BITS) {
+                    if (lastRealBitCount < fmsContainer.getFmsBD().bitCount) {
+                        realBit = (short) (fmsContainer.getFmsBD().bit ? Short.MAX_VALUE / 2 : Short.MIN_VALUE / 2);
+                        lastRealBitCount = fmsContainer.getFmsBD().bitCount;
+                    } else {
+                        realBit = fmsContainer.getFmsBD().bit ? Short.MAX_VALUE : Short.MIN_VALUE;
+                        if (lastRealBit != realBit) {
+                            lastRealBitCount = 0;
+                        }
+                    }
+                    lastRealBit = fmsContainer.getFmsBD().bit ? Short.MAX_VALUE : Short.MIN_VALUE;
+                } else {
+                    lastRealBit = 0;
+                    lastRealBitCount = 0;
+                    realBit = 0;
+                    lastRealBitCount = 0;
+                }
+                synthBit = m.getCurrentFrequency() == 1200 ? Short.MAX_VALUE : Short.MIN_VALUE;
 
-				sfs.setShort(0, (short) (m.getY() * Short.MAX_VALUE));
-				sfs.setShort(1, (short) filter.getY());
-				sfs.setShort(2, AudioSink.scale0_2PI_to_short(fmsContainer.getNco().getPhi()));
-				sfs.setShort(3, (short) (synthBit * 0.9));
-				sfs.setShort(4, (short) (realBit * 0.9));
-				sfs.setShort(5, (short) (fmsContainer.getCostasLoop().getPhiError() * Short.MAX_VALUE / Math.PI));
-				sfs.setShort(6, (short) (fmsContainer.getSymbolFilterY() * Short.MAX_VALUE / Math.PI));
-				sfs.setShort(7, (short) ((fmsContainer.getSymbolFilterY() - oldSymbol) * Short.MAX_VALUE * 2));
-				sfs.nextSample();
-				oldSymbol = fmsContainer.getSymbolFilterY();
-			}
-		} while (!m.isLast());
-		assertTrue(success);
-	}
+                sfs.setShort(0, (short) (m.getY() * Short.MAX_VALUE));
+                sfs.setShort(1, (short) filter.getY());
+                sfs.setShort(2, AudioSink.scale0_2PI_to_short(fmsContainer.getNco().getPhi()));
+                sfs.setShort(3, (short) (synthBit * 0.9));
+                sfs.setShort(4, (short) (realBit * 0.9));
+                sfs.setShort(5, (short) (fmsContainer.getCostasLoop().getPhiError() * Short.MAX_VALUE / Math.PI));
+                sfs.setShort(6, (short) (fmsContainer.getSymbolFilterY() * Short.MAX_VALUE / Math.PI));
+                sfs.setShort(7, (short) ((fmsContainer.getSymbolFilterY() - oldSymbol) * Short.MAX_VALUE * 2));
+                sfs.nextSample();
+                oldSymbol = fmsContainer.getSymbolFilterY();
+            }
+        } while (!m.isLast());
+        assertTrue(success);
+    }
 
-	@Test
-	@Ignore
-	public void inFilterTest() throws Exception {
-		double samplerate = 11025;
-		File f = createFile("testFms", true);
-		sfs = new ShortFileSink(f, 1, samplerate, 1024);
-		msss = new ShortSpeakerSink(1, samplerate, 1);
-		DirectDoubleIirFilter iF = new DoubleIirFilterGenerator(samplerate).getHP_ButterFc(2, 50,
-				DirectDoubleIirFilter.class);
+    @Disabled
+    @Test
+    public void inFilterTest() throws Exception {
+        double samplerate = 11025;
+        File f = createFile("testFms", true);
+        sfs = new ShortFileSink(f, 1, samplerate, 1024);
+        msss = new ShortSpeakerSink(1, samplerate, 1);
+        DirectDoubleIirFilter iF = new DoubleIirFilterGenerator(samplerate).getHP_ButterFc(2, 50,
+                DirectDoubleIirFilter.class);
 
-		int T = (int) (samplerate / 40);
-		short D = 200;
-		short MIN = (short) Short.MIN_VALUE / 2;
-		short MAX = (short) Short.MAX_VALUE / 2;
-		for (int i = 0; i < T; i++) {
-			iF.setX(0);
-			sfs.setShort(0, (short) iF.getY());
-			sfs.nextSample();
-			msss.setShort(0, (short) (0));
-			msss.nextSample();
-		}
-		for (int n = 0; n < 10; n++) {
-			for (int i = 0; i < T; i++) {
-				iF.setX(MAX);
-				sfs.setShort(0, (short) iF.getY());
-				sfs.nextSample();
-				msss.setShort(0, D);
-				msss.nextSample();
-			}
-			iF.setX(MIN);
-			msss.setShort(0, (short) -D);
-			msss.nextSample();
-			sfs.setShort(0, (short) iF.getY());
-			sfs.nextSample();
-			for (int i = 0; i < T; i++) {
-				iF.setX(MAX);
-				sfs.setShort(0, (short) iF.getY());
-				sfs.nextSample();
-				msss.setShort(0, D);
-				msss.nextSample();
-			}
-			for (int i = 0; i < T; i++) {
-				iF.setX(MIN);
-				sfs.setShort(0, (short) iF.getY());
-				sfs.nextSample();
-				msss.setShort(0, (short) -D);
-				msss.nextSample();
-			}
-			iF.setX(MAX);
-			sfs.setShort(0, (short) iF.getY());
-			sfs.nextSample();
-			msss.setShort(0, D);
-			msss.nextSample();
-			for (int i = 0; i < T; i++) {
-				iF.setX(MIN);
-				sfs.setShort(0, (short) iF.getY());
-				sfs.nextSample();
-				msss.setShort(0, (short) -D);
-				msss.nextSample();
-			}
-		}
+        int T = (int) (samplerate / 40);
+        short D = 200;
+        short MIN = (short) Short.MIN_VALUE / 2;
+        short MAX = (short) Short.MAX_VALUE / 2;
+        for (int i = 0; i < T; i++) {
+            iF.setX(0);
+            sfs.setShort(0, (short) iF.getY());
+            sfs.nextSample();
+            msss.setShort(0, (short) (0));
+            msss.nextSample();
+        }
+        for (int n = 0; n < 10; n++) {
+            for (int i = 0; i < T; i++) {
+                iF.setX(MAX);
+                sfs.setShort(0, (short) iF.getY());
+                sfs.nextSample();
+                msss.setShort(0, D);
+                msss.nextSample();
+            }
+            iF.setX(MIN);
+            msss.setShort(0, (short) -D);
+            msss.nextSample();
+            sfs.setShort(0, (short) iF.getY());
+            sfs.nextSample();
+            for (int i = 0; i < T; i++) {
+                iF.setX(MAX);
+                sfs.setShort(0, (short) iF.getY());
+                sfs.nextSample();
+                msss.setShort(0, D);
+                msss.nextSample();
+            }
+            for (int i = 0; i < T; i++) {
+                iF.setX(MIN);
+                sfs.setShort(0, (short) iF.getY());
+                sfs.nextSample();
+                msss.setShort(0, (short) -D);
+                msss.nextSample();
+            }
+            iF.setX(MAX);
+            sfs.setShort(0, (short) iF.getY());
+            sfs.nextSample();
+            msss.setShort(0, D);
+            msss.nextSample();
+            for (int i = 0; i < T; i++) {
+                iF.setX(MIN);
+                sfs.setShort(0, (short) iF.getY());
+                sfs.nextSample();
+                msss.setShort(0, (short) -D);
+                msss.nextSample();
+            }
+        }
 
-	}
+    }
 }

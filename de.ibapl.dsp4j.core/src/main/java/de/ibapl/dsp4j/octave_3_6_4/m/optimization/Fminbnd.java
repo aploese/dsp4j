@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -21,9 +21,9 @@
  */
 package de.ibapl.dsp4j.octave_3_6_4.m.optimization;
 
+import de.ibapl.dsp4j.octave_3_2_4.OctaveBuildIn;
 import java.util.Collections;
 import java.util.Map;
-import de.ibapl.dsp4j.octave_3_2_4.OctaveBuildIn;
 
 /*
  ## Copyright (C) 2008-2012 VZLU Prague, a.s.
@@ -61,33 +61,24 @@ import de.ibapl.dsp4j.octave_3_2_4.OctaveBuildIn;
  * @var{fun} should be a ## function ## handle or name.
  * @var{a},
  * @var{b} specify a starting interval.
- * @var{options} ## is a ## structure specifying additional options. Currently, @code{fminbnd}
- * ## recognizes these options: @code{"FunValCheck"}, @code{"OutputFcn"},
- * ## @code{"TolX"}, @code{"MaxIter"}, @code{"MaxFunEvals"}.
- * ## For description of these options, see @ref{doc-optimset,,optimset}.
- * ##
- * ## On exit, the function returns @var{x}, the approximate minimum point
- * ## and @var{fval}, the function value thereof.
- * ## @var{info} is an exit flag that can have these values:
- * ##
- * ## @itemize
- * ## @item 1
- * ## The algorithm converged to a solution.
- * ##
- * ## @item 0
- * ## Maximum number of iterations or function evaluations has been exhausted.
- * ##
- * ## @item -1
- * ## The algorithm has been terminated from user output function.
- * ## @end itemize
- * ## @seealso{optimset, fzero, fminunc}
- * ## @end deftypefn
+ * @var{options} ## is a ## structure specifying additional options. Currently,
+ * @code{fminbnd} ## recognizes these options: @code{"FunValCheck"},
+ * @code{"OutputFcn"}, ## @code{"TolX"}, @code{"MaxIter"}, @code{"MaxFunEvals"}.
+ * ## For description of these options, see @ref{doc-optimset,,optimset}. ## ##
+ * On exit, the function returns @var{x}, the approximate minimum point ## and
+ * @var{fval}, the function value thereof. ## @var{info} is an exit flag that
+ * can have these values: ## ## @itemize ## @item 1 ## The algorithm converged
+ * to a solution. ## ## @item 0 ## Maximum number of iterations or function
+ * evaluations has been exhausted. ## ## @item -1 ## The algorithm has been
+ * terminated from user output function. ## @end itemize ## @seealso{optimset,
+ * fzero, fminunc} ## @end deftypefn
  *
- * ## This is patterned after opt/fmin.f from Netlib, which in turn is taken from
- * ## Richard Brent: Algorithms For Minimization Without Derivatives, Prentice-Hall (1973)
+ * ## This is patterned after opt/fmin.f from Netlib, which in turn is taken
+ * from ## Richard Brent: Algorithms For Minimization Without Derivatives,
+ * Prentice-Hall (1973)
  *
- * ## PKG_ADD: ## Discard result to avoid polluting workspace with ans at startup.
- * ## PKG_ADD: [~] = __all_opts__ ("fminbnd");
+ * ## PKG_ADD: ## Discard result to avoid polluting workspace with ans at
+ * startup. ## PKG_ADD: [~] = __all_opts__ ("fminbnd");
  */
 public class Fminbnd {
 
@@ -100,13 +91,13 @@ public class Fminbnd {
     private double outputBracketB;
 
     public Fminbnd() {
-        
+
     }
-    
+
     public double fminbnd(FunctionWrapper fun, double xmin, double xmax) {
         return fminbnd(fun, xmin, xmax, Collections.EMPTY_MAP);
     }
-    
+
     public double fminbnd(FunctionWrapper fun, double xmin, double xmax, Map<Opti, Object> options) {
 //    , options = struct ()
 
@@ -124,7 +115,6 @@ public class Fminbnd {
 //  if (ischar (fun))
 //    fun = str2func (fun, "global");
 //  endif
-
         // TODO
         boolean displev = Opti.optimget(options, Opti.DISPLAY, true); // was "notify"
         boolean funvalchk = Opti.optimget(options, Opti.FUN_VAL_CHECK, false);
@@ -210,7 +200,6 @@ public class Fminbnd {
             niter++;
 
             // update  a, b, v, w, and x
-
             if (fu <= fval) {
                 if (u < x) {
                     b = x;

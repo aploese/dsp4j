@@ -5,7 +5,7 @@
         <groupId>de.ibapl.dsp4j</groupId>
         <artifactId>dsp4j</artifactId>
         <version>1.0.0-SNAPSHOT</version>
-        <relativePath>../</relativePath>
+        <relativePath>..</relativePath>
     </parent>
 
     <artifactId>fms4j-console</artifactId>
@@ -14,8 +14,12 @@
 
     <dependencies>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
         </dependency>
         <dependency>
             <groupId>commons-cli</groupId>
@@ -23,9 +27,9 @@
         </dependency>
 
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>de.ibapl.dsp4j</groupId>
             <artifactId>de.ibapl.fms4j.core</artifactId>
-            <version>${project.version}</version>
+            <version>1.0.0-SNAPSHOT</version>
         </dependency>
 
     </dependencies>

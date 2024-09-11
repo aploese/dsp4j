@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -23,8 +23,7 @@ package de.ibapl.dsp4j.fms4j;
 
 import java.io.File;
 import java.io.IOException;
-import org.junit.After;
-import org.junit.Ignore;
+import org.junit.jupiter.api.*;
 
 /**
  *
@@ -32,12 +31,13 @@ import org.junit.Ignore;
  *
  * set setShowTests(true) in before... to show all tests
  */
-@Ignore
+@Disabled
 public class VisualResultCheckTest {
+
     private File f;
     private boolean showResult;
-    
-    @After
+
+    @AfterEach
     public void tearDown() throws Exception {
         if (isShowResult()) {
             Runtime.getRuntime().exec(new String[]{"audacity", f.getAbsolutePath()}).waitFor();
@@ -54,7 +54,7 @@ public class VisualResultCheckTest {
     /**
      * @param showTestName the showTests to set
      */
-    protected File createFile(String name, boolean showResult) throws IOException{
+    protected File createFile(String name, boolean showResult) throws IOException {
         this.showResult = showResult;
         this.f = File.createTempFile(String.format("%s_%s", getClass().getSimpleName(), name), ".wav");
         f.deleteOnExit();

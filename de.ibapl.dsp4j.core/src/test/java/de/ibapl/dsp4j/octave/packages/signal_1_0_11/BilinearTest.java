@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -23,37 +23,14 @@ package de.ibapl.dsp4j.octave.packages.signal_1_0_11;
 
 import de.ibapl.dsp4j.ComplexUtil;
 import org.apache.commons.math3.complex.Complex;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
  * @author aploese
  */
 public class BilinearTest {
-
-    public BilinearTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
 
     /**
      * Test of bilinear method, of class BilinearTransform.
@@ -75,10 +52,9 @@ public class BilinearTest {
 
     @Test
     public void testBilinear1stOrder() {
-        Complex [] sPole;
-        Complex [] sZero;
+        Complex[] sPole;
+        Complex[] sZero;
         double sGain;
-
 
         //LP
         sPole = new Complex[]{new Complex(-0.198912367379658, 0)};
@@ -93,7 +69,7 @@ public class BilinearTest {
         ComplexUtil.assertComplexEquals(0.6681786379192989, 0.0, instance.getZPole()[0]);
         assertEquals(0.16591068104035053, instance.getZGain(), Double.MIN_VALUE);
 
-/*
+        /*
         //HP
         sfTrans = new SfTrans(zero, pole, gain, W, true);
         assertEquals(1, sfTrans.getSZero().length);
@@ -122,8 +98,7 @@ public class BilinearTest {
         ComplexUtil.assertComplexEquals(-0.24354822446263902, 1.7388063843636265E-16, sfTrans.getSPole()[0]);
         ComplexUtil.assertComplexEquals(-1.9717529705307977, -1.7388063843636265E-16, sfTrans.getSPole()[1]);
         assertEquals(1, sfTrans.getSGain(), Double.MIN_VALUE);
- */
+         */
     }
-
 
 }

@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -21,9 +21,9 @@
  */
 package de.ibapl.dsp4j.octave_3_2_4.m.polynomial;
 
-import java.util.Arrays;
 import de.ibapl.dsp4j.octave_3_2_4.Eig;
 import de.ibapl.dsp4j.octave_3_2_4.OctaveBuildIn;
+import java.util.Arrays;
 import org.apache.commons.math3.complex.Complex;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.linear.RealVector;
@@ -109,17 +109,14 @@ public class Roots {
 
     public static Complex[] roots(RealVector v) {
 
-        
-            if (v.isInfinite() || v.isNaN()) {
-                throw new RuntimeException("roots: inputs must not contain Inf or NaN");
-            }
-
+        if (v.isInfinite() || v.isNaN()) {
+            throw new RuntimeException("roots: inputs must not contain Inf or NaN");
+        }
 
         int n = v.getDimension();
 
         // ## If v = [ 0 ... 0 v(k+1) ... v(k+l) 0 ... 0 ], we can remove the
         // ## leading k zeros and n - k - l roots of the polynomial are zero.
-
         int[] f = new int[v.getDimension()];
         if (v.getDimension() > 0) {
             int fI = 0;
@@ -148,11 +145,11 @@ public class Roots {
                     throw new RuntimeException(e);
                 }
                 if (f[f.length - 1] < n) {
-                    int diffLength = n -1 - f[f.length - 1];
+                    int diffLength = n - 1 - f[f.length - 1];
                     if (diffLength > 0) {
-                    int rl = r.length;
-                    r = Arrays.copyOf(r, r.length + diffLength);
-                    Arrays.fill(r, rl, r.length, Complex.ZERO);
+                        int rl = r.length;
+                        r = Arrays.copyOf(r, r.length + diffLength);
+                        Arrays.fill(r, rl, r.length, Complex.ZERO);
                     }
                 }
             } else {
@@ -177,15 +174,15 @@ public class Roots {
 %!assert(isempty (roots ([])));
 
 %!error roots ([1, 2; 3, 4]);
- 
+
 %!assert(isempty (roots (1)));
 
  %!error roots ([1, 2; 3, 4]);
- 
+
 %!error roots ([1 Inf 1]);
 
 %!error roots ([1 NaN 1]);
 
 %!assert(roots ([1e-200, -1e200, 1]), 1e-200)
 %!assert(roots ([1e-200, -1e200 * 1i, 1]), -1e-200 * 1i)
-*/
+ */

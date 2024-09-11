@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -21,35 +21,33 @@
  */
 package de.ibapl.dsp4j.datatypes._short;
 
+import de.ibapl.dsp4j.FileSink;
 import java.io.File;
 import javax.sound.sampled.AudioFormat;
-import de.ibapl.dsp4j.FileSink;
 
 /**
  *
- * @author aploese
- * 16 Bit PCM
+ * @author aploese 16 Bit PCM
  */
-public class ShortFileSink extends  FileSink {
-
+public class ShortFileSink extends FileSink {
 
     public void setShort(int channel, short sample) {
-    	final int pos =  bufferSamplePos * sampleSize + channel * 2;
-    	if (isBigEndian()) {
-             buffer[pos] = (byte)(sample >>> 8);
-             buffer[pos + 1] = (byte)sample;
-         } else {
-             buffer[pos] = (byte)sample;
-             buffer[pos +1] = (byte)(sample >>> 8);
-    }
+        final int pos = bufferSamplePos * sampleSize + channel * 2;
+        if (isBigEndian()) {
+            buffer[pos] = (byte) (sample >>> 8);
+            buffer[pos + 1] = (byte) sample;
+        } else {
+            buffer[pos] = (byte) sample;
+            buffer[pos + 1] = (byte) (sample >>> 8);
+        }
     }
 
     public ShortFileSink(File wavOut, int channels, double sampleRate, boolean signed, boolean bigEndian, int framesInBuffer) {
-        super(wavOut, new AudioFormat((float)sampleRate, 2 * 8, channels, signed, bigEndian), framesInBuffer);
+        super(wavOut, new AudioFormat((float) sampleRate, 2 * 8, channels, signed, bigEndian), framesInBuffer);
     }
 
     public ShortFileSink(File wavOut, int channels, double sampleRate, int framesInBuffer) {
-        super(wavOut, new AudioFormat((float)sampleRate, 2 * 8, channels, true, false ), framesInBuffer);
+        super(wavOut, new AudioFormat((float) sampleRate, 2 * 8, channels, true, false), framesInBuffer);
     }
 
 }

@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -21,18 +21,17 @@
  */
 package de.ibapl.dsp4j.datatypes._int;
 
+import de.ibapl.dsp4j.AudioInputStreamSource;
 import java.io.File;
 import java.io.IOException;
 import javax.sound.sampled.UnsupportedAudioFileException;
-import de.ibapl.dsp4j.AudioInputStreamSource;
 
 /**
  *
- * @author aploese
- * 32 Bit PCM
+ * @author aploese 32 Bit PCM
  */
 public class IntegerSampledSource extends AudioInputStreamSource {
-    
+
     public IntegerSampledSource(File f) throws IOException, UnsupportedAudioFileException {
         this(f, 1);
     }
@@ -40,17 +39,17 @@ public class IntegerSampledSource extends AudioInputStreamSource {
     public IntegerSampledSource(File f, int framesInBuffer) throws IOException, UnsupportedAudioFileException {
         super(f, framesInBuffer);
     }
-    
-	protected final int getInt(int channel) {
-		final int pos = bufferPos * sampleSize + channel * 4;
-		if (bigEndian) {
-			return ((buffer[pos] & 0xFF) << 24) | ((buffer[pos + 1] & 0xFF) << 16)
-					| ((buffer[pos + 2] & 0xFF) << 8) | (buffer[pos + 3] & 0xFF);
-		} else {
-			return ((buffer[pos + channel] & 0xFF)) | ((buffer[pos + 1] & 0xFF) << 8)
-					| ((buffer[pos + 2] & 0xFF) << 16)
-					| ((buffer[pos + 3] & 0xFF) << 24);
-		}
-	}
+
+    protected final int getInt(int channel) {
+        final int pos = bufferPos * sampleSize + channel * 4;
+        if (bigEndian) {
+            return ((buffer[pos] & 0xFF) << 24) | ((buffer[pos + 1] & 0xFF) << 16)
+                    | ((buffer[pos + 2] & 0xFF) << 8) | (buffer[pos + 3] & 0xFF);
+        } else {
+            return ((buffer[pos + channel] & 0xFF)) | ((buffer[pos + 1] & 0xFF) << 8)
+                    | ((buffer[pos + 2] & 0xFF) << 16)
+                    | ((buffer[pos + 3] & 0xFF) << 24);
+        }
+    }
 
 }

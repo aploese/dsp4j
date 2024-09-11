@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -33,7 +33,7 @@ public class CplxReal {
 
     private List<Complex> conjComplxPair;
     private List<Complex> realValues;
-    
+
     public static boolean checkIsConjugate(Complex c1, Complex c2, double delta) {
         return Math.abs(c1.getReal() - c2.getReal()) <= delta && Math.abs(c1.getImaginary() + c2.getImaginary()) <= delta;
     }
@@ -41,7 +41,7 @@ public class CplxReal {
     public static boolean checkIsReal(Complex c, double delta) {
         return Math.abs(c.getImaginary()) <= delta;
     }
-    
+
     public void cplxReal(double delta, Complex... in) {
         conjComplxPair = new ArrayList<>(in.length / 2);
         realValues = new ArrayList<>();

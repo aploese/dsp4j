@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -45,8 +45,8 @@ You should have received a copy of the GNU General Public License
 along with Octave; see the file COPYING.  If not, see
 <http://www.gnu.org/licenses/>.
 
-*/
-/*
+ */
+ /*
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -75,18 +75,17 @@ Schur@tie{}decomposition.\n\
 The eigenvalues returned by @code{eig} are not ordered.\n\
 @seealso{eigs, svd}\n\
 @end deftypefn")
-*/
-
+ */
 public class Eig {
 
-    public static Complex[] eig(RealMatrix d)  {
+    public static Complex[] eig(RealMatrix d) {
         EigenDecomposition eig = new EigenDecomposition(d);
         double[] realEigenvalues = eig.getRealEigenvalues();
         double[] imagEigenvalues = eig.getImagEigenvalues();
-        
+
         final Complex[] result = new Complex[realEigenvalues.length];
         for (int i = 0; i < realEigenvalues.length; i++) {
-            result[i] = new Complex(realEigenvalues[i],imagEigenvalues[i]);
+            result[i] = new Complex(realEigenvalues[i], imagEigenvalues[i]);
         }
         return result;
     }
@@ -173,4 +172,4 @@ public class Eig {
 %!error eig ([1 2 ; 2 3], "abcd");
 %!error eig (false, [1 2 ; 2 3]);
 
-*/
+ */

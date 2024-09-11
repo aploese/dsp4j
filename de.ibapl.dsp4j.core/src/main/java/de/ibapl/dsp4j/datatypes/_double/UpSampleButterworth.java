@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -21,10 +21,10 @@
  */
 package de.ibapl.dsp4j.datatypes._double;
 
-import de.ibapl.dsp4j.datatypes._double.iirfilter.AbstractCascadedDoubleIirFilter;
-import de.ibapl.dsp4j.datatypes._double.iirfilter.DoubleIirFilterGenerator;
 import de.ibapl.dsp4j.In;
 import de.ibapl.dsp4j.SampledBlock;
+import de.ibapl.dsp4j.datatypes._double.iirfilter.AbstractCascadedDoubleIirFilter;
+import de.ibapl.dsp4j.datatypes._double.iirfilter.DoubleIirFilterGenerator;
 
 /**
  *
@@ -32,7 +32,6 @@ import de.ibapl.dsp4j.SampledBlock;
  */
 public class UpSampleButterworth implements SampledBlock {
 
-    
     private int multiplier;
     private double sampleRate;
     private AbstractCascadedDoubleIirFilter filter;
@@ -44,7 +43,7 @@ public class UpSampleButterworth implements SampledBlock {
     @Override
     public void setSampleRate(double sampleRate) {
         this.sampleRate = sampleRate;
-        filter =  new DoubleIirFilterGenerator(sampleRate * multiplier).getLP_BesselFc(multiplier + 1, sampleRate / 2.0, AbstractCascadedDoubleIirFilter.class);
+        filter = new DoubleIirFilterGenerator(sampleRate * multiplier).getLP_BesselFc(multiplier + 1, sampleRate / 2.0, AbstractCascadedDoubleIirFilter.class);
     }
 
     @In

@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -21,11 +21,11 @@
  */
 package de.ibapl.dsp4j.datatypes._double;
 
-import java.util.ArrayList;
-import java.util.List;
 import de.ibapl.dsp4j.AbstractSampleProcessingBlock;
 import static de.ibapl.dsp4j.DspConst.TWO_PI;
 import de.ibapl.dsp4j.In;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -34,17 +34,19 @@ import de.ibapl.dsp4j.In;
 public class SinWaveSource extends AbstractSampleProcessingBlock {
 
     public static abstract class SinWaveSnipplet {
+
         public final double frequency;
-        
+
         public SinWaveSnipplet(double frequency) {
             this.frequency = frequency;
         }
 
         public abstract double getDuration();
-        
+
     }
-    
+
     public static class SinWaveByPeriods extends SinWaveSnipplet {
+
         public final double periods;
 
         public SinWaveByPeriods(double frequency, double periods) {
@@ -57,8 +59,9 @@ public class SinWaveSource extends AbstractSampleProcessingBlock {
             return periods / frequency;
         }
     }
-    
-    public static class SinWaveByDuration extends SinWaveSnipplet  {
+
+    public static class SinWaveByDuration extends SinWaveSnipplet {
+
         public final double durationInSec;
 
         public SinWaveByDuration(double frequency, double durationInSec) {
@@ -71,7 +74,7 @@ public class SinWaveSource extends AbstractSampleProcessingBlock {
             return durationInSec;
         }
     }
-    
+
     private double sampleDrift;
     private double deltaPhi;
     private double currentPhi;
@@ -99,9 +102,9 @@ public class SinWaveSource extends AbstractSampleProcessingBlock {
             return result;
         }
     }
-    
+
     private int calcMinSamplesOfTIme(double time) {
-         return (int) Math.floor(calcSamplesOfTime(time));
+        return (int) Math.floor(calcSamplesOfTime(time));
     }
 
     /*
@@ -114,20 +117,20 @@ public class SinWaveSource extends AbstractSampleProcessingBlock {
             deltaPhi = calcW(frequencies.get(frequencyIndex).frequency);
             firstSample = false;
             if (sampleDrift > 0) {
-              currentPhi += (1- sampleDrift) * deltaPhi;    
-            } 
-        } 
-        
+                currentPhi += (1 - sampleDrift) * deltaPhi;
+            }
+        }
+
         if (currentPhi >= TWO_PI) {
             currentPhi -= TWO_PI;
         }
         y = Math.sin(currentPhi);
         samplesLeft--;
         if (samplesLeft == 0) {
-          nextFrequency();  
-        } 
+            nextFrequency();
+        }
     }
-    
+
     public boolean isAfterLast() {
         return samplesLeft < 0;
     }
@@ -170,7 +173,7 @@ public class SinWaveSource extends AbstractSampleProcessingBlock {
         }
         return result;
     }
-    
+
     public boolean addPeriods(double frq, double periods) {
         return add(new SinWaveByPeriods(frq, periods));
     }
@@ -178,7 +181,6 @@ public class SinWaveSource extends AbstractSampleProcessingBlock {
     public boolean addDuration(double frq, double durationInSec) {
         return add(new SinWaveByDuration(frq, durationInSec));
     }
-
 
     public double clock(double level) {
         clock();
@@ -191,14 +193,14 @@ public class SinWaveSource extends AbstractSampleProcessingBlock {
     public double getY() {
         return y;
     }
-    
+
     @Override
     public void reset() {
         super.reset();
         frequencies.clear();
         frequencyIndex = -1;
     }
-    
+
     private void nextFrequency() {
         double absSamples = calcSamplesOfTime(frequencies.get(frequencyIndex).getDuration());
         sampleDrift = absSamples - Math.floor(absSamples);

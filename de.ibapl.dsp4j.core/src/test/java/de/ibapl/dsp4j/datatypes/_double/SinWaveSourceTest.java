@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -21,16 +21,14 @@
  */
 package de.ibapl.dsp4j.datatypes._double;
 
-import de.ibapl.dsp4j.VisualResultCheckTest;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
 import static de.ibapl.dsp4j.DspConst.HALF_PI;
 import static de.ibapl.dsp4j.DspConst.TWO_PI;
-import org.junit.After;
-import static org.junit.Assert.*;
+import de.ibapl.dsp4j.VisualResultCheckTest;
+import org.junit.jupiter.api.AfterEach;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -41,24 +39,13 @@ public class SinWaveSourceTest extends VisualResultCheckTest {
     SinWaveSource instance;
     SampleCount sc;
 
-    public SinWaveSourceTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         instance = new SinWaveSource(0.01);
         sc = new SampleCount();
     }
 
-    @After
+    @AfterEach
     @Override
     public void tearDown() throws Exception {
         super.tearDown();
@@ -87,7 +74,6 @@ public class SinWaveSourceTest extends VisualResultCheckTest {
         instance.addDuration(f1, 1.0 * T);
         instance.addDuration(f2, 1.0 * T);
 
-
         do {
             instance.clock();
             sc.clock();
@@ -98,10 +84,9 @@ public class SinWaveSourceTest extends VisualResultCheckTest {
         } while (!instance.isLast());
 
 //        assertEquals(6.1549570356044905, instance.getCurrentPhi(), deltaphi1200);
-
     }
 
-    @Ignore
+    @Disabled
     @Test
     public void testSinWave() {
         instance.setSampleRate(22050);
@@ -109,7 +94,6 @@ public class SinWaveSourceTest extends VisualResultCheckTest {
         final double f1 = 1200;
         final double f2 = 1800;
         final double T = 1.0 / 1200;
-
 
 //        instance.runTime(f1, 1, T);
 //        instance.runPeriods(10, 1, 1);

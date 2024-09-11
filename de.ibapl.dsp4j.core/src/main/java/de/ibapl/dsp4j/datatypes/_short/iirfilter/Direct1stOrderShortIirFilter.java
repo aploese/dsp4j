@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -37,9 +37,9 @@ public class Direct1stOrderShortIirFilter implements DirectShortIirFilter {
     private int y;
 
     public Direct1stOrderShortIirFilter(double[] a, double[] b) {
-        this.a1 = (int)Math.round(a[1] * Q_DOT_15_VALUE);
-        this.b0 = (int)Math.round(b[0] * Q_DOT_15_VALUE);
-        this.b1 = (int)Math.round(b[1] * Q_DOT_15_VALUE);
+        this.a1 = (int) Math.round(a[1] * Q_DOT_15_VALUE);
+        this.b0 = (int) Math.round(b[0] * Q_DOT_15_VALUE);
+        this.b1 = (int) Math.round(b[1] * Q_DOT_15_VALUE);
     }
 
     @Override

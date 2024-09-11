@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -21,12 +21,8 @@
  */
 package de.ibapl.dsp4j;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -35,23 +31,6 @@ import org.junit.Test;
 public class FileSinkTest {
 
     public FileSinkTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-
     }
 
     /**
@@ -113,7 +92,7 @@ public class FileSinkTest {
     /**
      * Test of flush method, of class FileSink.
      */
-    @Ignore
+    @Disabled
     @Test
     public void testFlush() {
         System.out.println("flush");
@@ -126,7 +105,7 @@ public class FileSinkTest {
     /**
      * Test of close method, of class FileSink.
      */
-    @Ignore
+    @Disabled
     @Test
     public void testClose() {
         System.out.println("close");

@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -22,9 +22,9 @@
 package de.ibapl.dsp4j.octave.packages.signal_1_0_11;
 
 import java.util.Arrays;
-import org.apache.commons.math3.transform.FastFourierTransformer;
 import org.apache.commons.math3.complex.Complex;
 import org.apache.commons.math3.transform.DftNormalization;
+import org.apache.commons.math3.transform.FastFourierTransformer;
 import org.apache.commons.math3.transform.TransformType;
 
 /*
@@ -86,7 +86,7 @@ import org.apache.commons.math3.transform.TransformType;
 ##
 ## @deftypefnx {Function File} {[@dots{}] =} freqz (@dots{}, @var{Fs})
 ## Return frequencies in Hz instead of radians assuming a sampling rate
-## @var{Fs}.  If you are evaluating the response at specific frequencies 
+## @var{Fs}.  If you are evaluating the response at specific frequencies
 ## @var{w}, those frequencies should be requested in Hz rather than radians.
 ##
 ## @deftypefnx {Function File} {} freqz (@dots{})
@@ -104,8 +104,8 @@ public class Freqz {
     public Freqz(double[] b, double[] a, int n) {
         FastFourierTransformer fft = new FastFourierTransformer(DftNormalization.STANDARD);
 
-        Complex[] hb = fft.transform(Arrays.copyOf(b, 2*n), TransformType.FORWARD);
-        Complex[] ha = fft.transform(Arrays.copyOf(a, 2*n), TransformType.FORWARD);
+        Complex[] hb = fft.transform(Arrays.copyOf(b, 2 * n), TransformType.FORWARD);
+        Complex[] ha = fft.transform(Arrays.copyOf(a, 2 * n), TransformType.FORWARD);
 
         H = new Complex[n];
         w = new double[n];
@@ -119,7 +119,7 @@ public class Freqz {
 
     public Freqz(double[] b, int n) {
         FastFourierTransformer fft = new FastFourierTransformer(DftNormalization.STANDARD);
-        Complex[] hb = fft.transform(Arrays.copyOf(b, 2*n), TransformType.FORWARD);
+        Complex[] hb = fft.transform(Arrays.copyOf(b, 2 * n), TransformType.FORWARD);
 
         H = Arrays.copyOfRange(hb, 0, n);
         w = new double[n];
@@ -136,7 +136,7 @@ public class Freqz {
     public Freqz(double[] b, double[] a) {
         this(b, a, 512);
     }
- }
+}
 
 /*
 %!test # correct values and fft-polyval consistency
@@ -165,4 +165,4 @@ public class Freqz {
 %! assert(h,h2.',20*eps);
 %! [h3,f3] = freqz(b,a,32,'whole',320);
 %! assert(f3,[0:31]'*10,10*eps);
-*/
+ */

@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -68,20 +68,20 @@ public class SampleCount extends AbstractSampleProcessingBlock {
     @Out
     public double getTime() {
         //TODO overrun !!!
-        return (double)sampleCount / getSampleRate();
+        return (double) sampleCount / getSampleRate();
     }
 
     public String getTimeStr() {
         double t = getTime();
-        int ms = ((int)(t * 1000)) % 1000;
-        long lt = (long)t;
-        int s = (int)(lt % 60);
+        int ms = ((int) (t * 1000)) % 1000;
+        long lt = (long) t;
+        int s = (int) (lt % 60);
         lt /= 60;
-        int min = (int)(lt % 60);
+        int min = (int) (lt % 60);
         lt /= 60;
-        int h = (int)(lt % 24);
+        int h = (int) (lt % 24);
         lt /= 24;
-        return String.format("%d %d %02d:%02d:%02d.%03d", overflowCount, (int)lt, h,min,s,ms);
+        return String.format("%d %d %02d:%02d:%02d.%03d", overflowCount, (int) lt, h, min, s, ms);
     }
 
 }

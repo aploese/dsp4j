@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -21,14 +21,10 @@
  */
 package de.ibapl.dsp4j.datatypes._double;
 
-import java.util.logging.Logger;
 import de.ibapl.dsp4j.VisualResultCheckTest;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import java.util.logging.Logger;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -39,23 +35,6 @@ public class CostasLoopTest extends VisualResultCheckTest {
     final private static Logger LOG = Logger.getLogger(CostasLoopTest.class.getCanonicalName());
 
     public CostasLoopTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        super.tearDown();
     }
 
     /**

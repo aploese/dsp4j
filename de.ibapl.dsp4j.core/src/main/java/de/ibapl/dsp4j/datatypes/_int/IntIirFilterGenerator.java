@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -32,7 +32,7 @@ import de.ibapl.dsp4j.datatypes.IirFilterGenerator;
 public class IntIirFilterGenerator extends IirFilterGenerator {
 
     public final static int Q_DOT_31 = 1 << 31;
-    
+
     public IntIirFilterGenerator(double sampleRate) {
         super(sampleRate);
     }
@@ -41,11 +41,11 @@ public class IntIirFilterGenerator extends IirFilterGenerator {
     public <DF extends DirectIirFilter> DF createDirectFilter(double[] a, double[] b, Class<DF> clazz) {
         int[] aInt = new int[a.length];
         for (int i = 0; i < a.length; i++) {
-            aInt[i] = (int)Math.round(a[i] * Q_DOT_31);
+            aInt[i] = (int) Math.round(a[i] * Q_DOT_31);
         }
         int[] bInt = new int[b.length];
         for (int i = 0; i < b.length; i++) {
-            bInt[i] = (int)Math.round(b[i] * Q_DOT_31);
+            bInt[i] = (int) Math.round(b[i] * Q_DOT_31);
         }
         return (DF) new GenericDirectIntIirFilter().setCoeff(aInt, bInt);
     }
@@ -54,6 +54,5 @@ public class IntIirFilterGenerator extends IirFilterGenerator {
     public <CF extends CascadedIirFilter> CF createCascadedFilter(double[][] sos, double gain, Class<CF> clazz) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
 
 }

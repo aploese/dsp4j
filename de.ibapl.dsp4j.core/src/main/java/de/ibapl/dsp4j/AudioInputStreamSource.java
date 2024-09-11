@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -26,7 +26,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import javax.sound.sampled.AudioFormat.Encoding;
-
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
@@ -37,84 +36,84 @@ import javax.sound.sampled.UnsupportedAudioFileException;
  */
 public abstract class AudioInputStreamSource implements Sampled {
 
-	protected final boolean bigEndian;
-	protected final AudioInputStream ais;
-	protected final int sampleSize;
-	protected final byte[] buffer;
-	protected int bufferPos = -1;
-	protected int bytesReaded;
+    protected final boolean bigEndian;
+    protected final AudioInputStream ais;
+    protected final int sampleSize;
+    protected final byte[] buffer;
+    protected int bufferPos = -1;
+    protected int bytesReaded;
 
-	public AudioInputStreamSource(AudioInputStream ais, int samplesInBuffer) throws IOException {
-		this.ais = ais;
-		bigEndian = ais.getFormat().isBigEndian();
-		this.sampleSize = ais.getFormat().getFrameSize();
-		buffer = new byte[sampleSize * samplesInBuffer];
-	}
+    public AudioInputStreamSource(AudioInputStream ais, int samplesInBuffer) throws IOException {
+        this.ais = ais;
+        bigEndian = ais.getFormat().isBigEndian();
+        this.sampleSize = ais.getFormat().getFrameSize();
+        buffer = new byte[sampleSize * samplesInBuffer];
+    }
 
-	public AudioInputStreamSource(InputStream is, int samplesInBuffer)
-			throws IOException, UnsupportedAudioFileException {
-		this(AudioSystem.getAudioInputStream(is), samplesInBuffer);
-	}
+    public AudioInputStreamSource(InputStream is, int samplesInBuffer)
+            throws IOException, UnsupportedAudioFileException {
+        this(AudioSystem.getAudioInputStream(is), samplesInBuffer);
+    }
 
-	public AudioInputStreamSource(File f, int samplesInBuffer) throws IOException, UnsupportedAudioFileException {
-		this(AudioSystem.getAudioInputStream(f), samplesInBuffer);
-	}
+    public AudioInputStreamSource(File f, int samplesInBuffer) throws IOException, UnsupportedAudioFileException {
+        this(AudioSystem.getAudioInputStream(f), samplesInBuffer);
+    }
 
-	public AudioInputStreamSource(String name, int samplesInBuffer) throws IOException, UnsupportedAudioFileException {
-		this(new File(name), samplesInBuffer);
-	}
+    public AudioInputStreamSource(String name, int samplesInBuffer) throws IOException, UnsupportedAudioFileException {
+        this(new File(name), samplesInBuffer);
+    }
 
-	public AudioInputStreamSource(URL resource, int samplesInBuffer) throws IOException, UnsupportedAudioFileException {
-		this(resource.getFile(), samplesInBuffer);
-	}
+    public AudioInputStreamSource(URL resource, int samplesInBuffer) throws IOException, UnsupportedAudioFileException {
+        this(resource.getFile(), samplesInBuffer);
+    }
 
-	protected final boolean isBufferReaded() {
-		return bufferPos == bytesReaded;
-	}
+    protected final boolean isBufferReaded() {
+        return bufferPos == bytesReaded;
+    }
 
-	public final int getChannels() {
-		return ais.getFormat().getChannels();
-	}
+    public final int getChannels() {
+        return ais.getFormat().getChannels();
+    }
 
-	public final int getFrameSize() {
-		return ais.getFormat().getFrameSize();
-	}
+    public final int getFrameSize() {
+        return ais.getFormat().getFrameSize();
+    }
 
-	public final int getSampleSizeInBits() {
-		return ais.getFormat().getSampleSizeInBits();
-	}
+    public final int getSampleSizeInBits() {
+        return ais.getFormat().getSampleSizeInBits();
+    }
 
-	public final boolean isBigEndian() {
-		return bigEndian;
-	}
+    public final boolean isBigEndian() {
+        return bigEndian;
+    }
 
-	public final Encoding getEncoding() {
-		return ais.getFormat().getEncoding();
-	}
+    public final Encoding getEncoding() {
+        return ais.getFormat().getEncoding();
+    }
 
-	public final float getSampleRate() {
-		return ais.getFormat().getSampleRate();
-	}
+    public final float getSampleRate() {
+        return ais.getFormat().getSampleRate();
+    }
 
-	/**
-	 *
-	 * @return false, if the end of stream is reached (The last frames where read in
-	 *         the buffer).
-	 * @throws IOException
-	 */
-	public boolean nextSample() throws IOException {
-		if ((bufferPos == -1) || ((bufferPos +1) * sampleSize >= bytesReaded)) {
-			bytesReaded = ais.read(buffer);
-			if (bytesReaded > 0) {
-				bufferPos = 0;
-				return true;
-			} else {
-				bufferPos = -1;
-				return false;
-			}
-		}
-		bufferPos++;
-		return true;
-	}
-	
+    /**
+     *
+     * @return false, if the end of stream is reached (The last frames where
+     * read in the buffer).
+     * @throws IOException
+     */
+    public boolean nextSample() throws IOException {
+        if ((bufferPos == -1) || ((bufferPos + 1) * sampleSize >= bytesReaded)) {
+            bytesReaded = ais.read(buffer);
+            if (bytesReaded > 0) {
+                bufferPos = 0;
+                return true;
+            } else {
+                bufferPos = -1;
+                return false;
+            }
+        }
+        bufferPos++;
+        return true;
+    }
+
 }

@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -21,9 +21,9 @@
  */
 package de.ibapl.dsp4j.datatypes._double.iirfilter;
 
-import java.util.Arrays;
 import de.ibapl.dsp4j.In;
 import de.ibapl.dsp4j.Out;
+import java.util.Arrays;
 
 /**
  *
@@ -41,8 +41,8 @@ public final class GenericDirectDoubleIirFilter implements DirectDoubleIirFilter
             throw new IllegalArgumentException("a[0] must be 1");
         }
         if (a.length == b.length) {
-        this.a = a;
-        this.b = b;
+            this.a = a;
+            this.b = b;
         } else if (a.length < b.length) {
             this.a = Arrays.copyOf(a, b.length);
             this.b = b;
@@ -90,9 +90,9 @@ public final class GenericDirectDoubleIirFilter implements DirectDoubleIirFilter
 
     @Override
     public void reset() {
-       for (int i = 0; i < si.length; i++) {
-           si[i] = 0;
-       }
+        for (int i = 0; i < si.length; i++) {
+            si[i] = 0;
+        }
     }
 
 }

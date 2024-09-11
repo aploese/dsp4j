@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -21,9 +21,9 @@
  */
 package de.ibapl.dsp4j.datatypes._short.iirfilter;
 
-import java.util.Arrays;
 import de.ibapl.dsp4j.In;
 import de.ibapl.dsp4j.Out;
+import java.util.Arrays;
 
 /**
  *
@@ -36,15 +36,15 @@ public class GenericDirectShortIirFilter implements DirectShortIirFilter {
     private final int[] si;
     private int y;
 
-    public GenericDirectShortIirFilter(double [] a, double [] b) {
+    public GenericDirectShortIirFilter(double[] a, double[] b) {
         if (a[0] != 1) {
             throw new IllegalArgumentException("a[0] must be 1");
         }
         this.a = new int[a.length];
         this.b = new int[b.length];
         for (int i = 0; i < a.length; i++) {
-            this.a[i] = (int)Math.round(a[i] * Q_DOT_15_VALUE);
-            this.b[i] = (int)Math.round(b[i] * Q_DOT_15_VALUE);
+            this.a[i] = (int) Math.round(a[i] * Q_DOT_15_VALUE);
+            this.b[i] = (int) Math.round(b[i] * Q_DOT_15_VALUE);
         }
         if (a.length > 1) {
             si = new int[a.length - 1];

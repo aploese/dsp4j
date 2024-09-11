@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -22,6 +22,7 @@
 package de.ibapl.dsp4j;
 
 import java.io.IOException;
+import java.lang.ref.Cleaner;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioFormat.Encoding;
 import javax.sound.sampled.AudioSystem;
@@ -32,8 +33,9 @@ import javax.sound.sampled.TargetDataLine;
 /**
  *
  * @author aploese
- * 
- * To get a sample first call clock to read from the underlying TargetDataLine or move to the next sample in the buffer
+ *
+ * To get a sample first call clock to read from the underlying TargetDataLine
+ * or move to the next sample in the buffer
  */
 public abstract class TargetDataLineWrapper {
 
@@ -43,12 +45,26 @@ public abstract class TargetDataLineWrapper {
     protected final int sampleSize;
     protected int bufferPos = -1;
     protected int bytesReaded;
+
     /*
      * Just a shorthand to avoid long access for each sample in readXXX().
      */
     protected final boolean bigEndian;
-    
+
+    private final void setupCleaner() {
+        Cleaner c = Cleaner.create();
+        c.register(this, () -> {
+            final TargetDataLine t = tdl;
+            tdl = null;
+            if (t != null) {
+                t.stop();
+                t.close();
+            }
+        });
+    }
+
     public TargetDataLineWrapper(Mixer.Info mixerInfo, AudioFormat af, int samplesInBuffer) throws LineUnavailableException, IOException {
+        setupCleaner();
         this.tdl = AudioSystem.getTargetDataLine(af, mixerInfo);
         this.bigEndian = af.isBigEndian();
         this.channels = af.getChannels();
@@ -59,6 +75,7 @@ public abstract class TargetDataLineWrapper {
     }
 
     public TargetDataLineWrapper(AudioFormat af, int samplesInBuffer) throws LineUnavailableException, IOException {
+        setupCleaner();
         this.tdl = AudioSystem.getTargetDataLine(af);
         this.bigEndian = af.isBigEndian();
         this.channels = af.getChannels();
@@ -69,6 +86,7 @@ public abstract class TargetDataLineWrapper {
     }
 
     public TargetDataLineWrapper(TargetDataLine tdl, int samplesInBuffer) throws IOException, LineUnavailableException {
+        setupCleaner();
         this.tdl = tdl;
         this.bigEndian = tdl.getFormat().isBigEndian();
         this.channels = tdl.getFormat().getChannels();
@@ -108,43 +126,35 @@ public abstract class TargetDataLineWrapper {
 
     protected final int getInt(int channel) {
         if (bigEndian) {
-            return ((buffer[bufferPos + channel] << 24) & 0xFF000000) | ((buffer[bufferPos  + channel +1] << 16) & 0x00FF0000) | ((buffer[bufferPos  + channel +2] << 8) & 0x0000FF00) | (buffer[bufferPos  + channel +3] & 0x000000FF);
+            return ((buffer[bufferPos + channel] << 24) & 0xFF000000) | ((buffer[bufferPos + channel + 1] << 16) & 0x00FF0000) | ((buffer[bufferPos + channel + 2] << 8) & 0x0000FF00) | (buffer[bufferPos + channel + 3] & 0x000000FF);
         } else {
-            return ((buffer[bufferPos + channel] & 0x000000FF)) | ((buffer[bufferPos  + channel +1] << 8) & 0x0000FF00) | ((buffer[bufferPos  + channel +2] << 16) & 0x00FF0000) | ((buffer[bufferPos  + channel +3] << 24) & 0xFF000000);
+            return ((buffer[bufferPos + channel] & 0x000000FF)) | ((buffer[bufferPos + channel + 1] << 8) & 0x0000FF00) | ((buffer[bufferPos + channel + 2] << 16) & 0x00FF0000) | ((buffer[bufferPos + channel + 3] << 24) & 0xFF000000);
         }
     }
 
     public final TargetDataLine getTargetDataLine() {
         return tdl;
-    } 
-    
-    @Override
-    protected void finalize() throws Throwable {
-        if (tdl != null) {
-        tdl.stop();
-        tdl.close();
-        }
-        super.finalize();
     }
-    
-   /**
-     * 
-     * @return false, if the end of stream is reached (The last frames where read in the buffer).
-     * @throws IOException 
+
+    /**
+     *
+     * @return false, if the end of stream is reached (The last frames where
+     * read in the buffer).
+     * @throws IOException
      */
     public final boolean nextSample() throws IOException {
-		if ((bufferPos == -1) || ((bufferPos +1) * sampleSize >= bytesReaded)) {
-			bytesReaded = tdl.read(buffer, 0, buffer.length);
-			if (bytesReaded > 0) {
-				bufferPos = 0;
-				return true;
-			} else {
-				bufferPos = -1;
-				return false;
-			}
-		}
-		bufferPos++;
-		return true;
+        if ((bufferPos == -1) || ((bufferPos + 1) * sampleSize >= bytesReaded)) {
+            bytesReaded = tdl.read(buffer, 0, buffer.length);
+            if (bytesReaded > 0) {
+                bufferPos = 0;
+                return true;
+            } else {
+                bufferPos = -1;
+                return false;
+            }
+        }
+        bufferPos++;
+        return true;
     }
 
 }

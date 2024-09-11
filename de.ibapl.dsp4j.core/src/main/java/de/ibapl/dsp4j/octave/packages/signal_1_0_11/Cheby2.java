@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -42,7 +42,7 @@ import org.apache.commons.math3.util.FastMath;
 ## along with this program; If not, see <http://www.gnu.org/licenses/>.
 
 ## Generate an Chebyshev type II filter with Rs dB of stop band attenuation.
-## 
+##
 ## [b, a] = cheby2(n, Rs, Wc)
 ##    low pass filter with cutoff pi*Wc radians
 ##
@@ -61,11 +61,11 @@ import org.apache.commons.math3.util.FastMath;
 ##
 ## [...] = cheby2(...,'s')
 ##     return a Laplace space filter, W can be larger than 1.
-## 
+##
 ## [a,b,c,d] = cheby2(...)
-##  return  state-space matrices 
-## 
-## References: 
+##  return  state-space matrices
+##
+## References:
 ##
 ## Parks & Burrus (1987). Digital Filter Design. New York:
 ## John Wiley & Sons, Inc.
@@ -79,7 +79,6 @@ public class Cheby2 extends PoleZeroGainIIRFilterGenerator {
 
     private Cheby2(int n, double Rs, double[] W, boolean digital, boolean stop) {
         super(W, digital, stop);
-
 
         if (Rs < 0) {
             throw new IllegalArgumentException("cheby2: stopband attenuation must be positive decibels");
@@ -132,13 +131,13 @@ public class Cheby2 extends PoleZeroGainIIRFilterGenerator {
          */
         gain = FastMath.abs(OctaveBuildIn.prod(pole).divide(OctaveBuildIn.prod(zero)).getReal());
     }
-    
+
     public Cheby2(int n, double Rs, double wc, boolean digital, boolean stop) {
-        this(n, Rs, new double[] {wc}, digital, stop);
+        this(n, Rs, new double[]{wc}, digital, stop);
     }
 
     public Cheby2(int n, double Rs, double wl, double wh, boolean digital, boolean stop) {
-        this(n, Rs, new double[] {wl, wh}, digital, stop);
+        this(n, Rs, new double[]{wl, wh}, digital, stop);
     }
 
 }

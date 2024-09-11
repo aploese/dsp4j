@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -38,13 +38,13 @@ public class PidController implements SampledBlock {
     private double derivative;
     private double dt;
     private double sampleRate;
-    
+
 
     /*
      * This is basically whats done here....
-     * 
+     *
      previous_error = 0
-     integral = 0 
+     integral = 0
      start:
      error = setpoint - measured_value
      integral = integral + error*dt
@@ -53,11 +53,11 @@ public class PidController implements SampledBlock {
      previous_error = error
      wait(dt)
      goto start
-     * 
+     *
      */
     public double setX(double x) {
         integral += x * dt;
-        derivative = (x - old_x)/dt;
+        derivative = (x - old_x) / dt;
         y = kp * x + ki * integral + kd * derivative;
         return y;
     }

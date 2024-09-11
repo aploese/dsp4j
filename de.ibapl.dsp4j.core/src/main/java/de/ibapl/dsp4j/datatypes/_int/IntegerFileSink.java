@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -21,9 +21,9 @@
  */
 package de.ibapl.dsp4j.datatypes._int;
 
+import de.ibapl.dsp4j.FileSink;
 import java.io.File;
 import javax.sound.sampled.AudioFormat;
-import de.ibapl.dsp4j.FileSink;
 
 /**
  *
@@ -31,27 +31,27 @@ import de.ibapl.dsp4j.FileSink;
  */
 public class IntegerFileSink extends FileSink {
 
-	public void setInt(int channel, int sample) {
-		final int pos = bufferSamplePos * sampleSize + channel * 32;
-		if (isBigEndian()) {
-			buffer[pos] = (byte) ((sample >> 24) & 0xFF);
-			buffer[pos + 1] = (byte) ((sample >> 26) & 0xFF);
-			buffer[pos + 2] = (byte) ((sample >> 8) & 0xFF);
-			buffer[pos + 3] = (byte) (sample & 0xFF);
-		} else {
-			buffer[pos] = (byte) (sample & 0xFF);
-			buffer[pos + 1] = (byte) ((sample >> 8) & 0xFF);
-			buffer[pos + 2] = (byte) ((sample >> 16) & 0xFF);
-			buffer[pos + 3] = (byte) ((sample >> 24) & 0xFF);
-		}
-	}
+    public void setInt(int channel, int sample) {
+        final int pos = bufferSamplePos * sampleSize + channel * 32;
+        if (isBigEndian()) {
+            buffer[pos] = (byte) ((sample >> 24) & 0xFF);
+            buffer[pos + 1] = (byte) ((sample >> 26) & 0xFF);
+            buffer[pos + 2] = (byte) ((sample >> 8) & 0xFF);
+            buffer[pos + 3] = (byte) (sample & 0xFF);
+        } else {
+            buffer[pos] = (byte) (sample & 0xFF);
+            buffer[pos + 1] = (byte) ((sample >> 8) & 0xFF);
+            buffer[pos + 2] = (byte) ((sample >> 16) & 0xFF);
+            buffer[pos + 3] = (byte) ((sample >> 24) & 0xFF);
+        }
+    }
 
-	protected IntegerFileSink(File wavOut, int channels, double sampleRate, boolean signed, boolean bigEndian,
-			int framesInBuffer) {
-		super(wavOut, new AudioFormat((float) sampleRate, 4 * 8, channels, signed, bigEndian), framesInBuffer);
-	}
+    protected IntegerFileSink(File wavOut, int channels, double sampleRate, boolean signed, boolean bigEndian,
+            int framesInBuffer) {
+        super(wavOut, new AudioFormat((float) sampleRate, 4 * 8, channels, signed, bigEndian), framesInBuffer);
+    }
 
-	protected IntegerFileSink(File wavOut, int channels, double sampleRate, int framesInBuffer) {
-		super(wavOut, new AudioFormat((float) sampleRate, 4 * 8, channels, true, false), framesInBuffer);
-	}
+    protected IntegerFileSink(File wavOut, int channels, double sampleRate, int framesInBuffer) {
+        super(wavOut, new AudioFormat((float) sampleRate, 4 * 8, channels, true, false), framesInBuffer);
+    }
 }

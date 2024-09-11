@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -22,37 +22,14 @@
 package de.ibapl.dsp4j.datatypes._short;
 
 import java.io.File;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
  * @author aploese
  */
 public class StereoShortFileTest {
-    
-    public StereoShortFileTest() {
-    }
-    
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() throws Exception {
-    }
 
     /**
      * Test of setX method, of class MonoIntegerFileSink.
@@ -61,8 +38,8 @@ public class StereoShortFileTest {
     public void testSetX() throws Exception {
         short[] data = new short[]{
             0,
-            Short.MAX_VALUE / 4, 
-            Short.MAX_VALUE / 2, 
+            Short.MAX_VALUE / 4,
+            Short.MAX_VALUE / 2,
             Short.MAX_VALUE,
             Short.MAX_VALUE / 2,
             Short.MAX_VALUE / 4,
@@ -74,18 +51,17 @@ public class StereoShortFileTest {
             Short.MIN_VALUE / 2,
             Short.MIN_VALUE / 4,
             0};
-        
+
         System.out.println("setX");
         int sample = 0;
         ShortFileSink sink = new ShortFileSink(File.createTempFile("test", "wav"), 2, 8000.0, 5);
         for (int i = 0; i < data.length; i++) {
             sink.setShort(0, data[i]);
-            sink.setShort(1, (short)-data[i]);
+            sink.setShort(1, (short) -data[i]);
             sink.nextSample();
         }
         sink.close();
-        
-        
+
         ShortSampledSource source = new ShortSampledSource(sink.getWavOut(), 3);
         assertEquals(sink.isBigEndian(), source.isBigEndian());
         assertEquals(sink.getEncoding(), source.getEncoding());
@@ -93,11 +69,11 @@ public class StereoShortFileTest {
         assertEquals(sink.getSampleRate(), source.getSampleRate(), Double.MIN_VALUE);
         assertEquals(sink.getFrameSize(), source.getFrameSize());
         assertEquals(sink.getSampleSizeInBits(), source.getSampleSizeInBits());
-        
+
         for (int i = 0; i < data.length; i++) {
             assertTrue(source.nextSample());
-            assertEquals("Error at left:" + i, data[i], source.getShort(0));
-            assertEquals("Error at right:" + i, (short)-data[i], source.getShort(1));
+            assertEquals(data[i], source.getShort(0), "Error at left:" + i);
+            assertEquals((short) -data[i], source.getShort(1), "Error at right:" + i);
         }
         assertFalse(source.nextSample());
     }

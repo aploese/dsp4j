@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -126,9 +126,9 @@ public class OctaveBuildIn {
 
         double frexp(double value) {
             long bits = Double.doubleToLongBits(value);
-            
+
             // Test for NaN, infinity.
-            if (Double.isNaN(value) || Double.isInfinite(value) || value +value == value) {
+            if (Double.isNaN(value) || Double.isInfinite(value) || value + value == value) {
                 exponent = 0;
                 mantissa = value;
             } else {
@@ -136,13 +136,12 @@ public class OctaveBuildIn {
                 boolean neg = (bits < 0);
                 exponent = (int) ((bits >> 52) & 0x7ffL) - 1023;
                 long _mantissa = (bits & 0x0000fffffffffffffL) | (0x0010000000000000L);
-                mantissa = (double)_mantissa * 2.220446049250313E-16; // * Math.pow(2, -52);
-                
+                mantissa = (double) _mantissa * 2.220446049250313E-16; // * Math.pow(2, -52);
+
                 if (mantissa >= 1.0) {
                     mantissa /= 2;
                     exponent++;
                 }
-
 
                 if (neg) {
                     mantissa = -mantissa;

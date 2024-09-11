@@ -1,0 +1,5 @@
+-noimportjava: true
+Export-Package: \
+ de.ibapl.dsp4j.fms4j, \
+ de.ibapl.dsp4j.fms4j.fms, \
+ de.ibapl.dsp4j.fms4j.zvei

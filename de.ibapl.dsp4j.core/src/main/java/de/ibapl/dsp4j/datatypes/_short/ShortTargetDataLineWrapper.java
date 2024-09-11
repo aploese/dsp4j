@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -21,37 +21,36 @@
  */
 package de.ibapl.dsp4j.datatypes._short;
 
+import de.ibapl.dsp4j.TargetDataLineWrapper;
 import java.io.IOException;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.Mixer;
-import de.ibapl.dsp4j.TargetDataLineWrapper;
 
 /**
  *
- * @author aploese
- * 16 Bit PCM
+ * @author aploese 16 Bit PCM
  */
 public class ShortTargetDataLineWrapper extends TargetDataLineWrapper {
-    
+
     public ShortTargetDataLineWrapper(Mixer.Info mixerInfo, int channels, double sampleRate, boolean signed, boolean bigEndian, int framesInBuffer) throws IOException, LineUnavailableException {
-        super(mixerInfo, new AudioFormat((float)sampleRate, 2 * 8, channels, signed, bigEndian), framesInBuffer);
+        super(mixerInfo, new AudioFormat((float) sampleRate, 2 * 8, channels, signed, bigEndian), framesInBuffer);
     }
-    
+
     public ShortTargetDataLineWrapper(Mixer.Info mixerInfo, int channels, double sampleRate, int framesInBuffer) throws IOException, LineUnavailableException {
-        super(mixerInfo, new AudioFormat((float)sampleRate, 2 * 8, channels, true, false), framesInBuffer);
+        super(mixerInfo, new AudioFormat((float) sampleRate, 2 * 8, channels, true, false), framesInBuffer);
     }
 
     public ShortTargetDataLineWrapper(int channels, double sampleRate, int framesInBuffer) throws IOException, LineUnavailableException {
-        super(new AudioFormat((float)sampleRate, 2 * 8, channels, true, false), framesInBuffer);
+        super(new AudioFormat((float) sampleRate, 2 * 8, channels, true, false), framesInBuffer);
     }
-    
-    public final short getShort(int channel){
-    	final int pos = bufferPos * sampleSize + channel * 2; 
+
+    public final short getShort(int channel) {
+        final int pos = bufferPos * sampleSize + channel * 2;
         if (bigEndian) {
-            return (short)(((buffer[pos] << 8) & 0xFF00) | (buffer[pos + 1] & 0x00FF));
+            return (short) (((buffer[pos] << 8) & 0xFF00) | (buffer[pos + 1] & 0x00FF));
         } else {
-            return (short)(((buffer[pos] & 0x00FF) | ((buffer[pos + 1] << 8) & 0xFF00)));
+            return (short) (((buffer[pos] & 0x00FF) | ((buffer[pos + 1] << 8) & 0xFF00)));
         }
     }
 

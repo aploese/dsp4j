@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -21,83 +21,77 @@
  */
 package de.ibapl.dsp4j.octave.packages.signal_1_0_11;
 
+import static de.ibapl.dsp4j.octave_3_2_4.OctaveBuildIn.prod;
 import java.util.Arrays;
 import org.apache.commons.math3.complex.Complex;
 
-import static de.ibapl.dsp4j.octave_3_2_4.OctaveBuildIn.prod;
-
-/** Copyright (C) 1999 Paul Kienzle
+/**
+ * Copyright (C) 1999 Paul Kienzle
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; If not, see <http://www.gnu.org/licenses/>.
-
- * usage: [Zz, Zp, Zg] = bilinear(Sz, Sp, Sg, T)
- *        [Zb, Za] = bilinear(Sb, Sa, T)
+ * You should have received a copy of the GNU General Public License along with
+ * this program; If not, see <http://www.gnu.org/licenses/>.
  *
- * Transform a s-plane filter specification into a z-plane
- * specification. Filters can be specified in either zero-pole-gain or
- * transfer function form. The input form does not have to match the
- * output form. 1/T is the sampling frequency represented in the z plane.
+ * usage: [Zz, Zp, Zg] = bilinear(Sz, Sp, Sg, T) [Zb, Za] = bilinear(Sb, Sa, T)
+ *
+ * Transform a s-plane filter specification into a z-plane specification.
+ * Filters can be specified in either zero-pole-gain or transfer function form.
+ * The input form does not have to match the output form. 1/T is the sampling
+ * frequency represented in the z plane.
  *
  * Note: this differs from the bilinear function in the signal processing
  * toolbox, which uses 1/T rather than T.
  *
- * Theory: Given a piecewise flat filter design, you can transform it
- * from the s-plane to the z-plane while maintaining the band edges by
- * means of the bilinear transform.  This maps the left hand side of the
- * s-plane into the interior of the unit circle.  The mapping is highly
- * non-linear, so you must design your filter with band edges in the
- * s-plane positioned at 2/T tan(w*T/2) so that they will be positioned
- * at w after the bilinear transform is complete.
+ * Theory: Given a piecewise flat filter design, you can transform it from the
+ * s-plane to the z-plane while maintaining the band edges by means of the
+ * bilinear transform. This maps the left hand side of the s-plane into the
+ * interior of the unit circle. The mapping is highly non-linear, so you must
+ * design your filter with band edges in the s-plane positioned at 2/T
+ * tan(w*T/2) so that they will be positioned at w after the bilinear transform
+ * is complete.
  *
  * The following table summarizes the transformation:
  *
- * +---------------+-----------------------+----------------------+
- * | Transform     | Zero at x             | Pole at x            |
- * |    H(S)       |   H(S) = S-x          |    H(S)=1/(S-x)      |
- * +---------------+-----------------------+----------------------+
- * |       2 z-1   | zero: (2+xT)/(2-xT)   | zero: -1             |
- * |  S -> - ---   | pole: -1              | pole: (2+xT)/(2-xT)  |
- * |       T z+1   | gain: (2-xT)/T        | gain: (2-xT)/T       |
+ * +---------------+-----------------------+----------------------+ | Transform
+ * | Zero at x | Pole at x | | H(S) | H(S) = S-x | H(S)=1/(S-x) |
+ * +---------------+-----------------------+----------------------+ | 2 z-1 |
+ * zero: (2+xT)/(2-xT) | zero: -1 | | S -> - --- | pole: -1 | pole:
+ * (2+xT)/(2-xT) | | T z+1 | gain: (2-xT)/T | gain: (2-xT)/T |
  * +---------------+-----------------------+----------------------+
  *
  * With tedious algebra, you can derive the above formulae yourself by
  * substituting the transform for S into H(S)=S-x for a zero at x or
- * H(S)=1/(S-x) for a pole at x, and converting the result into the
- * form:
+ * H(S)=1/(S-x) for a pole at x, and converting the result into the form:
  *
- *    H(Z)=g prod(Z-Xi)/prod(Z-Xj)
+ * H(Z)=g prod(Z-Xi)/prod(Z-Xj)
  *
- * Please note that a pole and a zero at the same place exactly cancel.
- * This is significant since the bilinear transform creates numerous
- * extra poles and zeros, most of which cancel. Those which do not
- * cancel have a "fill-in" effect, extending the shorter of the sets to
- * have the same number of as the longer of the sets of poles and zeros
- * (or at least split the difference in the case of the band pass
- * filter). There may be other opportunistic cancellations but I will
- * not check for them.
+ * Please note that a pole and a zero at the same place exactly cancel. This is
+ * significant since the bilinear transform creates numerous extra poles and
+ * zeros, most of which cancel. Those which do not cancel have a "fill-in"
+ * effect, extending the shorter of the sets to have the same number of as the
+ * longer of the sets of poles and zeros (or at least split the difference in
+ * the case of the band pass filter). There may be other opportunistic
+ * cancellations but I will not check for them.
  *
- * Also note that any pole on the unit circle or beyond will result in
- * an unstable filter.  Because of cancellation, this will only happen
- * if the number of poles is smaller than the number of zeros.  The
- * analytic design methods all yield more poles than zeros, so this will
- * not be a problem.
+ * Also note that any pole on the unit circle or beyond will result in an
+ * unstable filter. Because of cancellation, this will only happen if the number
+ * of poles is smaller than the number of zeros. The analytic design methods all
+ * yield more poles than zeros, so this will not be a problem.
  *
  * References:
  *
- * Proakis & Manolakis (1992). Digital Signal Processing. New York:
- * Macmillan Publishing Company.
-
+ * Proakis & Manolakis (1992). Digital Signal Processing. New York: Macmillan
+ * Publishing Company.
+ *
  * Author: Paul Kienzle <pkienzle@users.sf.net>
  */
 public class Bilinear {

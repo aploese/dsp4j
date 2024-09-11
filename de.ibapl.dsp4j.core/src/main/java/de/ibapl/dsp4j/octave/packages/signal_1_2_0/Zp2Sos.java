@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -21,8 +21,8 @@
  */
 package de.ibapl.dsp4j.octave.packages.signal_1_2_0;
 
-import java.util.Arrays;
 import de.ibapl.dsp4j.octave_3_2_4.OctaveBuildIn;
+import java.util.Arrays;
 import org.apache.commons.math3.complex.Complex;
 
 /*
@@ -46,20 +46,20 @@ import org.apache.commons.math3.complex.Complex;
  * @author aploese
  */
 public class Zp2Sos {
-    
+
     private double[][] sos;
     private double gain;
 
     public Zp2Sos(Complex[] zeros, Complex[] poles, double gain) {
         this.gain = gain;
-        
+
         CplxReal cplxReal = new CplxReal();
 
         cplxReal.cplxReal(0.0000000001, zeros);
         Complex[] zc = cplxReal.getConjComplxPair();
         Complex[] zr = cplxReal.getRealValues();
 
-        cplxReal.cplxReal(0.0000000001,poles);
+        cplxReal.cplxReal(0.0000000001, poles);
         Complex[] pc = cplxReal.getConjComplxPair();
         Complex[] pr = cplxReal.getRealValues();
 
@@ -76,7 +76,7 @@ public class Zp2Sos {
         if (nzr > 0) {
             if (nzr % 2 == 1) {
                 zr = Arrays.copyOf(zr, zr.length + 1);
-                zr[zr.length -1] = Complex.ZERO;
+                zr[zr.length - 1] = Complex.ZERO;
                 nzr++;
             }
             nzrsec = nzr / 2;
@@ -95,7 +95,7 @@ public class Zp2Sos {
         if (npr > 0) {
             if (npr % 2 == 1) {
                 pr = Arrays.copyOf(pr, pr.length + 1);
-                pr[pr.length -1] = Complex.ZERO;
+                pr[pr.length - 1] = Complex.ZERO;
                 npr++;
             }
             nprsec = npr / 2;
@@ -160,19 +160,19 @@ public class Zp2Sos {
             }
         }
     }
-    
+
     public int getRowCount() {
         return sos.length;
     }
-    
+
     public double[] getRow(int i) {
         return sos[i];
     }
-    
+
     public double[][] getSos() {
         return sos;
     }
-    
+
     public double getGain() {
         return gain;
     }

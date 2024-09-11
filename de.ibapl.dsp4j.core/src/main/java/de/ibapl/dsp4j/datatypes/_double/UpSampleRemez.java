@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -36,7 +36,7 @@ public class UpSampleRemez implements SampledBlock {
 
     public UpSampleRemez(int multiplier) {
         this.multiplier = multiplier;
-        filter = new RemezFilter(multiplier * 16, new double[] {0}, new double[] {0,1});
+        filter = new RemezFilter(multiplier * 16, new double[]{0}, new double[]{0, 1});
     }
 
     @Override

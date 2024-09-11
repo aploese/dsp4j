@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -23,12 +23,8 @@ package de.ibapl.dsp4j.octave.packages.signal_1_0_11;
 
 import de.ibapl.dsp4j.ComplexUtil;
 import org.apache.commons.math3.complex.Complex;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
@@ -36,34 +32,15 @@ import static org.junit.Assert.*;
  */
 public class SfTransTest {
 
-    public SfTransTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
-
     /**
      * Test of sftrans method, of class SfTrans.
      */
     @Test
     public void testSftrans1stOrder() {
         Complex[] zero = new Complex[0];
-        Complex[] pole = new Complex[] {new Complex(-1, 0)};
+        Complex[] pole = new Complex[]{new Complex(-1, 0)};
         double gain = 1;
-        double[] W = new double[] {0.198912367379658};
+        double[] W = new double[]{0.198912367379658};
 
         //LP
         SfTrans sfTrans = new SfTrans(zero, pole, gain, W, false);
@@ -80,7 +57,7 @@ public class SfTransTest {
         ComplexUtil.assertComplexEquals(-0.198912367379658, -0.0, sfTrans.getSPole()[0]);
         assertEquals(1.0, sfTrans.getSGain(), Double.MIN_VALUE);
 
-        W = new double[] {0.198912367379658, 2.414213562373095};
+        W = new double[]{0.198912367379658, 2.414213562373095};
 
         //BP
         sfTrans = new SfTrans(zero, pole, gain, W, false);

@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -26,7 +26,7 @@ package de.ibapl.dsp4j.fms4j.fms;
  * @author aploese
  */
 public enum Baustufenkennung {
-    NUR_VOM_FZG("Übertragung nur vom Fahrzeug zur Leitstelle möglich"), 
+    NUR_VOM_FZG("Übertragung nur vom Fahrzeug zur Leitstelle möglich"),
     BEIDE_RICHTUNGEN("Übertragung in beide Richtungen möglich");
     public final String label;
 
@@ -38,5 +38,5 @@ public enum Baustufenkennung {
     public String toString() {
         return label;
     }
-    
+
 }

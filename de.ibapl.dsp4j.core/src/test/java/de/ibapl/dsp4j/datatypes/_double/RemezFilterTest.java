@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -21,47 +21,24 @@
  */
 package de.ibapl.dsp4j.datatypes._double;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  *
  * @author aploese
  */
 public class RemezFilterTest {
-    
-    public RemezFilterTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
-    }
 
     /**
      * Test of getW method, of class RemezFilter.
      */
+    @Disabled
     @Test
-    @Ignore
     public void testGetW() {
         System.out.println("getW");
-        RemezFilter instance = new RemezFilter(120, new double[] {900, 1200, 1800, 2100}, new double[] {0, 1, 1,0});
+        RemezFilter instance = new RemezFilter(120, new double[]{900, 1200, 1800, 2100}, new double[]{0, 1, 1, 0});
         double[] expResult = null;
         double[] result = instance.getW();
         assertEquals(expResult, result);
@@ -72,12 +49,12 @@ public class RemezFilterTest {
     /**
      * Test of setSampleRate method, of class RemezFilter.
      */
+    @Disabled
     @Test
-    @Ignore
     public void testSetSampleRate() {
         System.out.println("setSampleRate");
         double sampleRate = 0.0;
-        RemezFilter instance = new RemezFilter(120, new double[] {900, 1200, 1800, 2100}, new double[] {0, 1, 1,0});
+        RemezFilter instance = new RemezFilter(120, new double[]{900, 1200, 1800, 2100}, new double[]{0, 1, 1, 0});
         instance.setSampleRate(sampleRate);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
@@ -86,17 +63,17 @@ public class RemezFilterTest {
     /**
      * Test of setFc method, of class RemezFilter.
      */
+    @Disabled
     @Test
-    @Ignore
     public void testSetFc() {
         System.out.println("setFc");
         int order = 120;
         float fc = 0.0F;
         double with = 0.0;
         boolean high = false;
-        RemezFilter instance = new RemezFilter(120, new double[] {0, 900, 1200, 1800, 2100}, new double[] {0, 0, 1, 1, 0, 0});
+        RemezFilter instance = new RemezFilter(120, new double[]{0, 900, 1200, 1800, 2100}, new double[]{0, 0, 1, 1, 0, 0});
         instance.setSampleRate(22100);
-        
+
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }

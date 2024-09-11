@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -115,12 +115,12 @@ public abstract class AbstractCascadedShortIirFilter implements CascadedShortIir
         biquads = new BiQuad[sos.length];
         for (int i = 0; i < biquads.length; i++) {
             biquads[i] = createBiQuad(
-                    (int)Math.round(sos[i][3] * Q_DOT_15_VALUE), 
-                    (int)Math.round(sos[i][4] * Q_DOT_15_VALUE), 
-                    (int)Math.round(sos[i][5] * Q_DOT_15_VALUE), 
-                    (int)Math.round(sos[i][0] * gain * Q_DOT_15_VALUE), 
-                    (int)Math.round(sos[i][1] * gain * Q_DOT_15_VALUE), 
-                    (int)Math.round(sos[i][2] * gain * Q_DOT_15_VALUE));
+                    (int) Math.round(sos[i][3] * Q_DOT_15_VALUE),
+                    (int) Math.round(sos[i][4] * Q_DOT_15_VALUE),
+                    (int) Math.round(sos[i][5] * Q_DOT_15_VALUE),
+                    (int) Math.round(sos[i][0] * gain * Q_DOT_15_VALUE),
+                    (int) Math.round(sos[i][1] * gain * Q_DOT_15_VALUE),
+                    (int) Math.round(sos[i][2] * gain * Q_DOT_15_VALUE));
         }
     }
 
@@ -136,7 +136,7 @@ public abstract class AbstractCascadedShortIirFilter implements CascadedShortIir
 
     @Override
     public void reset() {
-        for (BiQuad b: biquads) {
+        for (BiQuad b : biquads) {
             b.reset();
         }
     }

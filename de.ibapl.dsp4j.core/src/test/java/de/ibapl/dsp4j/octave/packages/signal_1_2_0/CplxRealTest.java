@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -22,38 +22,15 @@
 package de.ibapl.dsp4j.octave.packages.signal_1_2_0;
 
 import org.apache.commons.math3.complex.Complex;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
 import static org.apache.commons.math3.complex.Complex.valueOf;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 /**
  *
  * @author aploese
  */
 public class CplxRealTest {
-    
-    public CplxRealTest() {
-    }
-    
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
-    }
 
     @Test
     public void doTest() {
@@ -62,7 +39,7 @@ public class CplxRealTest {
         assertArrayEquals(new Complex[]{valueOf(1, 2), valueOf(1, 3), valueOf(10, 2)}, instance.getConjComplxPair());
         assertArrayEquals(new Complex[]{valueOf(2)}, instance.getRealValues());
     }
-    
+
     @Test
     public void doTestRealOrder() {
         CplxReal instance = new CplxReal();
@@ -70,13 +47,16 @@ public class CplxRealTest {
         assertArrayEquals(new Complex[0], instance.getConjComplxPair());
         assertArrayEquals(new Complex[]{valueOf(-1), valueOf(-1), valueOf(1), valueOf(1)}, instance.getRealValues());
     }
-    
-    @Test(expected = RuntimeException.class)
+
+    @Test
     public void doTestEx() {
         CplxReal instance = new CplxReal();
-        instance.cplxReal(Double.MIN_VALUE, valueOf(1, -2), valueOf(2, 5), valueOf(1, 2), valueOf(1, 3), valueOf(1, -3));
-        assertArrayEquals(new Complex[]{valueOf(1, 2), valueOf(1, 3)}, instance.getConjComplxPair());
-        assertArrayEquals(new Complex[]{valueOf(2)}, instance.getRealValues());
+        //TODO siblings of complex pairs missing is thrown in instance.cplxReal ...
+        assertThrows(RuntimeException.class, () -> {
+            instance.cplxReal(Double.MIN_VALUE, valueOf(1, -2), valueOf(2, 5), valueOf(1, 2), valueOf(1, 3), valueOf(1, -3));
+            assertArrayEquals(new Complex[]{valueOf(1, 2), valueOf(1, 3)}, instance.getConjComplxPair());
+            assertArrayEquals(new Complex[]{valueOf(2)}, instance.getRealValues());
+        });
     }
 
 }

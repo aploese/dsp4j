@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -21,21 +21,17 @@
  */
 package de.ibapl.dsp4j.datatypes._short;
 
-import de.ibapl.dsp4j.datatypes._short.iirfilter.DirectShortIirFilter;
-import de.ibapl.dsp4j.datatypes._short.iirfilter.ShortIirFilterGenerator;
 import de.ibapl.dsp4j.VisualResultCheckTest;
 import de.ibapl.dsp4j.datatypes._double.iirfilter.DirectDoubleIirFilter;
 import de.ibapl.dsp4j.datatypes._double.iirfilter.DoubleIirFilterGenerator;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
-
+import de.ibapl.dsp4j.datatypes._short.iirfilter.DirectShortIirFilter;
+import de.ibapl.dsp4j.datatypes._short.iirfilter.ShortIirFilterGenerator;
 import java.io.IOException;
-
-import org.junit.Ignore;
+import org.junit.jupiter.api.AfterEach;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -43,123 +39,115 @@ import org.junit.Ignore;
  */
 public class ShortIirFilterTest extends VisualResultCheckTest {
 
-	public ShortIirFilterTest() {
-	}
+    public ShortIirFilterTest() {
+    }
 
-	private int deltaError;
-	private int factor;
-	private double outScale;
-	private DirectShortIirFilter filterShort;
-	private DirectDoubleIirFilter filterDouble;
+    private int deltaError;
+    private int factor;
+    private double outScale;
+    private DirectShortIirFilter filterShort;
+    private DirectDoubleIirFilter filterDouble;
 
-	@BeforeClass
-	public static void setUpClass() throws Exception {
-	}
+    @BeforeEach
+    public void setUp() {
+        deltaError = 1;
+        factor = 1 << 15;
+        outScale = 1.0;
+        filterShort = null;
+        filterDouble = null;
+    }
 
-	@AfterClass
-	public static void tearDownClass() throws Exception {
-	}
+    @AfterEach
+    @Override
+    public void tearDown() throws Exception {
+        super.tearDown();
+    }
 
-	@Before
-	public void setUp() {
-		deltaError = 1;
-		factor = 1 << 15;
-		outScale = 1.0;
-		filterShort = null;
-		filterDouble = null;
-	}
+    private void setValue(int i, short value) throws IOException {
+        final short sample = (short) ((value * factor) >> 15);
+        filterDouble.setX(sample);
+        filterShort.setX(sample);
+        assertEquals(filterDouble.getY(), filterShort.getY(), deltaError, "@Index: " + i);
+        if (isShowResult()) {
+            sfs.setShort(0, (short) (sample * outScale));
+            sfs.setShort(1, (short) ((filterDouble.getY() - filterShort.getY()) * 10));
+            sfs.setShort(2, (short) (filterDouble.getY() * outScale));
+            sfs.setShort(3, (short) (filterShort.getY() * outScale));
+            sfs.nextSample();
+        }
 
-	@After
-	@Override
-	public void tearDown() throws Exception {
-		super.tearDown();
-	}
+    }
 
-	private void setValue(int i, short value) throws IOException {
-		final short sample = (short) ((value * factor) >> 15);
-		filterDouble.setX(sample);
-		filterShort.setX(sample);
-		assertEquals("@Index: " + i, filterDouble.getY(), filterShort.getY(), deltaError);
-		if (isShowResult()) {
-			sfs.setShort(0, (short) (sample * outScale));
-			sfs.setShort(1, (short) ((filterDouble.getY() - filterShort.getY()) * 10));
-			sfs.setShort(2, (short) (filterDouble.getY() * outScale));
-			sfs.setShort(3, (short) (filterShort.getY() * outScale));
-			sfs.nextSample();
-		}
+    @Disabled
+    @Test
+    public void testFilter() throws Exception {
+        System.out.println("setX");
 
-	}
+        ShortIirFilterGenerator genShort = new ShortIirFilterGenerator(8000);
+        DoubleIirFilterGenerator genDouble = new DoubleIirFilterGenerator(8000);
 
-	@Test
-	@Ignore
-	public void testFilter() throws Exception {
-		System.out.println("setX");
+        filterShort = genShort.getLP_ButterFc(1, 1, DirectShortIirFilter.class);
+        filterDouble = genDouble.getLP_ButterFc(1, 1, DirectDoubleIirFilter.class);
 
-		ShortIirFilterGenerator genShort = new ShortIirFilterGenerator(8000);
-		DoubleIirFilterGenerator genDouble = new DoubleIirFilterGenerator(8000);
+        filterDouble.setX(Short.MIN_VALUE);
+        filterShort.setX(Short.MIN_VALUE);
+        assertEquals(filterDouble.getY(), filterShort.getY(), 1.0, "y");
+        filterDouble.setX(1024);
+        filterShort.setX((short) 1024);
+        assertEquals(filterDouble.getY(), filterShort.getY(), 1.0);
 
-		filterShort = genShort.getLP_ButterFc(1, 1, DirectShortIirFilter.class);
-		filterDouble = genDouble.getLP_ButterFc(1, 1, DirectDoubleIirFilter.class);
+    }
 
-		filterDouble.setX(Short.MIN_VALUE);
-		filterShort.setX(Short.MIN_VALUE);
-		assertEquals("y", filterDouble.getY(), filterShort.getY(), 1.0);
-		filterDouble.setX(1024);
-		filterShort.setX((short) 1024);
-		assertEquals(filterDouble.getY(), filterShort.getY(), 1.0);
+    @Disabled
+    @Test
+    public void testButterLP1stOrder() throws Exception {
+        System.out.println("setX");
+        deltaError = 100000;
+        outScale = 16;
 
-	}
+        // createFile("test", 8000, 4);
+        ShortIirFilterGenerator genShort = new ShortIirFilterGenerator(8000);
+        DoubleIirFilterGenerator genDouble = new DoubleIirFilterGenerator(8000);
 
-	@Test
-	@Ignore
-	public void testButterLP1stOrder() throws Exception {
-		System.out.println("setX");
-		deltaError = 100000;
-		outScale = 16;
+        filterShort = genShort.getLP_ButterFc(1, 1, DirectShortIirFilter.class);
+        filterDouble = genDouble.getLP_ButterFc(1, 1, DirectDoubleIirFilter.class);
 
-		// createFile("test", 8000, 4);
-		ShortIirFilterGenerator genShort = new ShortIirFilterGenerator(8000);
-		DoubleIirFilterGenerator genDouble = new DoubleIirFilterGenerator(8000);
+        for (int i = 0; i < 8000; i++) {
+            setValue(i, (short) 1024);
+        }
+        for (int i = 0; i < 8000; i++) {
+            setValue(i, (short) 0);
+        }
+        for (int i = 0; i < 8000; i++) {
+            setValue(i, (short) -1024);
+        }
+    }
 
-		filterShort = genShort.getLP_ButterFc(1, 1, DirectShortIirFilter.class);
-		filterDouble = genDouble.getLP_ButterFc(1, 1, DirectDoubleIirFilter.class);
+    @Disabled
+    @Test
+    public void testButterHP1stOrder() throws Exception {
+        System.out.println("setX");
+        deltaError = 100000;
+        outScale = 16;
 
-		for (int i = 0; i < 8000; i++) {
-			setValue(i, (short) 1024);
-		}
-		for (int i = 0; i < 8000; i++) {
-			setValue(i, (short) 0);
-		}
-		for (int i = 0; i < 8000; i++) {
-			setValue(i, (short) -1024);
-		}
-	}
+        createFile("test", 8000, 4);
+        ShortIirFilterGenerator genShort = new ShortIirFilterGenerator(8000);
+        DoubleIirFilterGenerator genDouble = new DoubleIirFilterGenerator(8000);
 
-	@Test
-	@Ignore
-	public void testButterHP1stOrder() throws Exception {
-		System.out.println("setX");
-		deltaError = 100000;
-		outScale = 16;
+        filterShort = genShort.getHP_ButterFc(2, 100, DirectShortIirFilter.class);
+        filterDouble = genDouble.getHP_ButterFc(2, 100, DirectDoubleIirFilter.class);
 
-		createFile("test", 8000, 4);
-		ShortIirFilterGenerator genShort = new ShortIirFilterGenerator(8000);
-		DoubleIirFilterGenerator genDouble = new DoubleIirFilterGenerator(8000);
-
-		filterShort = genShort.getHP_ButterFc(2, 100, DirectShortIirFilter.class);
-		filterDouble = genDouble.getHP_ButterFc(2, 100, DirectDoubleIirFilter.class);
-
-		for (int i = 0; i < 8000; i++) {
-			setValue(i, (short) -1024);
-		}
-		for (int i = 0; i < 8000; i++) {
-			setValue(i, (short) 1024);
-		}
-		for (int i = 0; i < 8000; i++) {
-			setValue(i, (short) 0);
-		}
-		for (int i = 0; i < 8000; i++) {
-			setValue(i, (short) -1024);
-		}
-	}
+        for (int i = 0; i < 8000; i++) {
+            setValue(i, (short) -1024);
+        }
+        for (int i = 0; i < 8000; i++) {
+            setValue(i, (short) 1024);
+        }
+        for (int i = 0; i < 8000; i++) {
+            setValue(i, (short) 0);
+        }
+        for (int i = 0; i < 8000; i++) {
+            setValue(i, (short) -1024);
+        }
+    }
 }

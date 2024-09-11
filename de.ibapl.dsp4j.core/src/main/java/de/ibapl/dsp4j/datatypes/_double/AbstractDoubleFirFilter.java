@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -21,16 +21,16 @@
  */
 package de.ibapl.dsp4j.datatypes._double;
 
-import java.util.Arrays;
 import de.ibapl.dsp4j.AbstractSampleProcessingBlock;
 import de.ibapl.dsp4j.In;
 import de.ibapl.dsp4j.Out;
+import java.util.Arrays;
 
 /**
  *
  * @author aploese
  */
-public abstract class AbstractDoubleFirFilter extends AbstractSampleProcessingBlock  {
+public abstract class AbstractDoubleFirFilter extends AbstractSampleProcessingBlock {
 
     private double[] b;
     private double[] si;
@@ -43,7 +43,7 @@ public abstract class AbstractDoubleFirFilter extends AbstractSampleProcessingBl
 
     @In
     public double setX(double x) {
-         y = b[0] * x + si[0];
+        y = b[0] * x + si[0];
         for (int i = 0; i < si.length - 1; i++) {
             si[i] = b[i + 1] * x + si[i + 1];
         }
@@ -51,7 +51,7 @@ public abstract class AbstractDoubleFirFilter extends AbstractSampleProcessingBl
 
         return y;
     }
-    
+
     @Out
     public double getY() {
         return y;
@@ -67,10 +67,10 @@ public abstract class AbstractDoubleFirFilter extends AbstractSampleProcessingBl
 
     @Override
     public void reset() {
-       for (int i = 0; i < si.length; i++) {
-           si[i] = 0;
-       }
-       super.reset();
+        for (int i = 0; i < si.length; i++) {
+            si[i] = 0;
+        }
+        super.reset();
     }
 
 }

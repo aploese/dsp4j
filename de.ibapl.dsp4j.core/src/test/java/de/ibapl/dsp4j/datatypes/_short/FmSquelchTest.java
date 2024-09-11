@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -22,12 +22,8 @@
 package de.ibapl.dsp4j.datatypes._short;
 
 import de.ibapl.dsp4j.VisualResultCheckTest;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -35,31 +31,11 @@ import org.junit.Test;
  */
 public class FmSquelchTest extends VisualResultCheckTest {
 
-    public FmSquelchTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        super.tearDown();
-    }
-
-    @Before
-    public void setUp() {
-    }
-
     /**
      * Test of setX method, of class NoiseBlock.
      */
+    @Disabled
     @Test
-    @Ignore
     public void testSetX() throws Exception {
         System.out.println("setX");
 

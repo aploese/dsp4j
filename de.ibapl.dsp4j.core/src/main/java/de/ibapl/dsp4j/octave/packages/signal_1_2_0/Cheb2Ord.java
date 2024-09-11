@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -82,7 +82,7 @@ public class Cheb2Ord extends IirFilterOrder {
             if (Wp.length == 1) {
                 Wa = Ws[0] / Wp[0];
             } else {
-                // band pass 
+                // band pass
                 Wa = Double.MAX_VALUE;
                 for (int i = 0; i < Wp.length; i++) {
                     Wa = Math.min(Wa, Math.abs((Math.pow(Wp[i], 2) - Ws[0] * Ws[1]) / (Wp[i] * (Ws[0] - Ws[1]))));

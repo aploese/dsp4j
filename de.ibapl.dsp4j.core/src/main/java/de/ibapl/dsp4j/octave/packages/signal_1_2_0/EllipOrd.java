@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -45,9 +45,9 @@ package de.ibapl.dsp4j.octave.packages.signal_1_2_0;
  */
 public class EllipOrd extends IirFilterOrder {
 
-        private double[] Wp;
+    private double[] Wp;
 
-        private void calcEllipOrd(double[] Wp, double[] Ws, double Rp, double Rs) {
+    private void calcEllipOrd(double[] Wp, double[] Ws, double Rp, double Rs) {
         // sampling frequency of 2 Hz
         double T = 2;
 
@@ -126,7 +126,7 @@ public class EllipOrd extends IirFilterOrder {
     public double getWp(int index) {
         return Wp[index];
     }
-    
+
     public int getWpCount() {
         return Wp.length;
     }

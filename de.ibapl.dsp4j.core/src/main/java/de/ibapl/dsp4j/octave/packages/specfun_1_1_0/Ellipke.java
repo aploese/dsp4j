@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -21,9 +21,8 @@
  */
 package de.ibapl.dsp4j.octave.packages.specfun_1_1_0;
 
-
-import java.util.Arrays;
 import de.ibapl.dsp4j.octave_3_2_4.OctaveBuildIn;
+import java.util.Arrays;
 
 /*## Copyright (C) 2001 David Billinghurst
  ##
@@ -58,7 +57,8 @@ import de.ibapl.dsp4j.octave_3_2_4.OctaveBuildIn;
  *
  * ## Author: David Billinghurst <David.Billinghurst@riotinto.com> ## Created:
  * 31 January 2001 ## 2001-02-01 Paul Kienzle ## * vectorized ## * included
- * function name in error messages ## 2003-1-18 Jaakko Ruohio ## * extended for
+ * function name in error messages ## 2003-1-18 Jaakko Ruohio ## * extended fo
+ * r
  * m < 0
  */
 public class Ellipke {
@@ -144,7 +144,7 @@ public class Ellipke {
 
             double[] t = new double[a.length];
             for (int n = 0; n <= Nmax; n++) {
-    
+
                 for (int j = 0; j < a.length; j++) {
                     t[j] = (a[j] + b[j]) / 2;
                     c[j] = (a[j] - b[j]) / 2;
@@ -192,12 +192,14 @@ public class Ellipke {
     public double getK(int index) {
         return k[index];
     }
+
     /**
      * @return the e
      */
     public double[] getE() {
         return e;
     }
+
     public double getE(int index) {
         return e[index];
     }

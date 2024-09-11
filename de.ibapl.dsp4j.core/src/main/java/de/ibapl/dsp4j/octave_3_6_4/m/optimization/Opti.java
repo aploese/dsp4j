@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -39,6 +39,7 @@ public enum Opti {
     static Object optimget(Map<Opti, Object> options, Opti opti) {
         return options.get(opti);
     }
+
     static boolean optimget(Map<Opti, Object> options, Opti opti, boolean b) {
         Object result = options.get(opti);
         if (result != null) {

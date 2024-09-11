@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -21,37 +21,14 @@
  */
 package de.ibapl.dsp4j.fms4j.fms;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
  * @author aploese
  */
 public class FmsBitDecoderTest {
-
-    public FmsBitDecoderTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
 
     /**
      * Test of reset method, of class FmsBitDecoder.
@@ -64,9 +41,9 @@ public class FmsBitDecoderTest {
             instance.setX(true);
             assertEquals(FmsBitDecoder.State.NOISE_MARK, instance.getState());
             assertEquals(i + 1, instance.getBitCount());
-            assertEquals("AT I= " + i,  true, instance.isBit());
+            assertEquals(true, instance.isBit(), "AT I= " + i);
         }
-        
+
         instance.setX(false);
         assertEquals(FmsBitDecoder.State.COLLECT_1ST_000, instance.getState());
         instance.setX(false);

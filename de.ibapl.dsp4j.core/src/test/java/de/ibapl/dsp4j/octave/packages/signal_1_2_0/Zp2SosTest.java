@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -24,37 +24,14 @@ package de.ibapl.dsp4j.octave.packages.signal_1_2_0;
 import de.ibapl.dsp4j.octave.packages.signal_1_0_11.Bilinear;
 import de.ibapl.dsp4j.octave.packages.signal_1_0_11.Butter;
 import de.ibapl.dsp4j.octave.packages.signal_1_0_11.SfTrans;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
  * @author aploese
  */
 public class Zp2SosTest {
-
-    public Zp2SosTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
 
     @Test
     public void testButterLP1StOrder() {
@@ -66,7 +43,7 @@ public class Zp2SosTest {
         assertEquals(0.24523727525278557, zp2Sos.getGain(), Double.MIN_VALUE);
         assertArrayEquals(new double[]{1, 1, 0, 1, -0.5095254494944288, 0}, zp2Sos.getRow(0), Double.MIN_VALUE);
     }
-    
+
     @Test
     public void testButterBP2StOrder() {
         Butter b = new Butter(2, 0.2, 0.4, true, false);
@@ -90,7 +67,7 @@ public class Zp2SosTest {
         assertArrayEquals(new double[]{1, -2, 1, 1, -1.25051643084874, 0.5457233155094574}, zp2Sos.getRow(0), Double.MIN_VALUE);
         assertArrayEquals(new double[]{1, -1, 0, 1, -0.5095254494944288, 0}, zp2Sos.getRow(1), Double.MIN_VALUE);
     }
-    
+
     @Test
     public void testButterBS4StOrder() {
         Butter b = new Butter(4, 0.2, 0.4, true, true);
@@ -104,5 +81,5 @@ public class Zp2SosTest {
         assertArrayEquals(new double[]{1, -1.2360679774997898, 1, 1, -1.126780672834907, 0.5820201361472738}, zp2Sos.getRow(2), Double.MIN_VALUE);
         assertArrayEquals(new double[]{1, -1.2360679774997898, 1, 1, -1.4700803540185425, 0.8373728439780258}, zp2Sos.getRow(3), Double.MIN_VALUE);
     }
-    
+
 }

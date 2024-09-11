@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -96,7 +96,7 @@ public class ArrayVsVarVsLoop {
     private void run() {
         runIn();
         final int length = 1000 * 1000 * 100;
-        for (int i = 0; i < length ; i++) {
+        for (int i = 0; i < length; i++) {
             runVar(i);
             runArray(i);
             runLoop(i);

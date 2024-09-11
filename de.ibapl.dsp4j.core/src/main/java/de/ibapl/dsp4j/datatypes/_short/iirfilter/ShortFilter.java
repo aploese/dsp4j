@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -28,7 +28,7 @@ import de.ibapl.dsp4j.datatypes._short.ShortBlock;
  * @author aploese
  */
 interface ShortFilter extends ShortBlock {
-    
+
     public final static short Q_DOT_15_EXP = 15;
     public final static int Q_DOT_15_VALUE = 1 << 15;
 

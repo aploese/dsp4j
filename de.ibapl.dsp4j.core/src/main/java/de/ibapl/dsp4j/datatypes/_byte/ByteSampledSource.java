@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -21,20 +21,18 @@
  */
 package de.ibapl.dsp4j.datatypes._byte;
 
-import java.io.IOException;
-
-import javax.sound.sampled.AudioInputStream;
-
 import de.ibapl.dsp4j.AudioInputStreamSource;
+import java.io.IOException;
+import javax.sound.sampled.AudioInputStream;
 
 public class ByteSampledSource extends AudioInputStreamSource {
 
-	public ByteSampledSource(AudioInputStream ais, int samplesInBuffer) throws IOException {
-		super(ais, samplesInBuffer);
-	}
+    public ByteSampledSource(AudioInputStream ais, int samplesInBuffer) throws IOException {
+        super(ais, samplesInBuffer);
+    }
 
-	protected final byte getByte(int channel) {
-		return buffer[bufferPos * sampleSize + channel];
-	}
+    protected final byte getByte(int channel) {
+        return buffer[bufferPos * sampleSize + channel];
+    }
 
 }

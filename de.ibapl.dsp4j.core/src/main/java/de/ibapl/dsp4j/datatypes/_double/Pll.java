@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -29,6 +29,7 @@ import org.apache.commons.math3.complex.Complex;
  * @author aploese
  */
 public class Pll {
+
     double d_alpha;
     double d_beta;
     int d_order;
@@ -37,139 +38,145 @@ public class Pll {
     double d_max_freq;
     double d_min_freq;
 
-      Pll (double alpha, double beta,
-				      double max_freq, double min_freq,
-				      int order
-				      )
-      {
-     d_alpha = alpha;
-     d_beta = beta;
-     d_order = order;
-     d_max_freq = max_freq;
-     d_min_freq = min_freq;
+    Pll(double alpha, double beta,
+            double max_freq, double min_freq,
+            int order
+    ) {
+        d_alpha = alpha;
+        d_beta = beta;
+        d_order = order;
+        d_max_freq = max_freq;
+        d_min_freq = min_freq;
 
     }
-      double d_phase_detector(Complex sample) {
-  switch(d_order) {
-  case 2:
-  return (sample.getReal() * sample.getImaginary());
 
-  case 4:
-  return ((sample.getReal() > 0 ? sample.getImaginary() : -sample.getImaginary()) -
-	  (sample.getImaginary() > 0 ? sample.getReal() : -sample.getReal()));
+    double d_phase_detector(Complex sample) {
+        switch (d_order) {
+            case 2:
+                return (sample.getReal() * sample.getImaginary());
 
-  default:
-    throw new RuntimeException("order must be 2 or 4");
- }
-}
+            case 4:
+                return ((sample.getReal() > 0 ? sample.getImaginary() : -sample.getImaginary())
+                        - (sample.getImaginary() > 0 ? sample.getReal() : -sample.getReal()));
 
+            default:
+                throw new RuntimeException("order must be 2 or 4");
+        }
+    }
 
-void setAlpha(double alpha)
-{
-  d_alpha = alpha;
-}
+    void setAlpha(double alpha) {
+        d_alpha = alpha;
+    }
 
-void setBeta(double beta)
-{
-  d_beta = beta;
-}
+    void setBeta(double beta) {
+        d_beta = beta;
+    }
 
+    double frequency(double sample) {
+        double error;
+        Complex nco_out;
+        Complex iptr = new Complex(sample, sample);
 
-double frequency(double sample) {
-      double error;
-  Complex nco_out;
-  Complex iptr = new Complex(sample, sample);
+        nco_out = new Complex(Math.sin(-d_phase), Math.cos(-d_phase));
+        Complex optr = iptr.multiply(nco_out);
 
-      nco_out = new Complex(Math.sin(-d_phase), Math.cos(-d_phase));
-      Complex optr = iptr.multiply(nco_out);
+        error = d_phase_detector(optr);
+        if (error > 1) {
+            error = 1;
+        } else if (error < -1) {
+            error = -1;
+        }
 
-      error = d_phase_detector(optr);
-      if (error > 1)
-	error = 1;
-      else if (error < -1)
-	error = -1;
+        d_freq = d_freq + d_beta * error;
+        d_phase = d_phase + d_freq + d_alpha * error;
 
-      d_freq = d_freq + d_beta * error;
-      d_phase = d_phase + d_freq + d_alpha * error;
+        while (d_phase > TWO_PI) {
+            d_phase -= TWO_PI;
+        }
+        while (d_phase < -TWO_PI) {
+            d_phase += TWO_PI;
+        }
 
-      while(d_phase>TWO_PI)
-	d_phase -= TWO_PI;
-      while(d_phase<-TWO_PI)
-	d_phase += TWO_PI;
-
-      if (d_freq > d_max_freq)
-	d_freq = d_max_freq;
-      else if (d_freq < d_min_freq)
-	d_freq = d_min_freq;
+        if (d_freq > d_max_freq) {
+            d_freq = d_max_freq;
+        } else if (d_freq < d_min_freq) {
+            d_freq = d_min_freq;
+        }
         System.err.println("FREQ: " + d_freq + "\t" + optr.abs());
-      return d_freq;
-}
-
-
-int work (int noutput_items,
-			 Complex[] iptr,
-			 Complex[] optr,
-                         double[] foptr,
-                         boolean write_foptr)
-{
-
-  double error;
-  Complex nco_out;
-
-  if (write_foptr) {
-
-    for (int i = 0; i < noutput_items; i++){
-      nco_out = new Complex(Math.sin(-d_phase), Math.cos(-d_phase));
-      optr[i] = iptr[i].multiply(nco_out);
-
-      error = d_phase_detector(optr[i]);
-      if (error > 1)
-	error = 1;
-      else if (error < -1)
-	error = -1;
-
-      d_freq = d_freq + d_beta * error;
-      d_phase = d_phase + d_freq + d_alpha * error;
-
-      while(d_phase>TWO_PI)
-	d_phase -= TWO_PI;
-      while(d_phase<-TWO_PI)
-	d_phase += TWO_PI;
-
-      if (d_freq > d_max_freq)
-	d_freq = d_max_freq;
-      else if (d_freq < d_min_freq)
-	d_freq = d_min_freq;
-
-      foptr[i] = d_freq;
+        return d_freq;
     }
-  } else {
-    for (int i = 0; i < noutput_items; i++){
-      nco_out = new Complex(Math.sin(-d_phase), Math.cos(-d_phase));
-      optr[i] = iptr[i].multiply(nco_out);
 
-      error = d_phase_detector(optr[i]);
-      if (error > 1)
-	error = 1;
-      else if (error < -1)
-	error = -1;
+    int work(int noutput_items,
+            Complex[] iptr,
+            Complex[] optr,
+            double[] foptr,
+            boolean write_foptr) {
 
-      d_freq = d_freq + d_beta * error;
-      d_phase = d_phase + d_freq + d_alpha * error;
+        double error;
+        Complex nco_out;
 
-      while(d_phase>TWO_PI)
-	d_phase -= TWO_PI;
-      while(d_phase<-TWO_PI)
-	d_phase += TWO_PI;
+        if (write_foptr) {
 
-      if (d_freq > d_max_freq)
-	d_freq = d_max_freq;
-      else if (d_freq < d_min_freq)
-	d_freq = d_min_freq;
+            for (int i = 0; i < noutput_items; i++) {
+                nco_out = new Complex(Math.sin(-d_phase), Math.cos(-d_phase));
+                optr[i] = iptr[i].multiply(nco_out);
 
+                error = d_phase_detector(optr[i]);
+                if (error > 1) {
+                    error = 1;
+                } else if (error < -1) {
+                    error = -1;
+                }
+
+                d_freq = d_freq + d_beta * error;
+                d_phase = d_phase + d_freq + d_alpha * error;
+
+                while (d_phase > TWO_PI) {
+                    d_phase -= TWO_PI;
+                }
+                while (d_phase < -TWO_PI) {
+                    d_phase += TWO_PI;
+                }
+
+                if (d_freq > d_max_freq) {
+                    d_freq = d_max_freq;
+                } else if (d_freq < d_min_freq) {
+                    d_freq = d_min_freq;
+                }
+
+                foptr[i] = d_freq;
+            }
+        } else {
+            for (int i = 0; i < noutput_items; i++) {
+                nco_out = new Complex(Math.sin(-d_phase), Math.cos(-d_phase));
+                optr[i] = iptr[i].multiply(nco_out);
+
+                error = d_phase_detector(optr[i]);
+                if (error > 1) {
+                    error = 1;
+                } else if (error < -1) {
+                    error = -1;
+                }
+
+                d_freq = d_freq + d_beta * error;
+                d_phase = d_phase + d_freq + d_alpha * error;
+
+                while (d_phase > TWO_PI) {
+                    d_phase -= TWO_PI;
+                }
+                while (d_phase < -TWO_PI) {
+                    d_phase += TWO_PI;
+                }
+
+                if (d_freq > d_max_freq) {
+                    d_freq = d_max_freq;
+                } else if (d_freq < d_min_freq) {
+                    d_freq = d_min_freq;
+                }
+
+            }
+        }
+        return noutput_items;
     }
-  }
-  return noutput_items;
-}
 
 }

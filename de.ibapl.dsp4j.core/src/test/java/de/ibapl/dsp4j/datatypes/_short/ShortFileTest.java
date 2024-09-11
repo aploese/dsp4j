@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -22,13 +22,8 @@
 package de.ibapl.dsp4j.datatypes._short;
 
 import java.io.File;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
@@ -36,62 +31,43 @@ import static org.junit.Assert.*;
  */
 public class ShortFileTest {
 
-	public ShortFileTest() {
-	}
+    /**
+     * Test of setX method, of class MonoIntegerFileSink.
+     */
+    @Test
+    public void testSetX() throws Exception {
+        short[] data = new short[]{0, Short.MAX_VALUE / 4, Short.MAX_VALUE / 2, Short.MAX_VALUE, Short.MAX_VALUE / 2,
+            Short.MAX_VALUE / 4, 0, 0, Short.MIN_VALUE / 4, Short.MIN_VALUE / 2, Short.MIN_VALUE,
+            Short.MIN_VALUE / 2, Short.MIN_VALUE / 4, 0};
 
-	@BeforeClass
-	public static void setUpClass() {
-	}
+        ShortFileSink sink = new ShortFileSink(File.createTempFile("test", "wav"), 5, 8000.0, 1);
+        for (int i = 0; i < data.length; i++) {
+            sink.setShort(0, data[i]);
+            sink.setShort(1, (short) -data[i]);
+            sink.setShort(2, Short.MIN_VALUE);
+            sink.setShort(3, (short) 0);
+            sink.setShort(4, Short.MAX_VALUE);
+            sink.nextSample();
+        }
+        sink.close();
 
-	@AfterClass
-	public static void tearDownClass() {
-	}
+        ShortSampledSource source = new ShortSampledSource(sink.getWavOut(), 1);
+        assertEquals(sink.isBigEndian(), source.isBigEndian());
+        assertEquals(sink.getEncoding(), source.getEncoding());
+        assertEquals(sink.getChannels(), source.getChannels());
+        assertEquals(sink.getSampleRate(), source.getSampleRate(), Double.MIN_VALUE);
+        assertEquals(sink.getFrameSize(), source.getFrameSize());
+        assertEquals(sink.getSampleSizeInBits(), source.getSampleSizeInBits());
 
-	@Before
-	public void setUp() {
-	}
-
-	@After
-	public void tearDown() throws Exception {
-	}
-
-	/**
-	 * Test of setX method, of class MonoIntegerFileSink.
-	 */
-	@Test
-	public void testSetX() throws Exception {
-		short[] data = new short[] { 0, Short.MAX_VALUE / 4, Short.MAX_VALUE / 2, Short.MAX_VALUE, Short.MAX_VALUE / 2,
-				Short.MAX_VALUE / 4, 0, 0, Short.MIN_VALUE / 4, Short.MIN_VALUE / 2, Short.MIN_VALUE,
-				Short.MIN_VALUE / 2, Short.MIN_VALUE / 4, 0 };
-
-		ShortFileSink sink = new ShortFileSink(File.createTempFile("test", "wav"), 5, 8000.0, 1);
-		for (int i = 0; i < data.length; i++) {
-			sink.setShort(0, data[i]);
-			sink.setShort(1, (short) -data[i]);
-			sink.setShort(2, Short.MIN_VALUE);
-			sink.setShort(3, (short) 0);
-			sink.setShort(4, Short.MAX_VALUE);
-			sink.nextSample();
-		}
-		sink.close();
-
-		ShortSampledSource source = new ShortSampledSource(sink.getWavOut(), 1);
-		assertEquals(sink.isBigEndian(), source.isBigEndian());
-		assertEquals(sink.getEncoding(), source.getEncoding());
-		assertEquals(sink.getChannels(), source.getChannels());
-		assertEquals(sink.getSampleRate(), source.getSampleRate(), Double.MIN_VALUE);
-		assertEquals(sink.getFrameSize(), source.getFrameSize());
-		assertEquals(sink.getSampleSizeInBits(), source.getSampleSizeInBits());
-
-		for (int i = 0; i < data.length; i++) {
-			assertTrue(source.nextSample());
-			assertEquals("Error at [0]:" + i, data[i], source.getShort(0));
-			assertEquals("Error at [1]:" + i, (short) -data[i], source.getShort(1));
-			assertEquals("Error at [2]:" + i, Short.MIN_VALUE, source.getShort(2));
-			assertEquals("Error at [3]:" + i, (short) 0, source.getShort(3));
-			assertEquals("Error at [4]:" + i, Short.MAX_VALUE, source.getShort(4));
-		}
-		assertFalse(source.nextSample());
-	}
+        for (int i = 0; i < data.length; i++) {
+            assertTrue(source.nextSample());
+            assertEquals(data[i], source.getShort(0), "Error at [0]:" + i);
+            assertEquals((short) -data[i], source.getShort(1), "Error at [1]:" + i);
+            assertEquals(Short.MIN_VALUE, source.getShort(2), "Error at [2]:" + i);
+            assertEquals((short) 0, source.getShort(3), "Error at [3]:" + i);
+            assertEquals(Short.MAX_VALUE, source.getShort(4), "Error at [4]:" + i);
+        }
+        assertFalse(source.nextSample());
+    }
 
 }

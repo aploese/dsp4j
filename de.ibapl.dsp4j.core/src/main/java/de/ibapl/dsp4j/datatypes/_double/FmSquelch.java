@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -21,12 +21,12 @@
  */
 package de.ibapl.dsp4j.datatypes._double;
 
-import de.ibapl.dsp4j.datatypes._double.iirfilter.Direct1stOrderDoubleIirFilter;
-import de.ibapl.dsp4j.datatypes._double.iirfilter.DirectDoubleIirFilter;
-import de.ibapl.dsp4j.datatypes._double.iirfilter.DoubleIirFilterGenerator;
 import de.ibapl.dsp4j.AbstractSampleProcessingBlock;
 import de.ibapl.dsp4j.In;
 import de.ibapl.dsp4j.Out;
+import de.ibapl.dsp4j.datatypes._double.iirfilter.Direct1stOrderDoubleIirFilter;
+import de.ibapl.dsp4j.datatypes._double.iirfilter.DirectDoubleIirFilter;
+import de.ibapl.dsp4j.datatypes._double.iirfilter.DoubleIirFilterGenerator;
 
 /**
  *
@@ -34,122 +34,122 @@ import de.ibapl.dsp4j.Out;
  */
 public class FmSquelch extends AbstractSampleProcessingBlock {
 
-	public enum State {
-		MUTED, TRIGGERING, TRIGGERED, MUTING;
-	}
+    public enum State {
+        MUTED, TRIGGERING, TRIGGERED, MUTING;
+    }
 
-	private DirectDoubleIirFilter lp;
-	private DirectDoubleIirFilter hpIn;
-	private final double flp;
-	private final double fhp;
-	private final double threshold;
-	private State state = State.MUTED;
+    private DirectDoubleIirFilter lp;
+    private DirectDoubleIirFilter hpIn;
+    private final double flp;
+    private final double fhp;
+    private final double threshold;
+    private State state = State.MUTED;
 
-	public FmSquelch(double threshhold, double flp, double fhp) {
-		this.threshold = threshhold;
-		this.flp = flp;
-		this.fhp = fhp;
-	}
+    public FmSquelch(double threshhold, double flp, double fhp) {
+        this.threshold = threshhold;
+        this.flp = flp;
+        this.fhp = fhp;
+    }
 
-	/**
-	 * @return the fhp
-	 */
-	public double getFhp() {
-		return fhp;
-	}
+    /**
+     * @return the fhp
+     */
+    public double getFhp() {
+        return fhp;
+    }
 
-	/**
-	 * @return the flp
-	 */
-	public double getFlp() {
-		return flp;
-	}
+    /**
+     * @return the flp
+     */
+    public double getFlp() {
+        return flp;
+    }
 
-	/**
-	 * @return the hpIn
-	 */
-	public DirectDoubleIirFilter getHpIn() {
-		return hpIn;
-	}
+    /**
+     * @return the hpIn
+     */
+    public DirectDoubleIirFilter getHpIn() {
+        return hpIn;
+    }
 
-	/**
-	 * @param hpIn the hpIn to set
-	 */
-	public void setHpIn(DirectDoubleIirFilter hpIn) {
-		this.hpIn = hpIn;
-	}
+    /**
+     * @param hpIn the hpIn to set
+     */
+    public void setHpIn(DirectDoubleIirFilter hpIn) {
+        this.hpIn = hpIn;
+    }
 
-	public double getPower() {
-		return lp.getY();
-	}
+    public double getPower() {
+        return lp.getY();
+    }
 
-	/**
-	 * @return the lpSlow
-	 */
-	public DirectDoubleIirFilter getLp() {
-		return lp;
-	}
+    /**
+     * @return the lpSlow
+     */
+    public DirectDoubleIirFilter getLp() {
+        return lp;
+    }
 
-	/**
-	 * @return the threshold
-	 */
-	public double getThreshold() {
-		return threshold;
-	}
+    /**
+     * @return the threshold
+     */
+    public double getThreshold() {
+        return threshold;
+    }
 
-	@Override
-	public void setSampleRate(double sampleRate) {
-		DoubleIirFilterGenerator gen = new DoubleIirFilterGenerator(sampleRate);
-		lp = gen.getLP_ButterFc(1, flp, Direct1stOrderDoubleIirFilter.class);
-		hpIn = gen.getHP_Cheby2Fc(1, 20, fhp, Direct1stOrderDoubleIirFilter.class);
-		super.setSampleRate(sampleRate);
-	}
+    @Override
+    public void setSampleRate(double sampleRate) {
+        DoubleIirFilterGenerator gen = new DoubleIirFilterGenerator(sampleRate);
+        lp = gen.getLP_ButterFc(1, flp, Direct1stOrderDoubleIirFilter.class);
+        hpIn = gen.getHP_Cheby2Fc(1, 20, fhp, Direct1stOrderDoubleIirFilter.class);
+        super.setSampleRate(sampleRate);
+    }
 
-	/**
-	 *
-	 * @param sample
-	 * @return
-	 */
-	@In
-	@Out
-	public State setX(final double sample) {
-		hpIn.setX(sample);
-		lp.setX(Math.abs(hpIn.getY()));
-		final boolean triggered = lp.getY() < threshold;
-		switch (state) {
-		case MUTED:
-			if (triggered) {
-				state = State.TRIGGERING;
-			}
-			break;
-		case TRIGGERING:
-			if (triggered) {
-				state = State.TRIGGERED;
-			} else {
-				state = State.MUTING;
-			}
-			break;
-		case TRIGGERED:
-			if (triggered) {
-			} else {
-				state = State.MUTING;
-			}
-			break;
-		case MUTING:
-			if (triggered) {
-				state = State.TRIGGERING;
-			} else {
-				state = State.MUTED;
-			}
-			break;
-		default:
-			throw new IllegalStateException("Can't handle state: " + state);
-		}
-		return state;
-	}
-	
-	public State getState() {
-		return state;
-	}
+    /**
+     *
+     * @param sample
+     * @return
+     */
+    @In
+    @Out
+    public State setX(final double sample) {
+        hpIn.setX(sample);
+        lp.setX(Math.abs(hpIn.getY()));
+        final boolean triggered = lp.getY() < threshold;
+        switch (state) {
+            case MUTED:
+                if (triggered) {
+                    state = State.TRIGGERING;
+                }
+                break;
+            case TRIGGERING:
+                if (triggered) {
+                    state = State.TRIGGERED;
+                } else {
+                    state = State.MUTING;
+                }
+                break;
+            case TRIGGERED:
+                if (triggered) {
+                } else {
+                    state = State.MUTING;
+                }
+                break;
+            case MUTING:
+                if (triggered) {
+                    state = State.TRIGGERING;
+                } else {
+                    state = State.MUTED;
+                }
+                break;
+            default:
+                throw new IllegalStateException("Can't handle state: " + state);
+        }
+        return state;
+    }
+
+    public State getState() {
+        return state;
+    }
 
 }

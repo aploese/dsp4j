@@ -1,0 +1,18 @@
+-noimportjava: true
+Export-Package: \
+ de.ibapl.dsp4j, \
+ de.ibapl.dsp4j.datatypes, \
+ de.ibapl.dsp4j.datatypes._byte, \
+ de.ibapl.dsp4j.datatypes._double, \
+ de.ibapl.dsp4j.datatypes._double.iirfilter, \
+ de.ibapl.dsp4j.datatypes._int, \
+ de.ibapl.dsp4j.datatypes._short, \
+ de.ibapl.dsp4j.datatypes._short.iirfilter, \
+ de.ibapl.dsp4j.octave, \
+ de.ibapl.dsp4j.octave.packages.signal_1_0_11, \
+ de.ibapl.dsp4j.octave.packages.signal_1_2_0, \
+ de.ibapl.dsp4j.octave.packages.specfun_1_1_0, \
+ de.ibapl.dsp4j.octave_3_2_4, \
+ de.ibapl.dsp4j.octave_3_2_4.m.general, \
+ de.ibapl.dsp4j.octave_3_2_4.m.polynomial, \
+ de.ibapl.dsp4j.octave_3_6_4.m.optimization

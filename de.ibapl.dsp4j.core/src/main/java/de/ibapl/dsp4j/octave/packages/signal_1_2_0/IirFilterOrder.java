@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -26,10 +26,11 @@ package de.ibapl.dsp4j.octave.packages.signal_1_2_0;
  * @author aploese
  */
 public class IirFilterOrder {
+
     protected boolean stop;
     protected int n;
 
-        /**
+    /**
      * @return the n
      */
     public int getN() {

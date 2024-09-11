@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -22,7 +22,6 @@
 package de.ibapl.dsp4j;
 
 import java.io.IOException;
-
 import javax.sound.sampled.AudioFormat;
 
 /**
@@ -30,9 +29,9 @@ import javax.sound.sampled.AudioFormat;
  * @author aploese
  */
 public abstract class AudioSink implements SampledBlock, Sampled {
-    
+
     public static short scale0_2PI_to_short(double sample) {
-        return (short)(((sample - Math.PI)/ Math.PI) * Short.MAX_VALUE);
+        return (short) (((sample - Math.PI) / Math.PI) * Short.MAX_VALUE);
     }
 
     public static short scaleBoolean_to_short(boolean value) {
@@ -43,7 +42,7 @@ public abstract class AudioSink implements SampledBlock, Sampled {
     protected final byte[] buffer;
     protected int bufferSamplePos;
     protected int sampleSize;
-    
+
     public AudioFormat.Encoding getEncoding() {
         return audioFormat.getEncoding();
     }
@@ -51,7 +50,7 @@ public abstract class AudioSink implements SampledBlock, Sampled {
     public boolean isBigEndian() {
         return audioFormat.isBigEndian();
     }
-    
+
     public int getChannels() {
         return audioFormat.getChannels();
     }
@@ -74,7 +73,7 @@ public abstract class AudioSink implements SampledBlock, Sampled {
         if (getSampleRate() == sampleRate) {
             return;
         }
-        setAudioFormat(new AudioFormat(audioFormat.getEncoding(), (float) sampleRate, audioFormat.getSampleSizeInBits(), audioFormat.getChannels(), audioFormat.getFrameSize(), (float)sampleRate, audioFormat.isBigEndian(), audioFormat.properties()));
+        setAudioFormat(new AudioFormat(audioFormat.getEncoding(), (float) sampleRate, audioFormat.getSampleSizeInBits(), audioFormat.getChannels(), audioFormat.getFrameSize(), (float) sampleRate, audioFormat.isBigEndian(), audioFormat.properties()));
     }
 
     protected AudioSink(AudioFormat audioFormat, int framesInBuffer) {
@@ -87,7 +86,7 @@ public abstract class AudioSink implements SampledBlock, Sampled {
     }
 
     final protected void setAudioFormat(AudioFormat audioFormat) {
-    	if (this.audioFormat != null) {
+        if (this.audioFormat != null) {
             close();
         }
         this.audioFormat = audioFormat;
@@ -97,13 +96,13 @@ public abstract class AudioSink implements SampledBlock, Sampled {
 
     @Override
     public boolean nextSample() throws IOException {
-    	bufferSamplePos++;
-    	if (bufferSamplePos * sampleSize >= buffer.length) {
-    		flush();
-    	}
-    	return true;
+        bufferSamplePos++;
+        if (bufferSamplePos * sampleSize >= buffer.length) {
+            flush();
+        }
+        return true;
     }
-    
+
     public abstract void open();
 
     public abstract void flush();

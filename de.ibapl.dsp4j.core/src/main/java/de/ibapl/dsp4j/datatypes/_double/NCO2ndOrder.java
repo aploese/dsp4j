@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -21,11 +21,11 @@
  */
 package de.ibapl.dsp4j.datatypes._double;
 
-import java.util.logging.Logger;
 import de.ibapl.dsp4j.AbstractSampleProcessingBlock;
 import static de.ibapl.dsp4j.DspConst.TWO_PI;
 import de.ibapl.dsp4j.In;
 import de.ibapl.dsp4j.Out;
+import java.util.logging.Logger;
 
 /**
  *
@@ -39,12 +39,12 @@ public class NCO2ndOrder extends AbstractSampleProcessingBlock implements NCO {
     private double deltaPhi;
     private double currentDeltaPhi;
     private double deltaPhiMax;
- 
+
     private double alpha;
     private double beta;
-    
+
     private final CosTableDouble cosTable;
-    
+
     private double fMin;
     private double f0;
     private double fMax;
@@ -69,7 +69,7 @@ public class NCO2ndOrder extends AbstractSampleProcessingBlock implements NCO {
         setAlpha(alpha);
     }
 
-    public NCO2ndOrder(double fMin, double f0, double fMax, double alpha, double  beta) {
+    public NCO2ndOrder(double fMin, double f0, double fMax, double alpha, double beta) {
         this(fMin, f0, fMax);
         this.alpha = alpha;
         this.beta = beta;
@@ -96,9 +96,9 @@ public class NCO2ndOrder extends AbstractSampleProcessingBlock implements NCO {
         }
         deltaPhi += error * beta;
         if (deltaPhi < deltaPhiMin) {
-           deltaPhi = deltaPhiMin;
+            deltaPhi = deltaPhiMin;
         } else if (deltaPhi > deltaPhiMax) {
-           deltaPhi = deltaPhiMax;
+            deltaPhi = deltaPhiMax;
         }
         cosY = cosTable.cos0To2Pi(phi);
         sinY = cosTable.sin0To2Pi(phi);
@@ -142,8 +142,7 @@ public class NCO2ndOrder extends AbstractSampleProcessingBlock implements NCO {
     }
 
     /**
-     * @param alpha the alpha to set
-     * beta will be calculated
+     * @param alpha the alpha to set beta will be calculated
      */
     @Override
     public void setAlpha(double alpha) {
@@ -161,7 +160,7 @@ public class NCO2ndOrder extends AbstractSampleProcessingBlock implements NCO {
      */
     public double getBeta() {
         return beta;
-}
+    }
 
     /**
      * @return the deltaPhiMin

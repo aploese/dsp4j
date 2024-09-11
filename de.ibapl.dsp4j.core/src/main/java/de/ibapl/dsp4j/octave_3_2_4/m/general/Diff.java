@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -63,7 +63,7 @@ package de.ibapl.dsp4j.octave_3_2_4.m.general;
 ## non-singleton dimension.
 ##
 ## The dimension along which to take the difference can be explicitly
-## stated with the optional variable @var{dim}.  In this case the 
+## stated with the optional variable @var{dim}.  In this case the
 ## @var{k}-th order differences are calculated along this dimension.
 ## In the case where @var{k} exceeds @code{size (@var{x}, @var{dim})}
 ## then an empty matrix is returned.
@@ -72,17 +72,16 @@ package de.ibapl.dsp4j.octave_3_2_4.m.general;
 ## Author: KH <Kurt.Hornik@wu-wien.ac.at>
 ## Created: 2 February 1995
 ## Adapted-By: jwe
-*/
+ */
 public class Diff {
 
-public static double[] diff (double[] x) {
-    double[] result = new double[x.length - 1];
-    for (int i = 0; i < result.length; i++) {
-        result[i] = x[i + 1] - x[i];
+    public static double[] diff(double[] x) {
+        double[] result = new double[x.length - 1];
+        for (int i = 0; i < result.length; i++) {
+            result[i] = x[i + 1] - x[i];
+        }
+        return result;
     }
-    return result;
-}
-
 
 }
 /*
@@ -99,4 +98,4 @@ public static double[] diff (double[] x) {
 %!error diff ();
 
 %!error diff (1, 2, 3, 4);
-*/
+ */

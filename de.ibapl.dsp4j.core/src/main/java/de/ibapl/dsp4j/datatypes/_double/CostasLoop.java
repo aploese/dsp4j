@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -21,11 +21,11 @@
  */
 package de.ibapl.dsp4j.datatypes._double;
 
-import de.ibapl.dsp4j.datatypes._double.iirfilter.DirectDoubleIirFilter;
-import de.ibapl.dsp4j.datatypes._double.iirfilter.DoubleIirFilterGenerator;
 import de.ibapl.dsp4j.AbstractSampleProcessingBlock;
 import de.ibapl.dsp4j.In;
 import de.ibapl.dsp4j.Out;
+import de.ibapl.dsp4j.datatypes._double.iirfilter.DirectDoubleIirFilter;
+import de.ibapl.dsp4j.datatypes._double.iirfilter.DoubleIirFilterGenerator;
 
 /**
  *
@@ -39,7 +39,6 @@ public class CostasLoop<N extends NCO, T extends FunctionAtan> extends AbstractS
     private final T arcTan;
     private double fcFilter;
     private double phiError;
-    
 
     public CostasLoop(N nco, T arcTan, double fcFilter) {
         this.fcFilter = fcFilter;

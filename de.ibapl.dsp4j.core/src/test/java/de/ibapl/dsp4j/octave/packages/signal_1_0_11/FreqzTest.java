@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -22,38 +22,15 @@
 package de.ibapl.dsp4j.octave.packages.signal_1_0_11;
 
 import org.apache.commons.math3.complex.Complex;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  *
  * @author aploese
  */
 public class FreqzTest {
-
-    public FreqzTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
 
     /**
      * Test of setResponseIIR method, of class Freqz.
@@ -139,8 +116,8 @@ public class FreqzTest {
     /**
      * Test of setResponseFIR method, of class Freqz.
      */
+    @Disabled
     @Test
-    @Ignore
     public void testSetResponseFIR() throws Exception {
         System.out.println("setResponseFIR");
         double[] b = new double[]{1, 0, 1};
@@ -155,8 +132,8 @@ public class FreqzTest {
 
     @Test
     public void testSetResponseCom() {
-        Complex c0 = new Complex(1,1);
-        Complex c1 = new Complex(0,1);
+        Complex c0 = new Complex(1, 1);
+        Complex c1 = new Complex(0, 1);
         Complex c2 = c0.divide(c1);
 
     }

@@ -1,6 +1,6 @@
 /*
  * DSP4J - Java classes for dsp processing, https://github.com/aploese/dsp4j/
- * Copyright (C) ${project.inceptionYear}-2019, Arne Plöse and individual contributors as indicated
+ * Copyright (C) 2019-2024, Arne Plöse and individual contributors as indicated
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -24,17 +24,18 @@ package de.ibapl.dsp4j.fms4j.fms;
 import java.util.logging.Logger;
 import de.ibapl.dsp4j.fms4j.VisualResultCheckTest;
 import de.ibapl.dsp4j.datatypes._short.ShortFileSink;
-import org.junit.Ignore;
+import org.junit.jupiter.api.*;
 
 /**
  *
  * @author aploese
  */
-@Ignore
+@Disabled
 public class MultipleFmsTest extends VisualResultCheckTest {
+
     final private static Logger LOG = Logger.getLogger(MultipleFmsTest.class.getCanonicalName());
     private ShortFileSink sfs;
-/*
+    /*
     public MultipleFmsTest() {
     }
 
@@ -96,7 +97,7 @@ public class MultipleFmsTest extends VisualResultCheckTest {
 
         doTest("/FMS-test-16bit-44.1kHz-20110416-010_0_02:43:01.945.wav", false, testSetup);
     }
-        
+
     @Test
     @Ignore //TODO 44 kHz ??? in schnipsel 36 hinten
     public void testFmsAudio_Probealarm_Teningen_zvei_fms() throws Exception {
@@ -105,7 +106,7 @@ public class MultipleFmsTest extends VisualResultCheckTest {
         testSetup.add(569105 - 522, new FmsData(F_W_T, BW, "65", "36-99", (byte) 0x0e, BEIDE_RICHTUNGEN, FZG_ZU_LST, TKI_I));
         doTest("/teningen/20110416-hauptübung/03-zvei-alarmierung-mit-fms.wav", false, testSetup);
     }
-    
+
     @Test
     public void testFmsAudio_Probealarm_Teningen_fms_11kHz() throws Exception {
         FmsTestListener testSetup = new FmsTestListener();
@@ -137,5 +138,5 @@ public class MultipleFmsTest extends VisualResultCheckTest {
 
         doTest("/teningen/20110416-hauptübung/alles.wav", false, testSetup);
     }
-*/
+     */
 }
